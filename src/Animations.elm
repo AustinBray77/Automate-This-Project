@@ -4,6 +4,13 @@ import ShapeCreator exposing (changeShapeColor)
 import GraphicSVG exposing (Color)
 import GraphicSVG exposing (rgba)
 import Html.Attributes exposing (shape)
+import GraphicSVG exposing (square)
+import GraphicSVG exposing (Shape)
+import GraphicSVG exposing (clip)
+import ShapeCreator exposing (Msg)
+import GraphicSVG exposing (filled)
+import GraphicSVG exposing (red)
+import GraphicSVG exposing (move)
 
 {- Frame time in ms -}
 frameTime: Float
@@ -14,26 +21,64 @@ type alias RGBA = {
     g: Float,
     b: Float,
     a: Float
-}
-
-calculateDifference: Float -> RGBA -> RGBA -> RGBA
-calculateDifference time startColor targetColor = 
-    { r = (2 * startColor.r - targetColor.r) / time * frameTime,  
-    g =  (2 * startColor.g - targetColor.g) / time * frameTime,
-    b =  (2 * startColor.b - targetColor.b) / time * frameTime,
-    a =  (2 * startColor.a - targetColor.a) / time * frameTime
     }
+
+type alias TimeData = {
+    start: Float,
+    current: Float,
+    end: Float
+    }
+
+calculateColor: TimeData -> RGBA -> RGBA -> RGBA
+calculateColor timeData startColor targetColor = 
+    let
+        timePercentage = (timeData.current - timeData.start) / (timeData.end - timeData.start)
+    in
+        { r = (startColor.r / (1 - timePercentage) + targetColor.r / timePercentage) / 2,  
+        g =  (startColor.g / (1 - timePercentage) + targetColor.g / timePercentage) / 2,
+        b =  (startColor.b / (1 - timePercentage) + targetColor.b / timePercentage) / 2,
+        a =  (startColor.a / (1 - timePercentage) + targetColor.a / timePercentage) / 2
+        }
 
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =
     (rgba color.r color.g color.b color.a)
 
-fadeShapeToColor: Float -> RGBA -> RGBA -> UserShape -> UserShape
-fadeShapeToColor time startColor targetColor shape = 
+fadeShapeToColor: TimeData -> RGBA -> RGBA -> UserShape -> UserShape
+fadeShapeToColor timeData startColor targetColor shape = 
     let 
-        newColor = (calculateDifference time startColor targetColor)
-        nextTime = time - frameTime
+        newColor = (calculateColor timeData startColor targetColor)
+        timePercentage = (timeData.current - timeData.start) / (timeData.end - timeData.start)
     in
-        case time of
-            0 -> shape
-            _ -> fadeShapeToColor nextTime newColor targetColor (changeShapeColor (rgbaToColor newColor) shape)
+        if timePercentage > 1 then shape else changeShapeColor (rgbaToColor newColor) shape
+
+clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
+clipShapes shape1 shapeTuple = 
+    clip shape1 (Tuple.second shapeTuple)
+
+moveShapesBasedOnIndex: Int -> (Int, Shape Msg) -> (Int, Shape Msg)
+moveShapesBasedOnIndex resolution shapeTuple =
+    let
+        square = round (sqrt (toFloat resolution))
+        index = Tuple.first shapeTuple
+        shape = Tuple.second shapeTuple
+    in
+        (index, 
+            move (
+                toFloat (-5 + modBy square (index+1) * 10), 
+                toFloat (-5 + (index) // square * 10)
+                ) 
+            (shape)
+        )
+
+particlizeShape: Int -> Shape Msg -> List (Shape Msg)
+particlizeShape resolution shape = 
+    let
+        baseSquare = 
+            square 10
+            |> filled red
+    in
+        List.repeat resolution (baseSquare)
+            |> List.indexedMap Tuple.pair
+            |> List.map (moveShapesBasedOnIndex resolution)
+            |> List.map (clipShapes shape)
