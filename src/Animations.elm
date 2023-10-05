@@ -56,8 +56,8 @@ clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
 clipShapes shape1 shapeTuple = 
     clip shape1 (Tuple.second shapeTuple)
 
-moveShapesBasedOnIndex: Int -> (Int, Shape Msg) -> (Int, Shape Msg)
-moveShapesBasedOnIndex resolution shapeTuple =
+placeShapesBasedOnIndex: Int -> (Int, Shape Msg) -> (Int, Shape Msg)
+placeShapesBasedOnIndex resolution shapeTuple =
     let
         square = round (sqrt (toFloat resolution))
         index = Tuple.first shapeTuple
@@ -80,5 +80,33 @@ particlizeShape resolution shape =
     in
         List.repeat resolution (baseSquare)
             |> List.indexedMap Tuple.pair
-            |> List.map (moveShapesBasedOnIndex resolution)
+            |> List.map (placeShapesBasedOnIndex resolution)
             |> List.map (clipShapes shape)
+
+
+moveBasedOnIndex: Int -> TimeData -> (Int, Shape Msg) -> (Int, Shape Msg)
+moveBasedOnIndex resolution timeData shapeTuple =
+    let
+        square = round (sqrt (toFloat resolution))
+        index = Tuple.first shapeTuple
+        shape = Tuple.second shapeTuple
+        timePercentage = ((timeData.current - timeData.start) / (timeData.end - timeData.start))
+    in
+        (index, 
+            move (
+                toFloat (-5 + modBy square (index+1) * 10 * (round (tan (pi/2 * timePercentage)))), 
+                toFloat (-5 + (index) // square * 10 * (round (tan (pi/2 * timePercentage))))
+                ) 
+            (shape)
+        )
+
+explodeParticlizedShape: TimeData -> List (Shape Msg) -> List (Shape Msg)
+explodeParticlizedShape timeData shapes =
+    let
+        resolution = round(sqrt (toFloat (List.length shapes)))
+    in
+        List.indexedMap Tuple.pair shapes
+        |> List.map (moveBasedOnIndex resolution timeData)
+        |> List.unzip
+        |> Tuple.second
+        
