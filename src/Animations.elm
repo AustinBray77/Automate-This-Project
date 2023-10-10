@@ -9,8 +9,8 @@ import GraphicSVG exposing (Shape)
 import GraphicSVG exposing (clip)
 import ShapeCreator exposing (Msg)
 import GraphicSVG exposing (filled)
-import GraphicSVG exposing (red)
 import GraphicSVG exposing (move)
+import GraphicSVG exposing (grey)
 
 {- Frame time in ms -}
 frameTime: Float
@@ -53,11 +53,11 @@ fadeShapeToColor timeData startColor targetColor shape =
         if timePercentage > 1 then shape else changeShapeColor (rgbaToColor newColor) shape
 
 clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
-clipShapes shape1 shapeTuple = 
-    clip shape1 (Tuple.second shapeTuple)
+clipShapes shape shapeTuple = 
+    clip (Tuple.second shapeTuple) shape
 
-placeShapesBasedOnIndex: Int -> (Int, Shape Msg) -> (Int, Shape Msg)
-placeShapesBasedOnIndex resolution shapeTuple =
+placeShapesBasedOnIndex: Float -> Int -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
+placeShapesBasedOnIndex radius resolution squareSize shapeTuple =
     let
         square = round (sqrt (toFloat resolution))
         index = Tuple.first shapeTuple
@@ -65,48 +65,47 @@ placeShapesBasedOnIndex resolution shapeTuple =
     in
         (index, 
             move (
-                toFloat (-5 + modBy square (index+1) * 10), 
-                toFloat (-5 + (index) // square * 10)
+                (squareSize/2) - radius + toFloat(modBy square index) * squareSize, 
+                radius - (squareSize/2) + toFloat(index // square) * -squareSize
                 ) 
             (shape)
         )
 
-particlizeShape: Int -> Shape Msg -> List (Shape Msg)
-particlizeShape resolution shape = 
+particlizeShape: Float -> Int -> Shape Msg -> List (Shape Msg)
+particlizeShape radius resolution shape = 
     let
+        squareSize = radius*2 / (sqrt (toFloat resolution))
         baseSquare = 
-            square 10
-            |> filled red
+            square squareSize
+            |> filled grey
     in
         List.repeat resolution (baseSquare)
             |> List.indexedMap Tuple.pair
-            |> List.map (placeShapesBasedOnIndex resolution)
+            |> List.map (placeShapesBasedOnIndex radius resolution squareSize)
             |> List.map (clipShapes shape)
 
 
-moveBasedOnIndex: Int -> TimeData -> (Int, Shape Msg) -> (Int, Shape Msg)
-moveBasedOnIndex resolution timeData shapeTuple =
+moveBasedOnIndex: Int -> Float -> TimeData -> (Int, Shape Msg) -> (Int, Shape Msg)
+moveBasedOnIndex square speed timeData shapeTuple =
     let
-        square = round (sqrt (toFloat resolution))
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
         timePercentage = ((timeData.current - timeData.start) / (timeData.end - timeData.start))
     in
         (index, 
             move (
-                toFloat (-5 + modBy square (index+1) * 10 * (round (tan (pi/2 * timePercentage)))), 
-                toFloat (-5 + (index) // square * 10 * (round (tan (pi/2 * timePercentage))))
+                ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (tan (pi/2 * timePercentage)), 
+                (toFloat (index//square - square//2) + 0.5) * -speed * (tan (pi/2 * timePercentage))
                 ) 
             (shape)
         )
 
-explodeParticlizedShape: TimeData -> List (Shape Msg) -> List (Shape Msg)
-explodeParticlizedShape timeData shapes =
+explodeParticlizedShape: Float -> TimeData -> List (Shape Msg) -> List (Shape Msg)
+explodeParticlizedShape speed timeData shapes =
     let
-        resolution = round(sqrt (toFloat (List.length shapes)))
+        square = round(sqrt (toFloat (List.length shapes)))
     in
         List.indexedMap Tuple.pair shapes
-        |> List.map (moveBasedOnIndex resolution timeData)
+        |> List.map (moveBasedOnIndex square speed timeData)
         |> List.unzip
         |> Tuple.second
-        
