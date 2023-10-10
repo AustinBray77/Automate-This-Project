@@ -2,34 +2,21 @@ module MakingSlideShowUtils exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import Html exposing (th)
 
 -- storage for screen size
 screen : { x : number, y : number}
 screen = { x = 1920, y = 1080 }
-
--- type input for antimation functions
-type alias AnimateFuncInput = {
-    x : Float, 
-    y : Float, 
-    time : Float, 
-    shape : Shape Msg}
-
-type alias SlideInput = {
-    time : Float,
-    transitionTime : Float,
-    state : SlideState}
 
 view : Model -> Collage Msg
 view model =
     collage screen.x screen.y
         [
         displaySlides model.slides model.time,
-        text (Debug.toString model.slides)
-        |> centered
-        |> filled orange
-        |> move (0, 50)
-        |> scale 2, 
+        -- text (Debug.toString model.slides)
+        -- |> centered
+        -- |> filled orange
+        -- |> move (0, 50)
+        -- |> scale 2, 
         displaySlideNum model
         ]
 
@@ -74,7 +61,7 @@ rotateAnimation : AnimateFuncInput -> Shape Msg
 rotateAnimation input = 
     rotate (degrees (input.x * input.time)) input.shape
 
--- the same as animate but only gets called when the slide is tranitioning 
+-- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
 transition : List (AnimateFuncInput -> Shape Msg) -> Float -> Float -> Float -> SlideState -> Shape Msg -> Shape Msg
 transition animations x y time state shape =
     case state of 
@@ -131,12 +118,13 @@ displaySlideNum model =
 
 displaySlides : List Slide -> Float -> Shape Msg
 displaySlides slides time = 
-    case List.reverse slides of -- reversing the slides list to draw the first slides on top of the last slides when transitioning 
-        x::xs -> group (List.append [subDisplaySlides x time] [displaySlides xs time])
+    case slides of
+        x::xs -> group (List.append [displaySlides xs time] [displaySlide x time])
         _ -> filled black (rect 0 0) -- returning a shape that wont be drawn
 
-subDisplaySlides : Slide -> Float -> Shape Msg
-subDisplaySlides s time = 
+-- makes it easier to read the displaySlides function
+displaySlide : Slide -> Float -> Shape Msg
+displaySlide s time = 
     case s.state of 
         Hidden -> filled black (rect 0 0) -- returning a shape that wont be drawn
         _ -> s.displaySlide (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)
@@ -217,8 +205,20 @@ updateSlides slides slideNum time =
 
 type Msg = Tick Float GetKeyState   
 
--- can transition for a max for 3 seconds
+-- can transition for a max of 3 seconds
 type SlideState = Visible | Transitioning | Hidden
+
+type alias SlideInput = {
+    time : Float,
+    transitionTime : Float,
+    state : SlideState}
+
+-- type input for antimation functions
+type alias AnimateFuncInput = {
+    x : Float, 
+    y : Float, 
+    time : Float, 
+    shape : Shape Msg}
 
 -- content is used for the content of the slide
 -- slide is used for moving the slide out of view
@@ -248,6 +248,7 @@ firstSlide input =
         rect 100 100
         |> filled blue 
         |> animate [rotateAnimation] 100 0 input.time 
+        |> move (0, -100)
     ]
     |> transition [slideOut] 2000 1000 input.transitionTime input.state
 
@@ -262,7 +263,7 @@ secondSlide input =
         |> scale 10,
         rect 100 100
         |> filled red
-        |> animate [rotateAnimation, moveAfterTill 2 3] 100 200 input.time
+        |> animate [rotateAnimation, moveAfterTill 1 1.5] 100 200 input.time
     ]
     |> transition [bounceBack] 2000 500 input.transitionTime input.state
 
@@ -280,10 +281,14 @@ thirdSlide input =
     ]
     |> transition [rotateAnimation, bounceBack] 500 2000 input.transitionTime input.state
 
+slideFunctions : { get : List (SlideInput -> Shape Msg) }
+slideFunctions = { get = [firstSlide, secondSlide, thirdSlide] } -- the slide functions in order 
+
 init : Model
 init = { time = 0, 
         slideNumber = 0, 
-        slides = [Slide Visible firstSlide 0 0, Slide Hidden secondSlide 0 0, Slide Hidden thirdSlide 0 0], 
+        -- updates slides at start to make the first slide visible
+        slides = updateSlides (List.map (\slideFunc -> (Slide Hidden slideFunc 0 0)) slideFunctions.get) 0 0, -- constructs the list of slide functions into a list of type Slide 
         slideTextStartTime = 0 }
 
 main : GraphicSVG.EllieApp.GameApp Model Msg
