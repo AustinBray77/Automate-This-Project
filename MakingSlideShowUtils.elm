@@ -53,10 +53,6 @@ bounceBack : AnimateFuncInput -> Shape Msg
 bounceBack input =
     move ((input.x * (input.time^input.time - 1)), (input.y * (input.time^input.time - 1))) input.shape
 
-testing : AnimateFuncInput -> Shape Msg
-testing input = 
-    move ((input.x * (sin input.time)), (input.y * (sin input.time))) input.shape
-
 -- only first direction var is used
 rotateAnimation : AnimateFuncInput -> Shape Msg
 rotateAnimation input = 
@@ -170,6 +166,7 @@ update msg model =
                 slideTextStartTime = model.slideTextStartTime
             }
 
+-- used to set transitioning slides to hidden adter there 3 seconds is up
 updateTransitioningSlides : List Slide -> Int -> Float -> List Slide
 updateTransitioningSlides slides slideNum time =
     case slides of
@@ -184,6 +181,7 @@ updateTransitioningSlides slides slideNum time =
                 (updateTransitioningSlides xs (slideNum - 1) time))
         _ -> []
 
+-- used to update the states of the slides when the slide number is changed
 updateSlides : List Slide -> Int -> Float -> List Slide
 updateSlides slides slideNum time = 
     case slides of
@@ -248,7 +246,7 @@ intro input =
         |> scale 10,
         rect 100 100
         |> filled blue 
-        |> animate [scaleAfterFor 1 2] 2 1 input.time
+        |> animate [(scaleAfterFor 1 2)] 2 1 input.time
         |> animate [rotateAnimation] 100 0 input.time 
         |> move (0, -100)
     ]
@@ -291,15 +289,8 @@ creating1 input =
     ]
     |> transition [rotateAnimation, bounceBack] 500 2000 input.transitionTime input.state
 
-simpleText : String -> Float -> Color -> Float -> Float -> Shape Msg
-simpleText txt s color x y = 
-    text txt
-    |> filled color
-    |> scale s
-    |> move (x, y)
-
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [intro, creating1] } -- the slide functions in order 
+slideFunctions = { get = [intro, creating1] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 
