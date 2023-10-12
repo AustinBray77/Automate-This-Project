@@ -11,13 +11,8 @@ view : Model -> Collage Msg
 view model =
     collage screen.x screen.y
         [
-        displaySlides model.slides model.time,
-        -- text (Debug.toString model.slides)
-        -- |> centered
-        -- |> filled orange
-        -- |> move (0, 50)
-        -- |> scale 2, 
-        displaySlideNum model
+        displaySlides model.slides model.time, -- displays the slides
+        displaySlideNum model -- displays the slide number
         ]
 
 -- template for a slide background
@@ -28,20 +23,26 @@ slide color =
         |> filled color
     ] 
 
-moveAfterTill : Float -> Float -> AnimateFuncInput -> Shape Msg
-moveAfterTill startTime stopTime input = 
-        if input.time > startTime then
-            input.shape
-            |> move ((input.x * (min stopTime (input.time - startTime))), (input.y * (min stopTime (input.time - startTime))))
-        else 
-            input.shape
-            |> move (0, 0)
+-- moves the shape x, y amount of pixels after the start time over the duration
+moveAfterFor : Float -> Float -> AnimateFuncInput -> Shape Msg
+moveAfterFor startTime duration input = 
+        let
+            percent = (min 1 (max 0 (input.time - startTime)/duration)) -- how far through the animation we are
+            rtn = input.shape
+                    |> move ((input.x * percent), (input.y * percent))
+        in
+            rtn 
 
-scaleAfterTill : Float -> Float -> AnimateFuncInput -> Shape Msg
-scaleAfterTill startTime stopTime input = 
-        input.shape
-        |> scaleX (input.x * (if input.time > startTime then min stopTime (input.time - startTime) else 1/input.x))
-        |> scaleY (input.y * (if input.time > startTime then min stopTime (input.time - startTime) else 1/input.y))
+-- scales the shape by the given x, y factor after the start time over the duration
+scaleAfterFor : Float -> Float -> AnimateFuncInput -> Shape Msg
+scaleAfterFor startTime duration input = 
+        let
+            percent = (min 1 (max 0 (input.time - startTime)/duration)) -- how far through the animation we are
+            rtn = input.shape
+                |> scaleX (1 + max 0 ((input.x - 1) * percent))
+                |> scaleY (1 + max 0 ((input.y - 1) * percent))
+        in
+            rtn
 
 -- takes in a "vector" that is used for direction and speed, the slide num that this animation should activate on, finally the model to access the starting times for slide animations
 slideOut : AnimateFuncInput -> Shape Msg
@@ -236,53 +237,69 @@ type alias Model = {time : Float,
                     slides : List Slide, 
                     slideTextStartTime : Float}
 
-firstSlide : SlideInput -> Shape Msg
-firstSlide input = 
+intro : SlideInput -> Shape Msg
+intro input = 
     group 
     [
         slide black,
-        text "How to use slide animations"
+        text "Intro"
         |> centered
         |> filled white
         |> scale 10,
         rect 100 100
         |> filled blue 
+        |> animate [scaleAfterFor 1 2] 2 1 input.time
         |> animate [rotateAnimation] 100 0 input.time 
         |> move (0, -100)
     ]
     |> transition [slideOut] 2000 1000 input.transitionTime input.state
 
-secondSlide : SlideInput -> Shape Msg
-secondSlide input =
-    group 
-    [
-        slide black,
-        text "This is the second slide"
-        |> centered
-        |> filled white
-        |> scale 10,
-        rect 100 100
-        |> filled red
-        |> animate [rotateAnimation, moveAfterTill 1 1.5] 100 200 input.time
-    ]
-    |> transition [bounceBack] 2000 500 input.transitionTime input.state
-
-thirdSlide : SlideInput -> Shape Msg
-thirdSlide input =
+creating1 : SlideInput -> Shape Msg
+creating1 input =
     group
     [
         slide black, 
-        text "To create a slide its as easy as\nmaking a new function"
+        rect 30 30
+        |> filled red
+        |> animate [rotateAnimation] 100 0 input.time
+        |> animate [moveAfterFor 1 2] 1900 0 input.time
+        |> move (-950, 200),
+        rect 30 30
+        |> filled red
+        |> animate [rotateAnimation] 100 0 input.time
+        |> animate [moveAfterFor 2 2] 1900 0 input.time
+        |> move (-950, 100),
+        rect 30 30
+        |> filled red
+        |> animate [rotateAnimation] 100 0 input.time
+        |> animate [moveAfterFor 3 2] 1900 0 input.time
+        |> move (-950, 0),
+        rect 30 30
+        |> filled red
+        |> animate [rotateAnimation] 100 0 input.time
+        |> animate [moveAfterFor 4 2] 1900 0 input.time
+        |> move (-950, -100),
+        rect 30 30
+        |> filled red
+        |> animate [rotateAnimation] 100 0 input.time
+        |> animate [moveAfterFor 5 2] 1900 0 input.time
+        |> move (-950, -200),
+        text "Second slide"
         |> centered
         |> filled white
-        |> scale 10,
-        rect 200 50
-        |> filled red
+        |> scale 10
     ]
     |> transition [rotateAnimation, bounceBack] 500 2000 input.transitionTime input.state
 
+simpleText : String -> Float -> Color -> Float -> Float -> Shape Msg
+simpleText txt s color x y = 
+    text txt
+    |> filled color
+    |> scale s
+    |> move (x, y)
+
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [firstSlide, secondSlide, thirdSlide] } -- the slide functions in order 
+slideFunctions = { get = [intro, creating1] } -- the slide functions in order 
 
 init : Model
 init = { time = 0, 
