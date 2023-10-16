@@ -56,6 +56,7 @@ shapeTypeOnly shapeType =
     Oval _ _ -> OvalT
     Ngon _ _ -> NgonT
 
+emptyShape: Shape Msg
 emptyShape = rect 0 0 |> ghost
 
 baseClickableBox : Shape Msg
@@ -139,10 +140,11 @@ allSameShape shapes =
             False -> Nothing
   in 
     List.map shapeTypeOnly shapes
-      |> List.foldl checkEqual (case List.head shapes of 
-                                  Nothing -> Nothing
-                                  Just shapeType -> Just (shapeTypeOnly shapeType))
-
+      |> List.foldl checkEqual 
+        (case List.head shapes of 
+            Nothing -> Nothing
+            Just shapeType -> Just (shapeTypeOnly shapeType))
+                                
 getPropertyString: Model -> NumberShapeProperty -> String
 getPropertyString model property =
   let 
@@ -150,12 +152,10 @@ getPropertyString model property =
       model.userShapes
         |> List.filter (shapeSelected model)
         |> List.map .shapeInfo
-
     selectedShapeTypes =
       model.userShapes
         |> List.filter (shapeSelected model)
         |> List.map .shapeType
-
   in
     case property of 
       FloatShapeProperty floatProperty ->
@@ -454,8 +454,7 @@ buildAndAddCallbacks model userShapes =
         |> List.map colourOutline
 
     updatedUserShapes = 
-      outlinedUserShapes ++
-      (List.filter (shapeNotSelected model) userShapes)
+      (List.filter (shapeNotSelected model) userShapes) ++ outlinedUserShapes 
   in
   (
   if Tuple.second model.mouseState then
@@ -573,8 +572,8 @@ updateShapeInfoValue value property userShape =
           case property of 
             RectProperty rectProperty -> 
               case rectProperty of 
+                RectWidth -> Rect value height roundness
                 RectHeight -> Rect width value roundness
-                RectWidth -> Rect value width roundness
                 Roundness -> Rect width height value
             _ -> Rect width height roundness
         Oval width height ->
