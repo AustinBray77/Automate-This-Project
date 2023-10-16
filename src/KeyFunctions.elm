@@ -3,6 +3,9 @@ module KeyFunctions exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 
+numberKeys : List Keys
+numberKeys = [ Key "0", Key "1", Key "2", Key "3", Key "4", Key "5", Key "6", Key "7", Key "8", Key "9"]
+
 -- Takes in a Ellie App KeyState, a Key, and a List of States
 -- Returns if the key has any of the given states
 checkKey: (Keys -> KeyState) -> List KeyState -> Keys -> Bool
@@ -38,12 +41,8 @@ anyKeyJustPressed keys keyInfo =
   |> List.length) >= 1
 
 -- Takes in a list of Keys and an Ellie App KeyState
--- Returns the index of the first key that is being pressed
-getKeyCheckFromList: List Keys -> List KeyState ->(Keys -> KeyState) -> Int
+-- Returns the first key that is being pressed
+getKeyCheckFromList: List Keys -> List KeyState -> (Keys -> KeyState) -> Maybe Keys
 getKeyCheckFromList keys states keyInfo =
-  List.map (checkKey keyInfo states) keys
-  |> List.indexedMap Tuple.pair
-  |> List.filter (Tuple.second) 
+  List.filter (checkKey keyInfo states) keys
   |> List.head
-  |> Maybe.withDefault (-1, True)
-  |> Tuple.first
