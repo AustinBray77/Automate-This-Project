@@ -7,12 +7,15 @@ import KeyFunctions exposing (..)
 import HelperFunctions exposing (..)
 import Html exposing (main_)
 import Html.Attributes exposing (height)
+import Html exposing (th)
+import Platform.Cmd exposing (none)
 
 --TODO Add function descriptions
 
 type Action = Dragging
   | None
   | TypingInput NumberShapeProperty String
+  | Exporting 
 
 type ID = Num Int
   | ShapeButton
@@ -39,11 +42,14 @@ type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
 type ColourShapeProperty = OutlineColour | FillColour
 type ShapeProperty = ColourShapeProperty | NumberShapeProperty
 
-type alias PropertyEditorField = { text : String, property : FloatShapeProperty }
+-- type alias PropertyEditorField = { text : String, property : FloatShapeProperty }
 
 getTabs: Int -> String
 getTabs number =
     String.repeat number "  "
+
+snapShapes: Model -> Bool
+snapShapes model = keyPressed model.keyboardInfo Alt
 
 convertShapesToCode: Int -> List UserShape -> String
 convertShapesToCode tabs shapes =
@@ -304,32 +310,6 @@ propertyFloatToString model property propertyFloat =
     _ -> 
       propertyString
 
-{-
-getFloatPropertyString: Model -> FloatShapeProperty -> List ShapeInfo -> String
-getFloatPropertyString model property shapeInfos =
-  let 
-    decimals = 3
-    propertyFloat = 
-      List.map (getPropertyFromShapeInfo property) shapeInfos
-      |> allEqualFloat
-    propertyString =        
-      case propertyFloat of 
-        Just float ->
-          String.fromFloat (roundToDigits decimals float)
-            |> stringRoundToDecimals decimals
-        Nothing ->
-            "-"  
-  in
-  case model.currentAction of 
-    TypingInput editProperty input ->
-      if editProperty == FloatShapeProperty property then 
-        input
-      else 
-        propertyString
-    _ -> 
-      propertyString 
-      -}
-
 propertyFieldOffset: (Float, Float)
 propertyFieldOffset = (70, -20)
 
@@ -412,7 +392,7 @@ selectedOutlineColour = green
 xOffset : Float
 xOffset = -110
 maxUndoSteps : Int
-maxUndoSteps = 100
+maxUndoSteps = 50
 snapAmount: Float
 snapAmount = 5
 
@@ -440,8 +420,8 @@ backgroundHitbox = (Rect 10000 5000 0, {defaultShapeInfo | position = (xOffset, 
 
 --Add bool for snapping
 --Add conditon on stop dragging to snap a shape
-buildShape: (ShapeType, ShapeInfo) -> Shape Msg
-buildShape (shapeType, shapeInfo) =
+buildShape: Bool -> (ShapeType, ShapeInfo) -> Shape Msg
+buildShape snapThisShapes (shapeType, shapeInfo) =
   let 
     shape = 
       case shapeType of 
@@ -456,7 +436,11 @@ buildShape (shapeType, shapeInfo) =
     |> scaleX (Tuple.first shapeInfo.scale)
     |> scaleY (Tuple.second shapeInfo.scale) 
     |> rotate (degrees shapeInfo.rotation * -1)
-    |> move shapeInfo.position
+    |> move 
+        (if snapThisShapes then
+          roundTupleToNearest snapAmount (shapeInfo.position)
+        else 
+          shapeInfo.position)
     |> addOutline (shapeInfo.outlineStyle shapeInfo.outlineSize) shapeInfo.outlineColour
 
 stringToTextShapes: String -> List (Shape Msg)
@@ -470,36 +454,37 @@ stringToTextShapes string =
 
 myShapes: Model -> List (Shape Msg)
 myShapes model = 
-  stringToTextShapes (convertShapesToCode 1 model.userShapes)
-  ++
-  [
-    buildShape backgroundHitbox
-    |> addNonUserShapeCallbacks model BackGround
-    ,
-    buildShape baseRect
-      |> notifyMouseDown (CreateShape baseRect)
-      |> addNonUserShapeCallbacks model ShapeButton
-    ,
-    buildShape baseOval
-      |> notifyMouseDown (CreateShape baseOval)
-      |> addNonUserShapeCallbacks model ShapeButton
-    ,
-    buildShape baseNgon
-      |> notifyMouseDown (CreateShape baseNgon)
-      |> addNonUserShapeCallbacks model ShapeButton
-  ]
-  ++ 
-  (
-    buildAndAddCallbacks model model.userShapes
-      |> List.map (notifyMouseMoveAt MouseMove) 
-  )
-  ++
-  (
-    if List.length model.selectedShapes > 0 then 
-      propertyFieldShapes model
-    else  
-      []
-  )
+  if model.currentAction == Exporting then
+    stringToTextShapes (convertShapesToCode 1 model.userShapes)
+  else
+    [
+      buildShape False backgroundHitbox
+      |> addNonUserShapeCallbacks model BackGround
+      ,
+      buildShape False baseRect
+        |> notifyMouseDown (CreateShape baseRect)
+        |> addNonUserShapeCallbacks model ShapeButton
+      ,
+      buildShape False baseOval
+        |> notifyMouseDown (CreateShape baseOval)
+        |> addNonUserShapeCallbacks model ShapeButton
+      ,
+      buildShape False baseNgon
+        |> notifyMouseDown (CreateShape baseNgon)
+        |> addNonUserShapeCallbacks model ShapeButton
+    ]
+    ++ 
+    (
+      buildAndAddCallbacks model model.userShapes
+        |> List.map (notifyMouseMoveAt MouseMove) 
+    )
+    ++
+    (
+      if List.length model.selectedShapes > 0 then 
+        propertyFieldShapes model
+      else  
+        []
+    )
 
 -- Temp Function (Makes the outline colour the selected outline colour)
 colourOutline: UserShape -> UserShape
@@ -522,19 +507,23 @@ buildAndAddCallbacks model userShapes =
         |> List.map colourOutline
 
     updatedUserShapes = 
-      (List.filter (shapeNotSelected model) userShapes) ++ outlinedUserShapes 
+      (List.filter (shapeNotSelected model) userShapes) ++ outlinedUserShapes
+
+    selectedShapeBools = 
+      List.map (shapeSelected model) updatedUserShapes
+        |> List.map ((&&) (snapShapes model))
   in
   (
   if Tuple.second model.mouseState then
-    List.map (buildAndAddCallback notifyMouseUpAt MouseUpAtShape) updatedUserShapes
+    List.map2 (buildAndAddCallback notifyMouseUpAt MouseUpAtShape) selectedShapeBools updatedUserShapes
   else 
-    List.map (buildAndAddCallback notifyMouseDownAt MouseDownAtShape) updatedUserShapes
+    List.map2 (buildAndAddCallback notifyMouseDownAt MouseDownAtShape) selectedShapeBools updatedUserShapes
   )
   |> List.map (notifyMouseMoveAt MouseMove) 
    
-buildAndAddCallback: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> UserShape -> Shape Msg
-buildAndAddCallback callback msg userShape =
-  buildShape (userShape.shapeType, userShape.shapeInfo)
+buildAndAddCallback: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Bool -> UserShape -> Shape Msg
+buildAndAddCallback callback msg snapShape userShape =
+  buildShape snapShape (userShape.shapeType, userShape.shapeInfo)
   |> addCallBackWithId callback msg userShape.id
 
 addCallBackWithId: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Int -> Shape Msg -> Shape Msg
@@ -548,7 +537,6 @@ shapeNotSelected: Model -> UserShape -> Bool
 shapeNotSelected model shape = 
   not (shapeSelected model shape)
 
---      Snap Shape
 moveShape: (Float, Float) -> UserShape -> UserShape
 moveShape moveAmount userShape =
   let
@@ -607,6 +595,22 @@ undo model =
       model
     Just modelInfo ->
       modelFromInfo modelInfo (List.drop 1 model.prevModels)
+
+snapSelectedShapes: Model -> List UserShape -> List UserShape
+snapSelectedShapes model shapes =
+  let 
+    snapPosition: ShapeInfo -> ShapeInfo
+    snapPosition info =
+      {info | position = roundTupleToNearest snapAmount info.position}
+    
+    snapShape: UserShape -> UserShape
+    snapShape shape =
+      {shape | shapeInfo  = snapPosition (.shapeInfo shape)}
+  in 
+  (List.filter (shapeSelected model) shapes
+    |> List.map snapShape)
+  ++ 
+  List.filter (shapeNotSelected model) shapes
 
 --Make a function to assign default values into model??? (probably a good idea)
 deleteSelectedShapes: Model -> (Keys -> KeyState) -> Model
@@ -681,7 +685,7 @@ tryUpdateSelectedShapes model property string =
     |> tryUpdateShapeInfoWithInput property string 
     |> (++) (List.filter (shapeNotSelected model) model.userShapes) 
 
-updateTypingInput: Model -> (Keys -> KeyState) -> Model  
+updateTypingInput: Model -> (Keys -> KeyState) -> Model
 updateTypingInput model keyInfo =
   let 
     newAction = 
@@ -705,32 +709,69 @@ updateTypingInput model keyInfo =
   in
   {model | currentAction = newAction, keyboardInfo = keyInfo}
 
+pasteShapes: Model -> List UserShape -> Model
+pasteShapes model shapes =
+  let 
+    startID = model.currentShapeID + 1
+
+    setId: Int -> UserShape -> UserShape
+    setId newId shape = 
+      {shape | id = newId}
+
+    offset = (snapAmount, snapAmount)   
+
+    updatedCopiedShapes = 
+      (List.map2 setId (List.range startID (startID + (List.length shapes))) shapes
+        |> List.map (moveShape offset))
+
+  in
+    { model | 
+        userShapes = updatedCopiedShapes ++ model.userShapes,
+        currentShapeID = model.currentShapeID + (List.length shapes) + 1,
+        selectedShapes = List.range startID (startID + (List.length shapes)),
+        copiedShapes = updatedCopiedShapes
+    }
+
+
+updateTick: Model -> (Keys -> KeyState) -> Model
+updateTick model getKeyStates =
+  case model.currentAction of 
+    Exporting ->
+      if getKeyStates (Key "e") == JustDown then  
+        { model | currentAction = None }
+      else 
+        model
+    TypingInput property inputStr ->
+      if keyPressed getKeyStates Enter then
+        { model | userShapes = tryUpdateSelectedShapes model property inputStr, prevModels = addModelToPrevModels model, currentAction = None}
+      else
+        updateTypingInput model getKeyStates
+    _ ->
+      -- Undo
+      if keyPressed getKeyStates Ctrl && getKeyStates (Key "z") == JustDown then
+        undo model
+      -- Copy
+      else if keyPressed getKeyStates Ctrl && getKeyStates (Key "c") == JustDown then
+        {model | copiedShapes = List.filter (shapeSelected model) model.userShapes} 
+      -- Paste
+      else if keyPressed getKeyStates Ctrl && getKeyStates (Key "v") == JustDown then
+        pasteShapes model model.copiedShapes
+      -- Export Mode 
+      else if getKeyStates (Key "e") == JustDown then
+        { model | currentAction = Exporting }
+      -- Delete Selected Shapes
+      else if anyKeyPressed [Delete, Backspace] getKeyStates then
+          deleteSelectedShapes model (getKeyStates)
+      else
+        model
+
 -- Your update function goes here
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
   case msg of
     Tick _ (getKeyStates, _, _) -> 
-      ( 
-      case model.currentAction of 
-        TypingInput property inputStr ->
-          if keyPressed getKeyStates Enter then
-            { model | userShapes = tryUpdateSelectedShapes model property inputStr, keyboardInfo = getKeyStates, prevModels = addModelToPrevModels model, currentAction = None}
-          else
-            updateTypingInput model getKeyStates
-        _ ->
-          if keyPressed getKeyStates Ctrl && getKeyStates (Key "z") == JustDown then
-            undo model
-          else
-            --TODO add clause to avoid this if typing input (and instead delete characters from input)
-            if anyKeyPressed [Delete, Backspace] getKeyStates then
-              deleteSelectedShapes model (getKeyStates)
-            else if anyKeyPressed numberKeys getKeyStates then
-              -- recolourSelectedShapes model getKeyStates
-              model
-            else
-              { model | keyboardInfo = getKeyStates }
-        
-      , Cmd.none )
+      (updateTick ({ model | keyboardInfo = getKeyStates }) getKeyStates, Cmd.none )
+
     CreateShape (shapeType, shapeInfo) -> 
       ( { model | 
             userShapes = 
@@ -793,8 +834,8 @@ update msg model =
             if Tuple.second model.mouseState && model.currentAction == Dragging then
               --Move Selected Shapes
               List.filter (shapeSelected model) model.userShapes
-              |> List.map (moveShape (positionDelta (Tuple.first model.mouseState) point))
-              |> (++) (List.filter (shapeNotSelected model) model.userShapes)
+                |> List.map (moveShape (positionDelta (Tuple.first model.mouseState) point))
+                |> (++) (List.filter (shapeNotSelected model) model.userShapes)
             else
               model.userShapes 
           ,
@@ -810,38 +851,49 @@ update msg model =
               _ ->
                 None
           ,
-          prevModels = addModelToPrevModels model
+          prevModels = addModelToPrevModels model,
+          userShapes = case snapShapes model of 
+            True -> snapSelectedShapes model model.userShapes
+            False -> model.userShapes
       } 
       , Cmd.none )
 
 -- This is the type of your model
-type alias Model = { currentShapeID : Int,
-                     userShapes : List (UserShape),
-                     keyboardInfo : (Keys -> KeyState),
-                     selectedShapes : List Int,
-                     mouseState : MouseState,
-                     currentAction : Action,
-                     prevModels : List ModelInfo}
+type alias Model = 
+  {
+    currentShapeID : Int,
+    userShapes : List (UserShape),
+    keyboardInfo : (Keys -> KeyState),
+    selectedShapes : List Int,
+    mouseState : MouseState,
+    currentAction : Action,
+    copiedShapes : List (UserShape),
+    prevModels : List ModelInfo
+  }
 
 --Needed for undo feature
-type alias ModelInfo = { currentShapeID : Int,
-                         userShapes : List (UserShape),
-                         keyboardInfo : (Keys -> KeyState),
-                         selectedShapes : List Int,
-                         mouseState : MouseState,
-                         currentAction : Action}
+type alias ModelInfo = 
+  { 
+    currentShapeID : Int,
+    userShapes : List (UserShape),
+    keyboardInfo : (Keys -> KeyState),
+    selectedShapes : List Int,
+    mouseState : MouseState,
+    currentAction : Action,
+    copiedShapes : List (UserShape)
+  }
 
 modelFromInfo: ModelInfo -> List ModelInfo -> Model
 modelFromInfo modelInfo prevModels = 
-  Model modelInfo.currentShapeID modelInfo.userShapes modelInfo.keyboardInfo modelInfo.selectedShapes modelInfo.mouseState modelInfo.currentAction prevModels
+  Model modelInfo.currentShapeID modelInfo.userShapes modelInfo.keyboardInfo modelInfo.selectedShapes modelInfo.mouseState modelInfo.currentAction modelInfo.copiedShapes prevModels
 
 modelToInfo: Model -> ModelInfo
 modelToInfo model = 
-  ModelInfo model.currentShapeID model.userShapes model.keyboardInfo model.selectedShapes model.mouseState model.currentAction
+  ModelInfo model.currentShapeID model.userShapes model.keyboardInfo model.selectedShapes model.mouseState model.currentAction model.copiedShapes
 
 -- Your initial model goes here
 init : Model
-init = {currentShapeID = 0, userShapes = [], keyboardInfo = defaultKeyboardInfo, selectedShapes = [], mouseState = ((0, 0), False), currentAction = None, prevModels = [] }
+init = {currentShapeID = 0, userShapes = [], keyboardInfo = defaultKeyboardInfo, selectedShapes = [], mouseState = ((0, 0), False), currentAction = None, prevModels = [], copiedShapes = [] }
 
 -- Your subscriptions go here
 subscriptions : Model -> Sub Msg
