@@ -6,25 +6,16 @@ import GraphicSVG.EllieApp exposing (..)
 import KeyFunctions exposing (..)
 import Array
 
+tupleToString: (Float, Float) -> String
+tupleToString (float1, float2) =
+    ["(", String.fromFloat float1, ", ", String.fromFloat float2, ")"]
+        |> List.foldr (++) ""
+
 --Returns the value if they are all equal, otherwise Nothing
 allEqualFloat: List Float -> Maybe Float
 allEqualFloat list =
   List.map (\x -> Just x) list
     |> allEqualMaybeFloat 
-
-{-  if List.length list == 0 then
-    Nothing
-  else if List.length list == 1 then
-    List.head list
-  else if floatEqual (List.head list) (List.head <| List.drop 1 list) then
-    if List.length list == 2 then
-      List.head list
-    else 
-      allEqualFloat (List.drop 1 list)
-  else
-    Nothing
--}
-
 
 allEqualMaybeFloat: List (Maybe Float) -> Maybe Float
 allEqualMaybeFloat list =

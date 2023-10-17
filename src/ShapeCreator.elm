@@ -41,6 +41,63 @@ type ShapeProperty = ColourShapeProperty | NumberShapeProperty
 
 type alias PropertyEditorField = { text : String, property : FloatShapeProperty }
 
+getTabs: Int -> String
+getTabs number =
+    String.repeat number "  "
+
+convertShapesToCode: Int -> List UserShape -> String
+convertShapesToCode tabs shapes =
+  let 
+    shapePropertiesCode: Int -> ShapeInfo -> String
+    shapePropertiesCode tabs3 info = 
+      [
+        ["filled", "red"],
+        ["scaleX", String.fromFloat (Tuple.first info.scale)],
+        ["scaleY", String.fromFloat (Tuple.second info.scale)],
+        ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"],
+        ["move", tupleToString info.position],
+        ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
+      ] --Change later to have custom rgba colours
+        |> List.map (List.intersperse " ") -- L L S
+        |> List.map ((++) ["|> "])           -- L L S
+        |> List.map ((++) [(getTabs tabs3)]) -- L L S
+        |> List.map (List.foldr (++) "")   -- L L S -> L S
+        |> List.intersperse "\n"           -- L S
+        |> List.foldr (++) ""              -- L S -> S
+
+    shapeCode: Int -> UserShape -> String
+    shapeCode tabs2 shape = 
+        (case shape.shapeType of
+            Rect w h r->
+                ["roundedRect", String.fromFloat w, String.fromFloat h, String.fromFloat r]
+                    |> formatList tabs2
+            Oval w h -> 
+                ["oval", String.fromFloat w, String.fromFloat h]
+                    |> formatList tabs2
+            Ngon s r -> 
+                ["ngon", String.fromInt s, String.fromFloat r]
+                    |> formatList tabs2)
+        ++ 
+        shapePropertiesCode (tabs2 + 1) shape.shapeInfo
+
+    formatList tabs4 list = 
+        (List.intersperse " " list
+          |> List.foldr (++) ""
+          |> (++) (getTabs tabs4))
+        ++ "\n"
+
+  in
+  ([getTabs tabs, "group", "\n", getTabs tabs, "["]
+      |> List.foldr (++) "")
+  ++
+  (List.map (shapeCode (tabs + 1)) shapes
+      |> List.intersperse ("\n" ++ (getTabs (tabs + 1)) ++ ",\n")
+      |> List.foldr (++) ""
+      |> (++) "\n" 
+      |> (++) (getTabs tabs))
+  ++
+    "\n" ++ (getTabs tabs) ++ "]"
+
 propertyToShapeType: NumberShapeProperty -> Maybe ShapeTypeOnly
 propertyToShapeType property = 
   case property of 
@@ -402,8 +459,19 @@ buildShape (shapeType, shapeInfo) =
     |> move shapeInfo.position
     |> addOutline (shapeInfo.outlineStyle shapeInfo.outlineSize) shapeInfo.outlineColour
 
+stringToTextShapes: String -> List (Shape Msg)
+stringToTextShapes string =
+  String.split "\n" string
+    |> List.map (\str -> text str)
+    |> List.map (size 4)
+    |> List.map selectable
+    |> List.map (filled black)
+    |> List.indexedMap (\index shape -> move (-80, toFloat(60 - index * 4))shape)
+
 myShapes: Model -> List (Shape Msg)
 myShapes model = 
+  stringToTextShapes (convertShapesToCode 1 model.userShapes)
+  ++
   [
     buildShape backgroundHitbox
     |> addNonUserShapeCallbacks model BackGround
@@ -541,7 +609,6 @@ undo model =
       modelFromInfo modelInfo (List.drop 1 model.prevModels)
 
 --Make a function to assign default values into model??? (probably a good idea)
-
 deleteSelectedShapes: Model -> (Keys -> KeyState) -> Model
 deleteSelectedShapes model getKeyStates = 
   { model |  
