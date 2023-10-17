@@ -7,10 +7,16 @@ import Html.Attributes exposing (shape)
 import GraphicSVG exposing (square)
 import GraphicSVG exposing (Shape)
 import GraphicSVG exposing (clip)
-import ShapeCreator exposing (Msg)
 import GraphicSVG exposing (filled)
 import GraphicSVG exposing (move)
 import GraphicSVG exposing (grey)
+import GraphicSVG exposing (scaleX)
+import GraphicSVG exposing (scaleY)
+import GraphicSVG exposing (rotate)
+import GraphicSVG.EllieApp exposing (GetKeyState)
+import GraphicSVG exposing (group)
+
+type Msg = Tick Float GetKeyState 
 
 {- Frame time in ms -}
 frameTime: Float
@@ -29,10 +35,26 @@ type alias TimeData = {
     end: Float
     }
 
-calculateColor: TimeData -> RGBA -> RGBA -> RGBA
-calculateColor timeData startColor targetColor = 
+-- type input for antimation functions
+type alias AnimateFuncInput = {
+    x : Float, 
+    y : Float, 
+    time : TimeData, 
+    shape : Shape Msg}
+
+percentCompleted: TimeData -> Float
+percentCompleted time = 
     let
-        timePercentage = (timeData.current - timeData.start) / (timeData.end - timeData.start)
+        timePercentage = ((time.current - time.start) / (time.end - time.start))
+        percent = (min 1 (max 0 timePercentage)) -- how far through the animation we are
+    in 
+        percent
+
+
+calculateColor: AnimateFuncInput -> RGBA -> RGBA -> RGBA
+calculateColor input startColor targetColor = 
+    let
+        timePercentage = percentCompleted input.time
     in
         { r = (startColor.r / (1 - timePercentage) + targetColor.r / timePercentage) / 2,  
         g =  (startColor.g / (1 - timePercentage) + targetColor.g / timePercentage) / 2,
@@ -44,13 +66,15 @@ rgbaToColor: RGBA -> Color
 rgbaToColor color =
     (rgba color.r color.g color.b color.a)
 
-fadeShapeToColor: TimeData -> RGBA -> RGBA -> UserShape -> UserShape
-fadeShapeToColor timeData startColor targetColor shape = 
-    let 
-        newColor = (calculateColor timeData startColor targetColor)
-        timePercentage = (timeData.current - timeData.start) / (timeData.end - timeData.start)
-    in
-        if timePercentage > 1 then shape else changeShapeColor (rgbaToColor newColor) shape
+fadeShapeToColor: AnimateFuncInput -> RGBA -> RGBA -> UserShape -> UserShape
+fadeShapeToColor input startColor targetColor shape = 
+    if input.time.current > input.time.end then 
+        shape
+    else
+        let 
+            newColor = (calculateColor input startColor targetColor)
+        in
+            changeShapeColor (rgbaToColor newColor) shape
 
 clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
 clipShapes shape shapeTuple = 
@@ -90,7 +114,7 @@ moveBasedOnIndex square speed timeData shapeTuple =
     let
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
-        timePercentage = ((timeData.current - timeData.start) / (timeData.end - timeData.start))
+        timePercentage = percentCompleted timeData
     in
         (index, 
             move (
@@ -109,3 +133,85 @@ explodeParticlizedShape speed timeData shapes =
         |> List.map (moveBasedOnIndex square speed timeData)
         |> List.unzip
         |> Tuple.second
+
+particlizeAndExplodeShape: Float -> AnimateFuncInput -> Shape Msg
+particlizeAndExplodeShape speed input = 
+    if input.time.current < input.time.start then
+        input.shape
+    else
+        let
+            radius = input.x
+            resolution = round(input.y)
+            shapes = particlizeShape radius resolution input.shape
+        in
+            group (explodeParticlizedShape speed input.time shapes)
+
+-- moves the shape x, y amount of pixels after the start time over the duration
+moveAfterFor : AnimateFuncInput -> Shape Msg
+moveAfterFor input = 
+        let
+            timePercentage = ((input.time.current - input.time.start) / (input.time.end - input.time.start))
+            percent = (min 1 (max 0 timePercentage)) -- how far through the animation we are
+            rtn = input.shape
+                    |> move ((input.x * percent), (input.y * percent))
+        in
+            rtn 
+
+-- scales the shape by the given x, y factor after the start time over the duration
+scaleAfterFor : AnimateFuncInput -> Shape Msg
+scaleAfterFor input = 
+        let
+            percent = percentCompleted input.time -- how far through the animation we are
+            rtn = input.shape
+                |> scaleX (1 + max 0 ((input.x - 1) * percent))
+                |> scaleY (1 + max 0 ((input.y - 1) * percent))
+        in
+            rtn
+
+-- takes in a "vector" that is used for direction and speed, the slide num that this animation should activate on, finally the model to access the starting times for slide animations
+slideOut : AnimateFuncInput -> Shape Msg
+slideOut input = 
+    let
+        time = (input.time.current - input.time.start)  
+    in
+        move ((input.x * time), (input.y*time)) input.shape
+
+bounceBack : AnimateFuncInput -> Shape Msg
+bounceBack input =
+    let
+        time = (input.time.current - input.time.start)  
+    in
+        move ((input.x * (time^time - 1)), (input.y * (time^time - 1))) input.shape
+
+-- only first direction var is used
+rotateAnimation : AnimateFuncInput -> Shape Msg
+rotateAnimation input = 
+    let
+        time = (input.time.current - input.time.start)  
+    in
+        rotate (degrees (input.x * time)) input.shape
+
+animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
+        -> Float -> Float -> TimeData -> Shape Msg -> Shape Msg -- takes in all vars needed to do the animation
+animate animations x y time shape =
+        subAnimate (AnimateFuncInput x y time shape) animations -- calling all the animations
+
+-- used to loop thorugh each animation for the given shape
+subAnimate : AnimateFuncInput -> List (AnimateFuncInput -> Shape Msg) -> Shape Msg
+subAnimate input animationFuncs =
+    let
+        animationFunc = -- used to get the first animation
+            case (List.head animationFuncs) of
+                Just func -> func
+                _ -> slideOut -- in the case that the head of the list is non existant use a default animation
+        tempShape = animationFunc input -- calling the animation
+        rtnShape = -- calling all other animations if there are any
+            if List.length animationFuncs > 0 then -- only continue if there are more animations to play
+                subAnimate (AnimateFuncInput input.x input.y input.time tempShape)
+                    (case (List.tail animationFuncs) of -- required as List.tail returns maybe list
+                        Just list -> list
+                        _ -> [])
+            else
+                input.shape -- if there are no more animations return the shape
+    in 
+        rtnShape
