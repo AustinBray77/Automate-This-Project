@@ -15,6 +15,7 @@ import GraphicSVG exposing (scaleY)
 import GraphicSVG exposing (rotate)
 import GraphicSVG.EllieApp exposing (GetKeyState)
 import GraphicSVG exposing (group)
+import GraphicSVG exposing (repaint)
 
 type Msg = Tick Float GetKeyState 
 
@@ -56,25 +57,22 @@ calculateColor input startColor targetColor =
     let
         timePercentage = percentCompleted input.time
     in
-        { r = (startColor.r / (1 - timePercentage) + targetColor.r / timePercentage) / 2,  
-        g =  (startColor.g / (1 - timePercentage) + targetColor.g / timePercentage) / 2,
-        b =  (startColor.b / (1 - timePercentage) + targetColor.b / timePercentage) / 2,
-        a =  (startColor.a / (1 - timePercentage) + targetColor.a / timePercentage) / 2
+        { r = (startColor.r * (1 - timePercentage) + targetColor.r * timePercentage),  
+        g =  (startColor.g * (1 - timePercentage) + targetColor.g * timePercentage),
+        b =  (startColor.b * (1 - timePercentage) + targetColor.b * timePercentage),
+        a =  (startColor.a * (1 - timePercentage) + targetColor.a * timePercentage)
         }
 
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =
     (rgba color.r color.g color.b color.a)
 
-fadeShapeToColor: AnimateFuncInput -> RGBA -> RGBA -> UserShape -> UserShape
-fadeShapeToColor input startColor targetColor shape = 
-    if input.time.current > input.time.end then 
-        shape
-    else
-        let 
+fadeShapeToColor: RGBA -> RGBA -> AnimateFuncInput -> Shape Msg
+fadeShapeToColor startColor targetColor input = 
+    let 
             newColor = (calculateColor input startColor targetColor)
         in
-            changeShapeColor (rgbaToColor newColor) shape
+            repaint (rgbaToColor newColor) input.shape
 
 clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
 clipShapes shape shapeTuple = 
@@ -194,7 +192,10 @@ rotateAnimation input =
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
         -> Float -> Float -> TimeData -> Shape Msg -> Shape Msg -- takes in all vars needed to do the animation
 animate animations x y time shape =
-        subAnimate (AnimateFuncInput x y time shape) animations -- calling all the animations
+        if time.current < time.start then 
+            shape
+        else
+            subAnimate (AnimateFuncInput x y time shape) animations -- calling all the animations
 
 -- used to loop thorugh each animation for the given shape
 subAnimate : AnimateFuncInput -> List (AnimateFuncInput -> Shape Msg) -> Shape Msg

@@ -14,6 +14,8 @@ import Animations exposing (Msg)
 import Animations exposing (Msg(..))
 import Animations exposing (explodeParticlizedShape)
 import Animations exposing (particlizeAndExplodeShape)
+import Animations exposing (fadeShapeToColor)
+import Animations exposing (RGBA)
 
 -- storage for screen size
 screen : { x : number, y : number}
@@ -183,15 +185,16 @@ intro : SlideInput -> Shape Msg
 intro input = 
     group 
     [
-        slide black,
+        slide white,
         text "Intro"
         |> centered
         |> filled white
         |> scale 10
         |> animate [(particlizeAndExplodeShape 5)] 120 36 (TimeData 2 input.time 4),
         rect 100 100
-        |> filled blue 
+        |> filled (rgb 0 0 255)
         |> move (0, -100)
+        |> animate [(fadeShapeToColor (RGBA 0 0 255 255) (RGBA 266 166 0 255))] 0 0 (TimeData 2 input.time 4)
     ]
     |> transition [slideOut] 2000 1000 (TimeData 0 input.time input.transitionTime) input.state
 
