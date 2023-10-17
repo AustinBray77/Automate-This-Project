@@ -151,7 +151,6 @@ scaleAfterFor input =
         in
             rtn
 
--- takes in a "vector" that is used for direction and speed, the slide num that this animation should activate on, finally the model to access the starting times for slide animations
 slideOut : AnimateFuncInput -> Shape Msg
 slideOut input = 
     let
