@@ -1,21 +1,6 @@
 module Animations exposing (..)
-import ShapeCreator exposing (UserShape)
-import ShapeCreator exposing (changeShapeColor)
-import GraphicSVG exposing (Color)
-import GraphicSVG exposing (rgba)
-import Html.Attributes exposing (shape)
-import GraphicSVG exposing (square)
-import GraphicSVG exposing (Shape)
-import GraphicSVG exposing (clip)
-import GraphicSVG exposing (filled)
-import GraphicSVG exposing (move)
-import GraphicSVG exposing (grey)
-import GraphicSVG exposing (scaleX)
-import GraphicSVG exposing (scaleY)
-import GraphicSVG exposing (rotate)
-import GraphicSVG.EllieApp exposing (GetKeyState)
-import GraphicSVG exposing (group)
-import GraphicSVG exposing (repaint)
+import GraphicSVG exposing (..)
+import GraphicSVG.EllieApp exposing (..)
 
 type Msg = Tick Float GetKeyState 
 
@@ -69,7 +54,10 @@ rgbaToColor color =
 
 fadeShapeToColor: RGBA -> RGBA -> AnimateFuncInput -> Shape Msg
 fadeShapeToColor startColor targetColor input = 
-    let 
+    if input.time.current > input.time.end then
+        repaint (rgbaToColor targetColor) input.shape
+    else
+        let 
             newColor = (calculateColor input startColor targetColor)
         in
             repaint (rgbaToColor newColor) input.shape
@@ -134,15 +122,12 @@ explodeParticlizedShape speed timeData shapes =
 
 particlizeAndExplodeShape: Float -> AnimateFuncInput -> Shape Msg
 particlizeAndExplodeShape speed input = 
-    if input.time.current < input.time.start then
-        input.shape
-    else
-        let
-            radius = input.x
-            resolution = round(input.y)
-            shapes = particlizeShape radius resolution input.shape
-        in
-            group (explodeParticlizedShape speed input.time shapes)
+    let
+        radius = input.x
+        resolution = round(input.y)
+        shapes = particlizeShape radius resolution input.shape
+    in
+        group (explodeParticlizedShape speed input.time shapes)
 
 -- moves the shape x, y amount of pixels after the start time over the duration
 moveAfterFor : AnimateFuncInput -> Shape Msg
@@ -170,7 +155,9 @@ scaleAfterFor input =
 slideOut : AnimateFuncInput -> Shape Msg
 slideOut input = 
     let
-        time = (input.time.current - input.time.start)  
+        time =
+            if input.time.current > input.time.end then input.time.end
+            else (input.time.current - input.time.start)  
     in
         move ((input.x * time), (input.y*time)) input.shape
 
@@ -192,7 +179,7 @@ rotateAnimation input =
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
         -> Float -> Float -> TimeData -> Shape Msg -> Shape Msg -- takes in all vars needed to do the animation
 animate animations x y time shape =
-        if time.current < time.start then 
+        if (time.current < time.start && time.start < time.end) then 
             shape
         else
             subAnimate (AnimateFuncInput x y time shape) animations -- calling all the animations

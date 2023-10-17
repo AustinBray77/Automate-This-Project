@@ -2,20 +2,8 @@ module MakingSlideShowUtils exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import Animations exposing (AnimateFuncInput)
-import Animations exposing (animate)
-import Animations exposing (rotateAnimation)
-import Animations exposing (scaleAfterFor)
-import Animations exposing (slideOut)
-import Animations exposing (moveAfterFor)
-import Animations exposing (bounceBack)
-import Animations exposing (TimeData)
 import Animations exposing (Msg)
-import Animations exposing (Msg(..))
-import Animations exposing (explodeParticlizedShape)
-import Animations exposing (particlizeAndExplodeShape)
-import Animations exposing (fadeShapeToColor)
-import Animations exposing (RGBA)
+import Animations exposing (..)
 
 -- storage for screen size
 screen : { x : number, y : number}
@@ -185,7 +173,7 @@ intro : SlideInput -> Shape Msg
 intro input = 
     group 
     [
-        slide white,
+        slide black,
         text "Intro"
         |> centered
         |> filled white
@@ -195,8 +183,9 @@ intro input =
         |> filled (rgb 0 0 255)
         |> move (0, -100)
         |> animate [(fadeShapeToColor (RGBA 0 0 255 255) (RGBA 266 166 0 255))] 0 0 (TimeData 2 input.time 4)
+        |> animate [rotateAnimation] 100 0 (TimeData 2 input.time 4)
     ]
-    |> transition [slideOut] 2000 1000 (TimeData 0 input.time input.transitionTime) input.state
+    |> transition [bounceBack, slideOut] 100 0 (TimeData 0 input.time input.transitionTime) input.state
 
 creating1 : SlideInput -> Shape Msg
 creating1 input =
@@ -232,6 +221,7 @@ creating1 input =
         |> centered
         |> filled white
         |> scale 10
+        |> animate [(particlizeAndExplodeShape 5)] 300 36 (TimeData 4 input.time 2)
     ]
     |> transition [rotateAnimation, bounceBack] 500 2000 (TimeData 0 input.time input.transitionTime) input.state
 
