@@ -4,6 +4,31 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Animations exposing (Msg)
 import Animations exposing (..)
+import KeyFunctions exposing (anyKeyJustPressed)
+
+-- can transition for a max of 3 seconds
+type SlideState = Visible | Transitioning | Hidden
+
+type alias SlideInput = {
+    time : Float,
+    transitionTime : Float,
+    state : SlideState}
+
+-- content is used for the content of the slide
+-- slide is used for moving the slide out of view
+type AnimationType = SlideAnimation | ContentAnimation
+
+type alias Slide =
+    {state : SlideState, -- the state of this slide
+     displaySlide : (SlideInput -> Shape Msg), -- function that creates the slide
+     startTime : Float, -- the time this slide started being seen (used for slide animtation)
+     transitionTime : Float -- the time that the transition started
+    } 
+
+type alias Model = {time : Float, 
+                    slideNumber : Int, 
+                    slides : List Slide, 
+                    slideTextStartTime : Float}
 
 -- storage for screen size
 screen : { x : number, y : number}
@@ -61,17 +86,6 @@ displaySlide s time =
         Hidden -> filled black (rect 0 0) -- returning a shape that wont be drawn
         _ -> s.displaySlide (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)
 
--- if the given key is just down return True
-keyJust: (Keys -> KeyState) -> Keys -> Bool
-keyJust keyInfo key =
-  keyInfo key == JustDown
-
--- if any of the given keys are just down return True
-anyKeyJust: List Keys -> (Keys -> KeyState) -> Bool
-anyKeyJust keys keyInfo =
-  (List.filter (keyJust keyInfo) keys
-    |> List.length) >= 1
-
 -- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
 transition : List (AnimateFuncInput -> Shape Msg) -> Float -> Float -> TimeData -> SlideState -> Shape Msg -> Shape Msg
 transition animations x y time state shape =
@@ -83,7 +97,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Tick t ( keys, _, _ ) ->
-            if (anyKeyJust [RightArrow, UpArrow, Space] keys) then -- if any of the next slide keys are pressed
+            if (anyKeyJustPressed [RightArrow, UpArrow, Space] keys) then -- if any of the next slide keys are pressed
             { 
                 model | slideNumber = model.slideNumber + 1,
                 time = t,
@@ -91,7 +105,7 @@ update msg model =
                 -- restarting the start time for the slide number text
                 slideTextStartTime = t
             }
-            else if (anyKeyJust [LeftArrow, DownArrow] keys) then -- if any of the back keys are pressed go back a slide
+            else if (anyKeyJustPressed [LeftArrow, DownArrow] keys) then -- if any of the back keys are pressed go back a slide
             {
                 model | slideNumber = max (model.slideNumber - 1) 0,
                 time = t,
@@ -144,40 +158,16 @@ updateSlides slides slideNum time =
                 (updateSlides xs (slideNum - 1) time))
         _ -> []
 
-
--- can transition for a max of 3 seconds
-type SlideState = Visible | Transitioning | Hidden
-
-type alias SlideInput = {
-    time : Float,
-    transitionTime : Float,
-    state : SlideState}
-
--- content is used for the content of the slide
--- slide is used for moving the slide out of view
-type AnimationType = SlideAnimation | ContentAnimation
-
-type alias Slide =
-    {state : SlideState, -- the state of this slide
-     displaySlide : (SlideInput -> Shape Msg), -- function that creates the slide
-     startTime : Float, -- the time this slide started being seen (used for slide animtation)
-     transitionTime : Float -- the time that the transition started
-    } 
-
-type alias Model = {time : Float, 
-                    slideNumber : Int, 
-                    slides : List Slide, 
-                    slideTextStartTime : Float}
-
 intro : SlideInput -> Shape Msg
 intro input = 
     group 
     [
         slide black,
-        text (typeWriter "Intro" 0.2 0 input.time)
+        text (typeWriter "Intro" 0.2 0 (TimeData 0 input.time 0 ))
         |> centered
         |> filled white
         |> scale 10
+        |> animate [(fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0)), (tornadoShape 5 5)] 120 36 (TimeData 2 input.time 4)
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)

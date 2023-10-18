@@ -4,10 +4,6 @@ import GraphicSVG.EllieApp exposing (..)
 
 type Msg = Tick Float GetKeyState 
 
-{- Frame time in ms -}
-frameTime: Float
-frameTime = 1
-
 type alias RGBA = {
     r: Float,
     g: Float,
@@ -28,10 +24,12 @@ type alias AnimateFuncInput = {
     time : TimeData, 
     shape : Shape Msg}
 
+--Takes in a animation func input and swaps the start and end times (useful for reverse animations)
 flipInputTime: AnimateFuncInput -> AnimateFuncInput
 flipInputTime input = 
     AnimateFuncInput input.x input.y (TimeData input.time.end input.time.current input.time.start) input.shape
 
+--Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float
 percentCompleted time = 
     let
@@ -40,7 +38,12 @@ percentCompleted time =
     in 
         percent
 
+--Converts type alias RGBA to Color type 
+rgbaToColor: RGBA -> Color 
+rgbaToColor color =
+    (rgba color.r color.g color.b color.a)
 
+--Takes in a animation func input, start, and end color, and calculates what color the shape should currently be based on the input
 calculateColor: AnimateFuncInput -> RGBA -> RGBA -> RGBA
 calculateColor input startColor targetColor = 
     let
@@ -52,10 +55,7 @@ calculateColor input startColor targetColor =
         a =  (startColor.a * (1 - timePercentage) + targetColor.a * timePercentage)
         }
 
-rgbaToColor: RGBA -> Color 
-rgbaToColor color =
-    (rgba color.r color.g color.b color.a)
-
+--Takes in a start and end color, as well as an animate func input and returns an animation of the shapes color between the two given colors
 fadeShapeToColor: RGBA -> RGBA -> AnimateFuncInput -> Shape Msg
 fadeShapeToColor startColor targetColor input = 
     if input.time.current > input.time.end then
@@ -213,14 +213,15 @@ rotateAnimation input =
     in
         rotate (degrees (input.x * time)) input.shape
 
-typeWriter: String -> Float -> Float -> Float -> String
+typeWriter: String -> Float -> Float -> TimeData -> String
 typeWriter string speed blinkSpeed time = 
-    if floor (time / speed) >= (String.length string) then
+    if time.start > time.current then ""
+    else if floor (time.current / speed) >= (String.length string) then
         string
     else
-        String.append (String.slice 0 (floor (time / speed)) string) 
+        String.append (String.slice 0 (floor (time.current / speed)) string) 
         (
-            if modBy 2 (round (time / blinkSpeed)) == 0 && blinkSpeed /= 0 then 
+            if modBy 2 (round (time.current / blinkSpeed)) == 0 && blinkSpeed /= 0 then 
                 "_"
             else 
                 " "
