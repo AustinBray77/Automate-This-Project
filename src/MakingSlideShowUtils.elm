@@ -178,12 +178,12 @@ intro input =
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(particlizeAndExplodeShape 5)] 120 36 (TimeData 2 input.time 4),
-        rect 100 100
+        |> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
+        {--rect 100 100
         |> filled (rgb 0 0 255)
-        |> move (0, -100)
+        |> move (0, 0)
         |> animate [(fadeShapeToColor (RGBA 0 0 255 255) (RGBA 266 166 0 255))] 0 0 (TimeData 2 input.time 4)
-        |> animate [rotateAnimation] 100 0 (TimeData 2 input.time 4)
+        |> animate [rotateAnimation] 100 0 (TimeData 2 input.time 4)--}
     ]
     |> transition [bounceBack, slideOut] 100 0 (TimeData 0 input.time input.transitionTime) input.state
 

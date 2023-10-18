@@ -28,6 +28,10 @@ type alias AnimateFuncInput = {
     time : TimeData, 
     shape : Shape Msg}
 
+flipInputTime: AnimateFuncInput -> AnimateFuncInput
+flipInputTime input = 
+    AnimateFuncInput input.x input.y (TimeData input.time.end input.time.current input.time.start) input.shape
+
 percentCompleted: TimeData -> Float
 percentCompleted time = 
     let
@@ -101,14 +105,11 @@ moveBasedOnIndex square speed timeData shapeTuple =
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
         timePercentage = percentCompleted timeData
+
+        xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (tan (pi/2 * timePercentage))
+        yPos = (toFloat (index//square - square//2) + 0.5) * -speed * (tan (pi/2 * timePercentage))
     in
-        (index, 
-            move (
-                ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (tan (pi/2 * timePercentage)), 
-                (toFloat (index//square - square//2) + 0.5) * -speed * (tan (pi/2 * timePercentage))
-                ) 
-            (shape)
-        )
+        (index, move (xPos, yPos) shape)
 
 explodeParticlizedShape: Float -> TimeData -> List (Shape Msg) -> List (Shape Msg)
 explodeParticlizedShape speed timeData shapes =
@@ -128,6 +129,43 @@ particlizeAndExplodeShape speed input =
         shapes = particlizeShape radius resolution input.shape
     in
         group (explodeParticlizedShape speed input.time shapes)
+
+rotateBasedOnIndex: Int -> Float -> TimeData -> (Int, Shape Msg) -> (Int, Shape Msg)
+rotateBasedOnIndex square speed timeData shapeTuple =
+    let
+        index = Tuple.first shapeTuple
+        shape = Tuple.second shapeTuple
+        timePercentage = percentCompleted timeData
+
+        xPos = ((toFloat (modBy square index - square // 2)) + 0.5)
+        yPos = (toFloat (index//square - square//2) + 0.5)
+
+        dist = sqrt(xPos^2 + yPos^2)
+    in
+        (index, 
+            rotate (dist * speed * degrees (tan (pi/2 * timePercentage)))
+            (shape)
+        )
+
+explodeRotateShape: Float -> Float -> TimeData -> List (Shape Msg) -> List (Shape Msg)
+explodeRotateShape speed rotateSpeed timeData shapes =
+    let
+        square = round(sqrt (toFloat (List.length shapes)))
+    in
+        List.indexedMap Tuple.pair shapes
+        |> List.map (moveBasedOnIndex square speed timeData)
+        |> List.map (rotateBasedOnIndex square rotateSpeed timeData)
+        |> List.unzip
+        |> Tuple.second
+
+tornadoShape: Float -> Float -> AnimateFuncInput -> Shape Msg
+tornadoShape speed rotateSpeed input = 
+    let
+        radius = input.x
+        resolution = round(input.y)
+        shapes = particlizeShape radius resolution input.shape
+    in
+        group (explodeRotateShape speed rotateSpeed input.time shapes)
 
 -- moves the shape x, y amount of pixels after the start time over the duration
 moveAfterFor : AnimateFuncInput -> Shape Msg
