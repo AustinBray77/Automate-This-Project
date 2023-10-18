@@ -174,11 +174,11 @@ intro input =
     group 
     [
         slide black,
-        text "Intro"
+        text (typeWriter "Intro" 0.2 0 input.time)
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
+        --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
         |> move (0, 0)

@@ -213,6 +213,19 @@ rotateAnimation input =
     in
         rotate (degrees (input.x * time)) input.shape
 
+typeWriter: String -> Float -> Float -> Float -> String
+typeWriter string speed blinkSpeed time = 
+    if floor (time / speed) >= (String.length string) then
+        string
+    else
+        String.append (String.slice 0 (floor (time / speed)) string) 
+        (
+            if modBy 2 (round (time / blinkSpeed)) == 0 && blinkSpeed /= 0 then 
+                "_"
+            else 
+                " "
+        )
+
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
         -> Float -> Float -> TimeData -> Shape Msg -> Shape Msg -- takes in all vars needed to do the animation
 animate animations x y time shape =
