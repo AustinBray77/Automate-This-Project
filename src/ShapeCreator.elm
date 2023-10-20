@@ -582,16 +582,17 @@ buildAndAddCallbacks model userShapes =
   in-}
   (
   if Tuple.second model.mouseState then
-    List.map2 (buildAndAddCallback notifyMouseUpAt MouseUpAtShape) selectedShapeBools userShapes
+    List.map (buildAndAddCallback model notifyMouseUpAt MouseUpAtShape) userShapes
   else 
-    List.map2 (buildAndAddCallback notifyMouseDownAt MouseDownAtShape) selectedShapeBools userShapes
+    List.map (buildAndAddCallback model notifyMouseDownAt MouseDownAtShape) userShapes
   )
   |> List.map (notifyMouseMoveAt MouseMove) 
    
-buildAndAddCallback: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Bool -> UserShape -> Shape Msg
-buildAndAddCallback callback msg snapShape userShape =
+buildAndAddCallback: Model -> (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> UserShape -> Shape Msg
+buildAndAddCallback model callback msg userShape =
   let 
     selected = shapeSelected model userShape
+    snapShape = (snapShapes model) && selected
   in
   buildShape (BuildShapeInfo snapShape False selected) (userShape.shapeType, userShape.shapeInfo)
   |> addCallBackWithId callback msg userShape.id
