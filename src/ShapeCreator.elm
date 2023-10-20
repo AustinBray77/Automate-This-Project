@@ -22,18 +22,21 @@ type ID = Num Int
   | BackGround
   | PropertyFieldID NumberShapeProperty
 
-type ShapeTypeOnly = RectT | OvalT | NgonT
+type ShapeTypeOnly = RectT | OvalT | NgonT | GroupT | UnionT
 
 -- Takes in one Float for each parameter to build the shape
 type ShapeType = Rect Float Float Float
   |  Oval Float Float
   |  Ngon Int Float
+  |  Group (List (ShapeType, ShapeInfo))
+  |  Union (List (ShapeType, ShapeInfo))
 
 type RectProperty = RectWidth | RectHeight | Roundness
 type OvalProperty = OvalWidth | OvalHeight
 type NgonProperty = NgonSides | NgonRadius
 
 type FloatShapeProperty = PosX | PosY | Rotation | ScaleX | ScaleY | OutlineSize
+
 type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
   RectProperty RectProperty |
   OvalProperty OvalProperty |
@@ -42,7 +45,10 @@ type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
 type ColourShapeProperty = OutlineColour | FillColour
 type ShapeProperty = ColourShapeProperty | NumberShapeProperty
 
--- type alias PropertyEditorField = { text : String, property : FloatShapeProperty }
+type CombineType = CombToGroup | CombToUnion 
+
+userShapeToData: UserShape -> (ShapeType, ShapeInfo)
+userShapeToData shape = (shape.shapeType, shape.shapeInfo)
 
 getTabs: Int -> String
 getTabs number =
@@ -51,19 +57,32 @@ getTabs number =
 snapShapes: Model -> Bool
 snapShapes model = keyPressed model.keyboardInfo Alt
 
-convertShapesToCode: Int -> List UserShape -> String
-convertShapesToCode tabs shapes =
+addToEnd: appendable -> appendable -> appendable
+addToEnd second first =
+  first ++ second
+
+convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
+convertShapesToCode combineType tabs shapeDatas =
   let 
-    shapePropertiesCode: Int -> ShapeInfo -> String
-    shapePropertiesCode tabs3 info = 
+    shapePropertiesCode: Int -> ShapeType -> ShapeInfo -> String
+    shapePropertiesCode tabs3 shapeType info = 
       [
-        ["filled", "red"],
         ["scaleX", String.fromFloat (Tuple.first info.scale)],
         ["scaleY", String.fromFloat (Tuple.second info.scale)],
         ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"],
         ["move", tupleToString info.position],
         ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
-      ] --Change later to have custom rgba colours
+      ]
+        |> (
+          case shapeType of 
+            Group _ ->
+              identity
+            _ ->
+              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
+                |> List.singleton
+                |> addToEnd
+          )
+        --Change later to have custom rgba colours
         |> List.map (List.intersperse " ") -- L L S
         |> List.map ((++) ["|> "])           -- L L S
         |> List.map ((++) [(getTabs tabs3)]) -- L L S
@@ -71,38 +90,51 @@ convertShapesToCode tabs shapes =
         |> List.intersperse "\n"           -- L S
         |> List.foldr (++) ""              -- L S -> S
 
-    shapeCode: Int -> UserShape -> String
-    shapeCode tabs2 shape = 
-        (case shape.shapeType of
-            Rect w h r->
-                ["roundedRect", String.fromFloat w, String.fromFloat h, String.fromFloat r]
-                    |> formatList tabs2
-            Oval w h -> 
-                ["oval", String.fromFloat w, String.fromFloat h]
-                    |> formatList tabs2
-            Ngon s r -> 
-                ["ngon", String.fromInt s, String.fromFloat r]
-                    |> formatList tabs2)
+    defaultFill tabs5 = ["\n", (getTabs tabs5), "|>", "filled", "red"]
+
+    shapeCode: Int -> (ShapeType, ShapeInfo) -> String
+    shapeCode tabs2 (shapeType, shapeInfo) = 
+      (case shapeType of
+        Rect w h r->
+          ["roundedRect", String.fromFloat w, String.fromFloat h, String.fromFloat r]
+          ++ defaultFill tabs2
+            |> formatList tabs2
+        Oval w h -> 
+          ["oval", String.fromFloat w, String.fromFloat h]
+            ++ defaultFill tabs2
+            |> formatList tabs2
+        Ngon s r -> 
+          ["ngon", String.fromInt s, String.fromFloat r]
+            ++ defaultFill tabs2
+            |> formatList tabs2
+        Group groupedShapes ->
+          convertShapesToCode CombToGroup (tabs2 + 1) groupedShapes ++ "\n"
+        Union unionedShapes ->
+          convertShapesToCode CombToUnion (tabs2 + 1) unionedShapes ++ "\n")
         ++ 
-        shapePropertiesCode (tabs2 + 1) shape.shapeInfo
+        shapePropertiesCode (tabs2 + 1) shapeType shapeInfo
 
     formatList tabs4 list = 
         (List.intersperse " " list
           |> List.foldr (++) ""
           |> (++) (getTabs tabs4))
         ++ "\n"
-
   in
-  ([getTabs tabs, "group", "\n", getTabs tabs, "["]
-      |> List.foldr (++) "")
-  ++
-  (List.map (shapeCode (tabs + 1)) shapes
+  (case combineType of 
+    CombToGroup ->
+      ([getTabs tabs, "group", "\n", getTabs tabs, "["]
+          |> List.foldr (++) "")
+    CombToUnion -> 
+      ([getTabs tabs, "List.foldr union (rect 0 0 |> ghost)", "\n", getTabs tabs, "["]
+        |> List.foldr (++) ""))
+    ++
+    (List.map (shapeCode (tabs + 1)) shapeDatas
       |> List.intersperse ("\n" ++ (getTabs (tabs + 1)) ++ ",\n")
       |> List.foldr (++) ""
       |> (++) "\n" 
       |> (++) (getTabs tabs))
-  ++
-    "\n" ++ (getTabs tabs) ++ "]"
+     ++ "\n" ++ (getTabs tabs) ++ "]"
+  
 
 propertyToShapeType: NumberShapeProperty -> Maybe ShapeTypeOnly
 propertyToShapeType property = 
@@ -118,9 +150,11 @@ shapeTypeOnly shapeType =
     Rect _ _ _ -> RectT
     Oval _ _ -> OvalT
     Ngon _ _ -> NgonT
+    Group _ -> GroupT
+    Union _ -> UnionT
 
 emptyShape: Shape Msg
-emptyShape = rect 0 0 |> ghost
+emptyShape = (rect 0 0 |> ghost)
 
 baseClickableBox : Shape Msg
 baseClickableBox = 
@@ -188,6 +222,9 @@ getShapePropertyValue property shape =
         NgonProperty NgonSides -> Just (toFloat sides)
         NgonProperty NgonRadius -> Just radius
         _ -> Nothing
+    Group _ ->
+      Nothing
+    Union _ -> Nothing
 
 allSameShape: List ShapeType -> Maybe ShapeTypeOnly
 allSameShape shapes =
@@ -379,7 +416,7 @@ defaultShapeInfo : ShapeInfo
 defaultShapeInfo = ShapeInfo (0,0) 0 (1,1) red (solid) 1 black
 
 --type EditAction = ColorChange
-type alias UserShape = {shapeType : ShapeType, shapeInfo : ShapeInfo, id: Int, isSelected: Bool} 
+type alias UserShape = {shapeType : ShapeType, shapeInfo : ShapeInfo, id: Int} 
 type alias MouseState = ((Float, Float), Bool) --x, y, isClicked
 
 colors : List Color
@@ -389,6 +426,7 @@ selectedOutlineType : (Float -> LineType)
 selectedOutlineType = solid
 selectedOutlineColour : Color
 selectedOutlineColour = green
+groupSelectedOutlineColour = blue 
 xOffset : Float
 xOffset = -110
 maxUndoSteps : Int
@@ -418,30 +456,54 @@ baseOval = (Oval 19 9, {defaultShapeInfo | position = (xOffset, 30)})
 backgroundHitbox : (ShapeType, ShapeInfo)
 backgroundHitbox = (Rect 10000 5000 0, {defaultShapeInfo | position = (xOffset, 45), colour = blank})
 
+type alias BuildShapeInfo = {snapShape: Bool, addGroupOutline: Bool, selected: Bool}
+
 --Add bool for snapping
 --Add conditon on stop dragging to snap a shape
-buildShape: Bool -> (ShapeType, ShapeInfo) -> Shape Msg
-buildShape snapThisShapes (shapeType, shapeInfo) =
+buildShape: BuildShapeInfo -> (ShapeType, ShapeInfo) -> Shape Msg
+buildShape buildInfo (shapeType, shapeInfo) =
   let 
     shape = 
       case shapeType of 
         Rect width height roundness ->
           roundedRect width height roundness
+            |> filled shapeInfo.colour 
         Oval width height ->
           oval width height
+            |> filled shapeInfo.colour 
         Ngon sides size ->
           ngon sides size
+            |> filled shapeInfo.colour 
+        Group shapeDatas ->
+          List.map (buildShape (BuildShapeInfo False True buildInfo.selected)) shapeDatas
+            |> group
+        Union shapeDatas ->
+          List.map (buildShape (BuildShapeInfo False False False)) shapeDatas
+            |> List.foldr union emptyShape
+
+    outlineColour = 
+      case buildInfo.selected of 
+        False -> shapeInfo.outlineColour
+        True ->
+          case buildInfo.addGroupOutline of 
+            False -> selectedOutlineColour
+            True -> groupSelectedOutlineColour
+
   in
-  filled shapeInfo.colour shape
-    |> scaleX (Tuple.first shapeInfo.scale)
+    scaleX (Tuple.first shapeInfo.scale) shape
     |> scaleY (Tuple.second shapeInfo.scale) 
-    |> rotate (degrees shapeInfo.rotation * -1)
-    |> move 
-        (if snapThisShapes then
-          roundTupleToNearest snapAmount (shapeInfo.position)
-        else 
-          shapeInfo.position)
-    |> addOutline (shapeInfo.outlineStyle shapeInfo.outlineSize) shapeInfo.outlineColour
+      |> rotate (degrees shapeInfo.rotation * -1)
+      |> move 
+          (if buildInfo.snapShape then
+            roundTupleToNearest snapAmount (shapeInfo.position)
+          else 
+            shapeInfo.position)
+      |>
+        case shapeType of 
+        Group _ ->
+          identity
+        _ -> 
+          addOutline (shapeInfo.outlineStyle shapeInfo.outlineSize) outlineColour
 
 stringToTextShapes: String -> List (Shape Msg)
 stringToTextShapes string =
@@ -454,22 +516,27 @@ stringToTextShapes string =
 
 myShapes: Model -> List (Shape Msg)
 myShapes model = 
+  let
+    defaultBuildInfo = BuildShapeInfo False False False
+  in
   if model.currentAction == Exporting then
-    stringToTextShapes (convertShapesToCode 1 model.userShapes)
+    stringToTextShapes (convertShapesToCode CombToGroup 1 (List.map userShapeToData model.userShapes))
+    
+    
   else
     [
-      buildShape False backgroundHitbox
+      buildShape defaultBuildInfo backgroundHitbox
       |> addNonUserShapeCallbacks model BackGround
       ,
-      buildShape False baseRect
+      buildShape defaultBuildInfo baseRect
         |> notifyMouseDown (CreateShape baseRect)
         |> addNonUserShapeCallbacks model ShapeButton
       ,
-      buildShape False baseOval
+      buildShape defaultBuildInfo baseOval
         |> notifyMouseDown (CreateShape baseOval)
         |> addNonUserShapeCallbacks model ShapeButton
       ,
-      buildShape False baseNgon
+      buildShape defaultBuildInfo baseNgon
         |> notifyMouseDown (CreateShape baseNgon)
         |> addNonUserShapeCallbacks model ShapeButton
     ]
@@ -497,7 +564,7 @@ colourOutline userShape =
 
 buildAndAddCallbacks: Model -> List UserShape -> List (Shape Msg)
 buildAndAddCallbacks model userShapes = 
-  let
+  {-let
     toOutlineUserShapes = List.filter (shapeSelected model) userShapes
     outlinedShapesCount = List.length toOutlineUserShapes
     outlineShapeInfos = List.map .shapeInfo toOutlineUserShapes
@@ -512,18 +579,21 @@ buildAndAddCallbacks model userShapes =
     selectedShapeBools = 
       List.map (shapeSelected model) updatedUserShapes
         |> List.map ((&&) (snapShapes model))
-  in
+  in-}
   (
   if Tuple.second model.mouseState then
-    List.map2 (buildAndAddCallback notifyMouseUpAt MouseUpAtShape) selectedShapeBools updatedUserShapes
+    List.map2 (buildAndAddCallback notifyMouseUpAt MouseUpAtShape) selectedShapeBools userShapes
   else 
-    List.map2 (buildAndAddCallback notifyMouseDownAt MouseDownAtShape) selectedShapeBools updatedUserShapes
+    List.map2 (buildAndAddCallback notifyMouseDownAt MouseDownAtShape) selectedShapeBools userShapes
   )
   |> List.map (notifyMouseMoveAt MouseMove) 
    
 buildAndAddCallback: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Bool -> UserShape -> Shape Msg
 buildAndAddCallback callback msg snapShape userShape =
-  buildShape snapShape (userShape.shapeType, userShape.shapeInfo)
+  let 
+    selected = shapeSelected model userShape
+  in
+  buildShape (BuildShapeInfo snapShape False selected) (userShape.shapeType, userShape.shapeInfo)
   |> addCallBackWithId callback msg userShape.id
 
 addCallBackWithId: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Int -> Shape Msg -> Shape Msg
@@ -588,6 +658,30 @@ type Msg = Tick Float GetKeyState
   |  MouseMove (Float, Float) 
   |  MouseUpAtShape ID (Float, Float)
 
+combineSelectedShapes: Model -> CombineType -> Model
+combineSelectedShapes model combineType =
+  let 
+    selectedShapes = List.filter (shapeSelected model) model.userShapes
+    
+    newId = case List.head selectedShapes of 
+      Nothing -> 0
+      Just shape -> shape.id
+
+    shapeDatas = List.map2 Tuple.pair (List.map .shapeType selectedShapes) (List.map .shapeInfo selectedShapes)
+    
+    newShape: UserShape
+    newShape = 
+      case combineType of 
+        CombToGroup ->
+          UserShape (Group shapeDatas) {defaultShapeInfo | outlineSize = 2} newId
+        CombToUnion ->
+          UserShape (Union shapeDatas) {defaultShapeInfo | outlineSize = 2} newId
+  in
+    if List.length selectedShapes > 1 then
+      {model | userShapes = newShape :: List.filter (shapeNotSelected model) model.userShapes}
+    else 
+      model
+
 undo: Model -> Model
 undo model = 
   case List.head model.prevModels of 
@@ -637,6 +731,7 @@ updateShapeInfoValue value property userShape =
           Rotation -> {shapeInfo | rotation = value}
           OutlineSize -> {shapeInfo | outlineSize = value}
         _ -> shapeInfo
+
     updatedShapeType = 
       case shapeType of  
         Rect width height roundness ->
@@ -661,6 +756,11 @@ updateShapeInfoValue value property userShape =
                 NgonSides -> Ngon (max 1 (round value)) radius
                 NgonRadius -> Ngon sides value
             _ -> Ngon sides radius
+        Group _ ->
+          shapeType
+        Union _ ->
+          shapeType
+
 
   in 
     {userShape | shapeType = updatedShapeType, shapeInfo = updatedInfo}
@@ -732,36 +832,44 @@ pasteShapes model shapes =
         copiedShapes = updatedCopiedShapes
     }
 
-
 updateTick: Model -> (Keys -> KeyState) -> Model
 updateTick model getKeyStates =
+  let 
+    savedModel = {model | prevModels = addModelToPrevModels model}
+  in
   case model.currentAction of 
     Exporting ->
       if getKeyStates (Key "e") == JustDown then  
-        { model | currentAction = None }
+        { savedModel | currentAction = None }
       else 
         model
     TypingInput property inputStr ->
       if keyPressed getKeyStates Enter then
-        { model | userShapes = tryUpdateSelectedShapes model property inputStr, prevModels = addModelToPrevModels model, currentAction = None}
+        { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, prevModels = addModelToPrevModels model, currentAction = None}
       else
         updateTypingInput model getKeyStates
     _ ->
       -- Undo
       if keyPressed getKeyStates Ctrl && getKeyStates (Key "z") == JustDown then
         undo model
+      -- Combine: Group
+      else if getKeyStates (Key "g") == JustDown then
+        combineSelectedShapes savedModel CombToGroup
+      -- Combine: Union
+      else if getKeyStates (Key "u") == JustDown then
+        combineSelectedShapes savedModel CombToUnion
       -- Copy
       else if keyPressed getKeyStates Ctrl && getKeyStates (Key "c") == JustDown then
-        {model | copiedShapes = List.filter (shapeSelected model) model.userShapes} 
+        {savedModel | copiedShapes = List.filter (shapeSelected model) model.userShapes} 
       -- Paste
       else if keyPressed getKeyStates Ctrl && getKeyStates (Key "v") == JustDown then
-        pasteShapes model model.copiedShapes
+        pasteShapes savedModel model.copiedShapes
       -- Export Mode 
       else if getKeyStates (Key "e") == JustDown then
-        { model | currentAction = Exporting }
+        { savedModel | currentAction = Exporting }
       -- Delete Selected Shapes
       else if anyKeyPressed [Delete, Backspace] getKeyStates then
-          deleteSelectedShapes model (getKeyStates)
+          deleteSelectedShapes savedModel (getKeyStates)
       else
         model
 
@@ -775,7 +883,7 @@ update msg model =
     CreateShape (shapeType, shapeInfo) -> 
       ( { model | 
             userShapes = 
-                UserShape shapeType shapeInfo model.currentShapeID False 
+                UserShape shapeType shapeInfo model.currentShapeID 
                 |> List.singleton
                 |> (++) model.userShapes
             ,
