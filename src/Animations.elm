@@ -11,7 +11,6 @@ type alias RGBA = {
     a: Float
     }
 
--- holds the time data for animations that stop and start at a specific time
 type alias TimeData = {
     start: Float,
     end: Float
@@ -37,13 +36,13 @@ percentCompleted time currentTime =
     in 
         percent
 
--- makes the function take the entire time to finish
--- input.time is now a percent instead of a time (the animation does not need to know that)
+-- makes the animation run in the given TimeData interval
+-- this function assumes that the given animation is originally done in 1 second
 fromTill: TimeData -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
 fromTill timeData animation input =
         animation (AnimateFuncInput (percentCompleted timeData input.time) input.shape)
 
---Converts type alias RGBA to Color type 
+-- Converts type alias RGBA to Color type 
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =
     (rgba color.r color.g color.b color.a)
@@ -186,6 +185,7 @@ slideOut : Float -> Float -> AnimateFuncInput -> Shape Msg
 slideOut x y input = 
         move ((x * input.time), (y * input.time)) input.shape
 
+-- moves the shape backword before moving speeding up in the other direction
 bounceBack : Float -> Float -> AnimateFuncInput -> Shape Msg
 bounceBack x y input =
     let
@@ -193,9 +193,9 @@ bounceBack x y input =
     in
         move ((x * (time^time - 1)), (y * (time^time - 1))) input.shape
 
--- only first direction var is used
-rotateAnimation : Float -> AnimateFuncInput -> Shape Msg
-rotateAnimation rotation input = 
+-- rotates the shape
+rotateAni : Float -> AnimateFuncInput -> Shape Msg
+rotateAni rotation input = 
         rotate (degrees (rotation * input.time)) input.shape
 
 -- backend function
@@ -213,14 +213,16 @@ typeWriter string speed blinkSpeed time currentTime =
                 " "
         )
 
+-- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
-            -> Float -> Shape Msg -> Shape Msg -- takes in all vars needed to do the animation
+            -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape
 animate animations time shape =
     subAnimate (AnimateFuncInput time shape) animations -- calling all the animations
 
+-- backend function
 -- used to loop thorugh each animation for the given shape
 subAnimate : AnimateFuncInput -> List (AnimateFuncInput -> Shape Msg) -> Shape Msg
 subAnimate input animationFuncs =
     case animationFuncs of
         x :: xs -> subAnimate (AnimateFuncInput input.time (x input)) xs -- calling the animation on the shape until list is empty
-        _ -> input.shape
+        _ -> input.shape -- returning shape with animations applied once list is empty

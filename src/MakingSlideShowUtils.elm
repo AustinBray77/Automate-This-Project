@@ -9,7 +9,7 @@ import KeyFunctions exposing (anyKeyJustPressed)
 -- can transition for a max of 3 seconds
 type SlideState = Visible | Transitioning | Hidden
 
--- the input that a slides function requires
+-- the input that a slides function is required to have
 type alias SlideInput = {
     time : Float,
     transitionTime : Float,
@@ -19,6 +19,7 @@ type alias SlideInput = {
 -- slide is used for moving the slide out of view
 type AnimationType = SlideAnimation | ContentAnimation
 
+-- backend Slide defenition
 type alias Slide =
     {state : SlideState, -- the state of this slide
      displaySlide : (SlideInput -> Shape Msg), -- function that creates the slide
@@ -44,11 +45,16 @@ view model =
         ]
 
 -- template for a slide background
-slide : Color -> Shape a
-slide color =
+slide : Color -> Float -> Shape Msg
+slide color time =
     group [
     rect screen.x screen.y
         |> filled color
+    ,
+    rect 100 100
+        |> outlined (solid 5) black
+        |> animate [(rotateAni 25)] time
+        |> move (-screen.x/2+50, -screen.y/2+50)
     ] 
 
 displaySlideNum : Model -> Shape Msg
@@ -78,7 +84,7 @@ displaySlideNum model =
 displaySlides : List Slide -> Float -> Shape Msg
 displaySlides slides time = 
     case slides of
-        x::xs -> group (List.append [displaySlides xs time] [displaySlide x time])
+        x::xs -> group (List.append [displaySlides xs time] [displaySlide x time]) -- adds all the slides into a shape after calling there animations
         _ -> filled black (rect 0 0) -- returning a shape that wont be drawn
 
 -- displays a specific slide
@@ -164,12 +170,13 @@ intro : SlideInput -> Shape Msg
 intro input = 
     group 
     [
-        slide blue,
+        slide blue input.time,
         text (typeWriter "Intro" 0.2 0 (TimeData 0 0) input.time)
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(fromTill (TimeData 3 1) (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), (fromTill (TimeData 3 1) (tornadoShape 5 5 120 36))] input.time
+        |> animate [(fromTill (TimeData 2 3) (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), 
+                    (fromTill (TimeData 2 3) (tornadoShape 5 5 120 36))] input.time
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
@@ -183,30 +190,30 @@ creating1 : SlideInput -> Shape Msg
 creating1 input =
     group
     [
-        slide purple, 
+        slide purple input.time, 
         rect 30 30
         |> filled red
-        |> animate [(rotateAnimation 100), 
+        |> animate [(rotateAni 100), 
                     (fromTill (TimeData 2 4) (moveAni 1910 0))] input.time
         |> move (-950, 200),
         rect 30 30
         |> filled red
-        |> animate [(rotateAnimation 100), 
+        |> animate [(rotateAni 100), 
                     (fromTill (TimeData 3 4) (moveAni 1910 0))] input.time
         |> move (-950, 100),
         rect 30 30
         |> filled red
-        |> animate [(rotateAnimation 100), 
+        |> animate [(rotateAni 100), 
                     (fromTill (TimeData 4 5) (moveAni 1910 0))] input.time
         |> move (-950, 0),
         rect 30 30
         |> filled red
-        |> animate [(rotateAnimation 100), 
+        |> animate [(rotateAni 100), 
                     (fromTill (TimeData 5 6) (moveAni 1910 0))] input.time
         |> move (-950, -100),
         rect 30 30
         |> filled red
-        |> animate [(rotateAnimation 100), 
+        |> animate [(rotateAni 100), 
                     (fromTill (TimeData 6 7) (moveAni 1910 0))] input.time
         |> move (-950, -200),
         text "Second slide"
@@ -215,7 +222,7 @@ creating1 input =
         |> scale 10
         |> animate [fromTill (TimeData 4 2) (particlizeAndExplodeShape 5 300 36)] input.time
     ]
-    |> transition [(rotateAnimation 100), (bounceBack 1000 2000)] input.transitionTime input.state
+    |> transition [(rotateAni 100), (bounceBack 1000 2000)] input.transitionTime input.state
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = [intro, creating1] } -- the slides are in order 
