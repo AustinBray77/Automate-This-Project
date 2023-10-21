@@ -20,7 +20,8 @@ type alias TimeData = {
 -- type input for antimation functions
 type alias AnimateFuncInput = { 
     time : Float, 
-    shape : Shape Msg}
+    shape : Shape Msg
+    }
 
 --Takes in a animation func input and swaps the start and end times (useful for reverse animations)
 -- flipInputTime: AnimateFuncInput -> AnimateFuncInput
@@ -29,17 +30,18 @@ type alias AnimateFuncInput = {
 
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float
-percentCompleted time start = 
+percentCompleted time currentTime = 
     let
-        timePercentage = ((start - time.start) / (time.end - time.start))
+        timePercentage = ((currentTime - time.start) / (time.end - time.start))
         percent = (min 1 (max 0 timePercentage)) -- how far through the animation we are
     in 
         percent
 
--- fromTill: TimeData -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
--- fromTill timeData animation input =
---     input.shape
---         |> animation (AnimateFuncInput input.)
+-- makes the function take the entire time to finish
+-- input.time is now a percent instead of a time (the animation does not need to know that)
+fromTill: TimeData -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
+fromTill timeData animation input =
+        animation (AnimateFuncInput (percentCompleted timeData input.time) input.shape)
 
 --Converts type alias RGBA to Color type 
 rgbaToColor: RGBA -> Color 
@@ -47,25 +49,23 @@ rgbaToColor color =
     (rgba color.r color.g color.b color.a)
 
 --Takes in a animation func input, start, and end color, and calculates what color the shape should currently be based on the input
-calculateColor: TimeData -> AnimateFuncInput -> RGBA -> RGBA -> RGBA
-calculateColor timeData input startColor targetColor = 
-    let
-        timePercentage = percentCompleted timeData input.time
-    in
-        { r = (startColor.r * (1 - timePercentage) + targetColor.r * timePercentage),  
-        g =  (startColor.g * (1 - timePercentage) + targetColor.g * timePercentage),
-        b =  (startColor.b * (1 - timePercentage) + targetColor.b * timePercentage),
-        a =  (startColor.a * (1 - timePercentage) + targetColor.a * timePercentage)
+calculateColor: AnimateFuncInput -> RGBA -> RGBA -> RGBA
+calculateColor input startColor targetColor = 
+        { r = (startColor.r * (1 - input.time) + targetColor.r * input.time),  
+        g =  (startColor.g * (1 - input.time) + targetColor.g * input.time),
+        b =  (startColor.b * (1 - input.time) + targetColor.b * input.time),
+        a =  (startColor.a * (1 - input.time) + targetColor.a * input.time)
         }
 
---Takes in a start and end color, as well as an animate func input and returns an animation of the shapes color between the two given colors
-fadeShapeToColor: RGBA -> RGBA -> TimeData -> AnimateFuncInput -> Shape Msg
-fadeShapeToColor startColor targetColor timeData input = 
-    if input.time > timeData.end then
+-- Takes in a start and end color, as well as an animate func input and returns an animation of the shapes color between the two given colors
+-- takes 1 second to turn from start to end color (use fromTill function to make this duration longer or shorter)
+fadeShapeToColor: RGBA -> RGBA -> AnimateFuncInput -> Shape Msg
+fadeShapeToColor startColor targetColor input = 
+    if input.time > 1 then
         repaint (rgbaToColor targetColor) input.shape
     else
         let 
-            newColor = (calculateColor timeData input startColor targetColor)
+            newColor = (calculateColor input startColor targetColor)
         in
             repaint (rgbaToColor newColor) input.shape
 
@@ -102,43 +102,41 @@ particlizeShape radius resolution shape =
             |> List.map (clipShapes shape)
 
 
-moveBasedOnIndex: Int -> Float -> TimeData -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-moveBasedOnIndex square speed timeData currentTime shapeTuple =
+moveBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
+moveBasedOnIndex square speed currentTime shapeTuple =
     let
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
-        timePercentage = percentCompleted timeData currentTime
 
-        xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (tan (pi/2 * timePercentage))
-        yPos = (toFloat (index//square - square//2) + 0.5) * -speed * (tan (pi/2 * timePercentage))
+        xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (tan (pi/2 * currentTime))
+        yPos = (toFloat (index//square - square//2) + 0.5) * -speed * (tan (pi/2 * currentTime))
     in
         (index, move (xPos, yPos) shape)
 
-explodeParticlizedShape: Float -> TimeData -> Float -> List (Shape Msg) -> List (Shape Msg)
-explodeParticlizedShape speed timeData currentTime shapes =
+explodeParticlizedShape: Float -> Float -> List (Shape Msg) -> List (Shape Msg)
+explodeParticlizedShape speed currentTime shapes =
     let
         square = round(sqrt (toFloat (List.length shapes)))
     in
         List.indexedMap Tuple.pair shapes
-        |> List.map (moveBasedOnIndex square speed timeData currentTime)
+        |> List.map (moveBasedOnIndex square speed currentTime)
         |> List.unzip
         |> Tuple.second
 
-particlizeAndExplodeShape: Float -> Float -> Float -> TimeData -> AnimateFuncInput -> Shape Msg
-particlizeAndExplodeShape speed x y timeData input = 
+particlizeAndExplodeShape: Float -> Float -> Float -> AnimateFuncInput -> Shape Msg
+particlizeAndExplodeShape speed x y input = 
     let
         radius = x
         resolution = round(y)
         shapes = particlizeShape radius resolution input.shape
     in
-        group (explodeParticlizedShape speed timeData input.time shapes)
+        group (explodeParticlizedShape speed input.time shapes)
 
-rotateBasedOnIndex: Int -> Float -> TimeData -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-rotateBasedOnIndex square speed timeData currentTime shapeTuple =
+rotateBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
+rotateBasedOnIndex square speed currentTime shapeTuple =
     let
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
-        timePercentage = percentCompleted timeData currentTime
 
         xPos = ((toFloat (modBy square index - square // 2)) + 0.5)
         yPos = (toFloat (index//square - square//2) + 0.5)
@@ -146,45 +144,41 @@ rotateBasedOnIndex square speed timeData currentTime shapeTuple =
         dist = sqrt(xPos^2 + yPos^2)
     in
         (index, 
-            rotate (dist * speed * degrees (tan (pi/2 * timePercentage)))
+            rotate (dist * speed * degrees (tan (pi/2 * currentTime)))
             (shape)
         )
 
-explodeRotateShape: Float -> Float -> TimeData -> Float -> List (Shape Msg) -> List (Shape Msg)
-explodeRotateShape speed rotateSpeed timeData currentTime shapes =
+explodeRotateShape: Float -> Float -> Float -> List (Shape Msg) -> List (Shape Msg)
+explodeRotateShape speed rotateSpeed currentTime shapes =
     let
         square = round(sqrt (toFloat (List.length shapes)))
     in
         List.indexedMap Tuple.pair shapes
-        |> List.map (moveBasedOnIndex square speed timeData currentTime)
-        |> List.map (rotateBasedOnIndex square rotateSpeed timeData currentTime)
+        |> List.map (moveBasedOnIndex square speed currentTime)
+        |> List.map (rotateBasedOnIndex square rotateSpeed currentTime)
         |> List.unzip
         |> Tuple.second
 
-tornadoShape: Float -> Float -> Float -> Int -> TimeData -> AnimateFuncInput -> Shape Msg
-tornadoShape speed rotateSpeed radius resolution timeData input = 
+tornadoShape: Float -> Float -> Float -> Int -> AnimateFuncInput -> Shape Msg
+tornadoShape speed rotateSpeed radius resolution input = 
     let
         shapes = particlizeShape radius resolution input.shape
     in
-        group (explodeRotateShape speed rotateSpeed timeData input.time shapes)
+        group (explodeRotateShape speed rotateSpeed input.time shapes)
 
 -- moves the shape x, y amount of pixels after the start time over the duration
-moveAfterFor : Float -> Float -> TimeData -> AnimateFuncInput -> Shape Msg
-moveAfterFor x y timeData input = 
-        let
-            percent = percentCompleted timeData input.time -- how far through the animation we are
-        in
-            input.shape
-                |> move ((x * percent), (y * percent))
+moveAni : Float -> Float -> AnimateFuncInput -> Shape Msg
+moveAni x y input = 
+        input.shape
+            |> move ((x * input.time), (y * input.time))
 
 -- scales the shape by the given x, y factor after the start time over the duration
-scaleAfterFor : (Float, Float) -> TimeData -> AnimateFuncInput -> Shape Msg
-scaleAfterFor xy timeData input = 
+scaleAni : (Float, Float)-> AnimateFuncInput -> Shape Msg
+scaleAni xy input = 
         let
-            percent = percentCompleted timeData input.time -- how far through the animation we are
             rtn = input.shape
-                |> scaleX (1 + max 0 ((Tuple.first xy - 1) * percent))
-                |> scaleY (1 + max 0 ((Tuple.second xy - 1) * percent))
+                |> scaleX (1 + max 0 ((Tuple.first xy - 1) * input.time))
+                |> scaleY (1 + max 0 ((Tuple.second xy - 1) * input.time))
         in
             rtn
 

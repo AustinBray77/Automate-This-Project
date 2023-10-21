@@ -169,7 +169,7 @@ intro input =
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0) (TimeData 2 4)), (tornadoShape 5 5 120 36 (TimeData 2 4))] input.time
+        |> animate [(fromTill (TimeData 3 1) (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), (fromTill (TimeData 3 1) (tornadoShape 5 5 120 36))] input.time
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
@@ -187,33 +187,33 @@ creating1 input =
         rect 30 30
         |> filled red
         |> animate [(rotateAnimation 100), 
-                    (moveAfterFor 1910 0 (TimeData 2 3))] input.time
+                    (fromTill (TimeData 2 4) (moveAni 1910 0))] input.time
         |> move (-950, 200),
         rect 30 30
         |> filled red
         |> animate [(rotateAnimation 100), 
-                    (moveAfterFor 1910 0 (TimeData 3 4))] input.time
+                    (fromTill (TimeData 3 4) (moveAni 1910 0))] input.time
         |> move (-950, 100),
         rect 30 30
         |> filled red
         |> animate [(rotateAnimation 100), 
-                    (moveAfterFor 1910 0 (TimeData 4 5))] input.time
+                    (fromTill (TimeData 4 5) (moveAni 1910 0))] input.time
         |> move (-950, 0),
         rect 30 30
         |> filled red
         |> animate [(rotateAnimation 100), 
-                    (moveAfterFor 1910 0 (TimeData 5 6))] input.time
+                    (fromTill (TimeData 5 6) (moveAni 1910 0))] input.time
         |> move (-950, -100),
         rect 30 30
         |> filled red
         |> animate [(rotateAnimation 100), 
-                    (moveAfterFor 1910 0 (TimeData 6 7))] input.time
+                    (fromTill (TimeData 6 7) (moveAni 1910 0))] input.time
         |> move (-950, -200),
         text "Second slide"
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(particlizeAndExplodeShape 5 300 36 (TimeData 4 2))] input.time
+        |> animate [fromTill (TimeData 4 2) (particlizeAndExplodeShape 5 300 36)] input.time
     ]
     |> transition [(rotateAnimation 100), (bounceBack 1000 2000)] input.transitionTime input.state
 
