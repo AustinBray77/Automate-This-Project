@@ -1,10 +1,19 @@
 module KeyFunctions exposing (..)
-
+import Dict exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 
 numberKeys : List Keys
 numberKeys = [ Key "0", Key "1", Key "2", Key "3", Key "4", Key "5", Key "6", Key "7", Key "8", Key "9"]
+
+stringKeys: List Keys
+stringKeys = 
+  let 
+    chars = "1234567890qwertyuiop[]\\-=asdfghjkl;'zxcvbnm,./{}|:\"<>?"
+  in
+  String.toList chars
+    |> List.map (String.fromChar)
+    |> List.map (\x -> Key x)
 
 -- Takes in a Ellie App KeyState, a Key, and a List of States
 -- Returns if the key has any of the given states
@@ -13,6 +22,22 @@ checkKey keyInfo states key =
   List.filter (\k -> keyInfo key == k) states
   |> List.length
   |> (/=) 0
+
+applyShift: String -> String
+applyShift char = 
+  let 
+    keys = List.map String.fromChar <| String.toList "abcdefghijklmnopqrstuvwxyz1234567890"
+    vals = List.map String.fromChar <| String.toList "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()"
+    dict = 
+      List.map2 Tuple.pair keys vals
+        |> Dict.fromList
+  in  
+    Dict.get char dict 
+      |> Maybe.withDefault char
+
+--Use this for all of the weird special characters
+-- applyAlt
+
 
 -- Takes in a Ellie App KeyState and a Key
 -- Returns if the key is being pressed

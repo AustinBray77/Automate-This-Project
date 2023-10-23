@@ -2,7 +2,6 @@ module ShapeCreator exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-
 import KeyFunctions exposing (..)
 import HelperFunctions exposing (..)
 import Html exposing (main_)
@@ -14,15 +13,15 @@ import Platform.Cmd exposing (none)
 
 type Action = Dragging
   | None
-  | TypingInput NumberShapeProperty String
+  | TypingInput ShapeProperty String
   | Exporting 
 
 type ID = Num Int
   | ShapeButton
   | BackGround
-  | PropertyFieldID NumberShapeProperty
+  | PropertyFieldID ShapeProperty
 
-type ShapeTypeOnly = RectT | OvalT | NgonT | GroupT | UnionT
+type ShapeTypeOnly = RectT | OvalT | NgonT | GroupT | UnionT | TextT
 
 -- Takes in one Float for each parameter to build the shape
 type ShapeType = Rect Float Float Float
@@ -30,22 +29,28 @@ type ShapeType = Rect Float Float Float
   |  Ngon Int Float
   |  Group (List (ShapeType, ShapeInfo))
   |  Union (List (ShapeType, ShapeInfo))
+  |  Text String Float 
+
+{-
+type alias TextData = {underlined: Bool, bold: Bool, italic: Bool, strikethrough: Bool}
+type TextAlign = Left | Center | Right -}
 
 type RectProperty = RectWidth | RectHeight | Roundness
 type OvalProperty = OvalWidth | OvalHeight
 type NgonProperty = NgonSides | NgonRadius
+type TextProperty = TextSize
 
 type FloatShapeProperty = PosX | PosY | Rotation | ScaleX | ScaleY | OutlineSize
-
 type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
   RectProperty RectProperty |
   OvalProperty OvalProperty |
-  NgonProperty NgonProperty
-
-type ColourShapeProperty = OutlineColour | FillColour
-type ShapeProperty = ColourShapeProperty | NumberShapeProperty
-
+  NgonProperty NgonProperty |
+  TextProperty TextProperty
+-- type ColourShapeProperty = OutlineColour | FillColour
+-- type ShapeProperty = ColourShapeProperty | NumberShapeProperty
+type ShapeProperty = StringProperty StringProperty | NumberShapeProperty NumberShapeProperty
 type CombineType = CombToGroup | CombToUnion 
+type StringProperty = TextString
 
 userShapeToData: UserShape -> (ShapeType, ShapeInfo)
 userShapeToData shape = (shape.shapeType, shape.shapeInfo)
@@ -70,13 +75,16 @@ convertShapesToCode combineType tabs shapeDatas =
         ["scaleX", String.fromFloat (Tuple.first info.scale)],
         ["scaleY", String.fromFloat (Tuple.second info.scale)],
         ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"],
-        ["move", tupleToString info.position],
-        ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
+        ["move", tupleToString info.position]
       ]
         |> (
           case shapeType of 
             Group _ ->
               identity
+            Text _ _ ->
+              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "purple"]
+                |> List.singleton
+                |> addToEnd
             _ ->
               ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
                 |> List.singleton
@@ -95,17 +103,23 @@ convertShapesToCode combineType tabs shapeDatas =
     shapeCode: Int -> (ShapeType, ShapeInfo) -> String
     shapeCode tabs2 (shapeType, shapeInfo) = 
       (case shapeType of
-        Rect w h r->
-          ["roundedRect", String.fromFloat w, String.fromFloat h, String.fromFloat r]
+        Rect width height radius ->
+          ["roundedRect", String.fromFloat width, String.fromFloat height, String.fromFloat radius]
           ++ defaultFill tabs2
             |> formatList tabs2
-        Oval w h -> 
-          ["oval", String.fromFloat w, String.fromFloat h]
+        Oval width height -> 
+          ["oval", String.fromFloat width, String.fromFloat height]
             ++ defaultFill tabs2
             |> formatList tabs2
-        Ngon s r -> 
-          ["ngon", String.fromInt s, String.fromFloat r]
+        Ngon sides radius -> 
+          ["ngon", String.fromInt sides, String.fromFloat radius]
             ++ defaultFill tabs2
+            |> formatList tabs2
+        Text str size ->
+          ["text", "\"" ++ str  ++ "\""]
+            |> addToEnd ["\n", (getTabs tabs2), "|>", "size", String.fromFloat size]
+            |> addToEnd ["\n", (getTabs tabs2), "|>", "alignLeft"]
+            |> addToEnd ["\n", (getTabs tabs2), "|>", "filled", "black"]
             |> formatList tabs2
         Group groupedShapes ->
           convertShapesToCode CombToGroup (tabs2 + 1) groupedShapes ++ "\n"
@@ -134,15 +148,20 @@ convertShapesToCode combineType tabs shapeDatas =
       |> (++) "\n" 
       |> (++) (getTabs tabs))
      ++ "\n" ++ (getTabs tabs) ++ "]"
-  
 
-propertyToShapeType: NumberShapeProperty -> Maybe ShapeTypeOnly
+propertyToShapeType: ShapeProperty -> Maybe ShapeTypeOnly
 propertyToShapeType property = 
   case property of 
-    OvalProperty _ -> Just OvalT
-    RectProperty _ -> Just RectT
-    NgonProperty _ -> Just NgonT
-    _ -> Nothing
+    NumberShapeProperty numberShapeProperty ->
+      case numberShapeProperty of 
+        OvalProperty _ -> Just OvalT
+        RectProperty _ -> Just RectT
+        NgonProperty _ -> Just NgonT
+        TextProperty _ -> Just TextT
+        _ -> Nothing
+    StringProperty stringProperty ->
+      case stringProperty of 
+        TextString -> Just TextT
 
 shapeTypeOnly: ShapeType -> ShapeTypeOnly
 shapeTypeOnly shapeType =
@@ -152,6 +171,7 @@ shapeTypeOnly shapeType =
     Ngon _ _ -> NgonT
     Group _ -> GroupT
     Union _ -> UnionT
+    Text _ _ -> TextT
 
 emptyShape: Shape Msg
 emptyShape = (rect 0 0 |> ghost)
@@ -178,30 +198,38 @@ buildLabel string =
     |> fixedwidth 
     |> filled black
 
-getFieldName: NumberShapeProperty -> String
+getFieldName: ShapeProperty -> String
 getFieldName property =
-  case property of 
-    FloatShapeProperty floatProperty ->
-      case floatProperty of 
-        PosX -> "X Position"
-        PosY -> "Y Position"
-        Rotation -> "Rotation"
-        ScaleX -> "X Scale"
-        ScaleY -> "Y Scale"
-        OutlineSize -> "Outline Size"
-    RectProperty rectProperty ->
-      case rectProperty of
-        RectWidth -> "Width"
-        RectHeight -> "Height"
-        Roundness -> "Roundness"
-    OvalProperty ovalProperty ->
-      case ovalProperty of
-        OvalWidth -> "Width"
-        OvalHeight -> "Height"
-    NgonProperty ngonProperty ->
-      case ngonProperty of 
-        NgonSides -> "Sides"
-        NgonRadius -> "Radius"
+  case property of  
+    NumberShapeProperty numberShapeProperty ->
+      case numberShapeProperty of 
+        FloatShapeProperty floatProperty ->
+          case floatProperty of 
+            PosX -> "X Position"
+            PosY -> "Y Position"
+            Rotation -> "Rotation"
+            ScaleX -> "X Scale"
+            ScaleY -> "Y Scale"
+            OutlineSize -> "Outline Size"
+        RectProperty rectProperty ->
+          case rectProperty of
+            RectWidth -> "Width"
+            RectHeight -> "Height"
+            Roundness -> "Roundness"
+        OvalProperty ovalProperty ->
+          case ovalProperty of
+            OvalWidth -> "Width"
+            OvalHeight -> "Height"
+        NgonProperty ngonProperty ->
+          case ngonProperty of 
+            NgonSides -> "Sides"
+            NgonRadius -> "Radius"
+        TextProperty textProperty ->
+          case textProperty of 
+            TextSize -> "Font Size"
+    StringProperty stringProperty ->
+      case stringProperty of  
+        TextString -> "Text"
 
 getShapePropertyValue: NumberShapeProperty -> ShapeType -> Maybe Float
 getShapePropertyValue property shape = 
@@ -222,9 +250,23 @@ getShapePropertyValue property shape =
         NgonProperty NgonSides -> Just (toFloat sides)
         NgonProperty NgonRadius -> Just radius
         _ -> Nothing
+    Text _ size -> 
+      case property of  
+        TextProperty TextSize -> Just size
+        _ -> Nothing
     Group _ ->
       Nothing
     Union _ -> Nothing
+
+getStringProperty: StringProperty -> ShapeType -> Maybe String
+getStringProperty property shapeType =
+  case shapeType of
+    Text str _ -> 
+      case property of 
+        TextString ->
+          Just str
+    _ -> Nothing
+
 
 allSameShape: List ShapeType -> Maybe ShapeTypeOnly
 allSameShape shapes =
@@ -245,7 +287,7 @@ allSameShape shapes =
             Nothing -> Nothing
             Just shapeType -> Just (shapeTypeOnly shapeType))
                                 
-getPropertyString: Model -> NumberShapeProperty -> String
+getPropertyString: Model -> ShapeProperty -> String
 getPropertyString model property =
   let 
     selectedShapeInfos = 
@@ -258,18 +300,26 @@ getPropertyString model property =
         |> List.map .shapeType
   in
     case property of 
-      FloatShapeProperty floatProperty ->
-        List.map (getPropertyFromShapeInfo floatProperty) selectedShapeInfos
-          |> allEqualFloat
-          |> propertyFloatToString model (FloatShapeProperty floatProperty)
-      otherShapeProperty -> 
-        List.map (getShapePropertyValue property) selectedShapeTypes 
-          |> allEqualMaybeFloat 
-          |> propertyFloatToString model (otherShapeProperty)
+      NumberShapeProperty numberShapeProperty ->
+        case numberShapeProperty of
+          FloatShapeProperty floatProperty ->
+            List.map (getPropertyFromShapeInfo floatProperty) selectedShapeInfos
+              |> allEqualFloat
+              |> propertyFloatToString model (FloatShapeProperty floatProperty)
+          otherShapeProperty -> 
+            List.map (getShapePropertyValue numberShapeProperty) selectedShapeTypes 
+              |> allEqualMaybeFloat 
+              |> propertyFloatToString model (otherShapeProperty)
+      StringProperty stringProperty ->
+        case stringProperty of 
+          TextString ->
+            List.map (getStringProperty stringProperty) selectedShapeTypes
+              |> allEqual
+              |> Maybe.withDefault " " 
 
 --TODO If string is empty then leave current model property in box
   -- Maybe highlight it blue or something
-buildPropertyField: Model -> NumberShapeProperty -> Shape Msg
+buildPropertyField: Model -> ShapeProperty -> Shape Msg
 buildPropertyField model property =
   let 
     selectedShapeInfos = 
@@ -285,18 +335,23 @@ buildPropertyField model property =
     validProperty = 
       allSameShape selectedShapeTypes == propertyToShapeType property ||
       case property of 
-        FloatShapeProperty _ -> True
+        NumberShapeProperty (FloatShapeProperty _) -> True
         _ -> False
 
     textString = 
       case property of 
-        FloatShapeProperty floatProperty ->
-          getPropertyString model property
-        otherProperty ->
-          if validProperty then
-            getPropertyString model property
-          else 
-            "-"
+        NumberShapeProperty numberShapeProperty ->
+          case numberShapeProperty of 
+            FloatShapeProperty floatProperty ->
+              getPropertyString model (NumberShapeProperty numberShapeProperty)
+            otherProperty ->
+              if validProperty then
+                getPropertyString model (NumberShapeProperty numberShapeProperty)
+              else 
+                "-"
+        StringProperty stringProperty ->
+          case stringProperty of 
+            TextString -> "Edit"
   in
   case validProperty of
     False -> emptyShape
@@ -340,7 +395,7 @@ propertyFloatToString model property propertyFloat =
   in
   case model.currentAction of 
     TypingInput editProperty input ->
-      if editProperty == property then 
+      if editProperty == NumberShapeProperty property then 
         input
       else 
         propertyString
@@ -360,46 +415,53 @@ propertyFieldShapes: Model -> List (Shape Msg)
 propertyFieldShapes model = 
   [
   --Rect Properties
-    buildPropertyField model (RectProperty RectWidth)
+    buildPropertyField model (NumberShapeProperty (RectProperty RectWidth))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (RectProperty RectHeight)
+    buildPropertyField model (NumberShapeProperty (RectProperty RectHeight))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (RectProperty Roundness)
+    buildPropertyField model (NumberShapeProperty (RectProperty Roundness))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
     ,
   --Oval Properties
-    buildPropertyField model (OvalProperty OvalWidth)
+    buildPropertyField model (NumberShapeProperty (OvalProperty OvalWidth))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (OvalProperty OvalHeight)
+    buildPropertyField model (NumberShapeProperty (OvalProperty OvalHeight))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
   --Ngon Properties
-    buildPropertyField model (NgonProperty NgonSides)
+    buildPropertyField model (NumberShapeProperty (NgonProperty NgonSides))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
     ,
-    buildPropertyField model (NgonProperty NgonRadius)
+    buildPropertyField model (NumberShapeProperty (NgonProperty NgonRadius))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
+  --Text Properties
+    buildPropertyField model (StringProperty TextString)
+      |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
+    ,
+    buildPropertyField model (NumberShapeProperty (TextProperty TextSize))
+      |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
+    ,
   --Float Shape Properties
-    buildPropertyField model (FloatShapeProperty PosX)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty PosX))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * 0)
     ,
-    buildPropertyField model (FloatShapeProperty PosY)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty PosY))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 0)
     ,    
-    buildPropertyField model (FloatShapeProperty ScaleX)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty ScaleX))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * 1)
     ,
-    buildPropertyField model (FloatShapeProperty ScaleY)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty ScaleY))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 1)
     ,
-    buildPropertyField model (FloatShapeProperty Rotation)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty Rotation))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * 2)
     ,
-    buildPropertyField model (FloatShapeProperty OutlineSize)
+    buildPropertyField model (NumberShapeProperty (FloatShapeProperty OutlineSize))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 2)
   ]
 
@@ -452,7 +514,10 @@ baseNgon = (Ngon 5 9, {defaultShapeInfo | position = (xOffset, 10)})
 
 baseOval : (ShapeType, ShapeInfo)
 baseOval = (Oval 19 9, {defaultShapeInfo | position = (xOffset, 30)})
-       
+
+baseText: (ShapeType, ShapeInfo)
+baseText = (Text "Text" 9, {defaultShapeInfo | position = (xOffset - 9, 58), outlineSize = 0.3 ,outlineColour = purple})
+
 backgroundHitbox : (ShapeType, ShapeInfo)
 backgroundHitbox = (Rect 10000 5000 0, {defaultShapeInfo | position = (xOffset, 45), colour = blank})
 
@@ -474,6 +539,11 @@ buildShape buildInfo (shapeType, shapeInfo) =
         Ngon sides size ->
           ngon sides size
             |> filled shapeInfo.colour 
+        Text str fontSize ->
+          text str
+            |> size fontSize 
+            |> alignLeft
+            |> filled black
         Group shapeDatas ->
           List.map (buildShape (BuildShapeInfo False True buildInfo.selected)) shapeDatas
             |> group
@@ -521,8 +591,6 @@ myShapes model =
   in
   if model.currentAction == Exporting then
     stringToTextShapes (convertShapesToCode CombToGroup 1 (List.map userShapeToData model.userShapes))
-    
-    
   else
     [
       buildShape defaultBuildInfo backgroundHitbox
@@ -538,6 +606,10 @@ myShapes model =
       ,
       buildShape defaultBuildInfo baseNgon
         |> notifyMouseDown (CreateShape baseNgon)
+        |> addNonUserShapeCallbacks model ShapeButton
+      , 
+      buildShape defaultBuildInfo baseText
+        |> notifyMouseDown (CreateShape baseText)
         |> addNonUserShapeCallbacks model ShapeButton
     ]
     ++ 
@@ -564,22 +636,6 @@ colourOutline userShape =
 
 buildAndAddCallbacks: Model -> List UserShape -> List (Shape Msg)
 buildAndAddCallbacks model userShapes = 
-  {-let
-    toOutlineUserShapes = List.filter (shapeSelected model) userShapes
-    outlinedShapesCount = List.length toOutlineUserShapes
-    outlineShapeInfos = List.map .shapeInfo toOutlineUserShapes
-    outlineSizes = List.map .outlineSize outlineShapeInfos
-    outlinedUserShapes = 
-      (List.map3 (updateShapeInfoValue) (outlineSizes) (List.repeat outlinedShapesCount (FloatShapeProperty OutlineSize)) toOutlineUserShapes)
-        |> List.map colourOutline
-
-    updatedUserShapes = 
-      (List.filter (shapeNotSelected model) userShapes) ++ outlinedUserShapes
-
-    selectedShapeBools = 
-      List.map (shapeSelected model) updatedUserShapes
-        |> List.map ((&&) (snapShapes model))
-  in-}
   (
   if Tuple.second model.mouseState then
     List.map (buildAndAddCallback model notifyMouseUpAt MouseUpAtShape) userShapes
@@ -716,6 +772,19 @@ deleteSelectedShapes model getKeyStates =
     userShapes = List.filter (shapeNotSelected model) model.userShapes 
   }
 
+updateShapeString: String -> StringProperty -> UserShape -> UserShape 
+updateShapeString newStr stringProperty userShape =
+  let 
+    shapeType = userShape.shapeType
+    updatedShapeType = 
+      case shapeType of 
+        Text _ size ->
+          case stringProperty of 
+            TextString -> Text newStr size
+        _ -> shapeType
+  in
+  {userShape | shapeType = updatedShapeType}
+
 updateShapeInfoValue: Float -> NumberShapeProperty -> UserShape -> UserShape
 updateShapeInfoValue value property userShape = 
   let 
@@ -742,21 +811,27 @@ updateShapeInfoValue value property userShape =
                 RectWidth -> Rect value height roundness
                 RectHeight -> Rect width value roundness
                 Roundness -> Rect width height value
-            _ -> Rect width height roundness
+            _ -> shapeType
         Oval width height ->
           case property of  
             OvalProperty ovalProperty -> 
               case ovalProperty of 
                 OvalWidth -> Oval value height
                 OvalHeight -> Oval width value
-            _ -> Oval width height
+            _ -> shapeType
         Ngon sides radius ->
           case property of 
             NgonProperty ngonProperty -> 
               case ngonProperty of 
                 NgonSides -> Ngon (max 1 (round value)) radius
                 NgonRadius -> Ngon sides value
-            _ -> Ngon sides radius
+            _ -> shapeType
+        Text str size ->
+          case property of 
+            TextProperty textProperty -> 
+              case textProperty of 
+                TextSize -> Text str value
+            _ -> shapeType
         Group _ ->
           shapeType
         Union _ ->
@@ -766,28 +841,27 @@ updateShapeInfoValue value property userShape =
   in 
     {userShape | shapeType = updatedShapeType, shapeInfo = updatedInfo}
 
-tryUpdateShapeInfoWithInput: NumberShapeProperty -> String -> List UserShape -> List UserShape
+tryUpdateShapeInfoWithInput: ShapeProperty -> String -> List UserShape -> List UserShape
 tryUpdateShapeInfoWithInput property string userShapes =
-  let
-    updateValue: Float -> UserShape -> UserShape
-    updateValue value userShape = 
-      updateShapeInfoValue value property userShape 
-  in
-  case String.toFloat string of
-    Just float ->
-      List.map (updateValue float) userShapes
-    Nothing ->
-      userShapes
+  case property of 
+    NumberShapeProperty numberShapeProperty ->
+      case String.toFloat string of
+        Just float ->
+          List.map (updateShapeInfoValue float numberShapeProperty) userShapes
+        Nothing ->
+          userShapes
+    StringProperty stringProperty->
+      List.map (updateShapeString string stringProperty) userShapes
 
 --UPDATE FUNCTION WITH NEW TYPES
-tryUpdateSelectedShapes: Model -> NumberShapeProperty -> String -> List UserShape
+tryUpdateSelectedShapes: Model -> ShapeProperty -> String -> List UserShape
 tryUpdateSelectedShapes model property string =
   List.filter (shapeSelected model) model.userShapes
     |> tryUpdateShapeInfoWithInput property string 
     |> (++) (List.filter (shapeNotSelected model) model.userShapes) 
 
-updateTypingInput: Model -> (Keys -> KeyState) -> Model
-updateTypingInput model keyInfo =
+updateNumberTypingInput: Model -> (Keys -> KeyState) -> Model
+updateNumberTypingInput model keyInfo =
   let 
     newAction = 
       case model.currentAction of 
@@ -808,7 +882,29 @@ updateTypingInput model keyInfo =
         _ -> 
           model.currentAction
   in
-  {model | currentAction = newAction, keyboardInfo = keyInfo}
+  {model | currentAction = newAction}
+
+updateStringTypingInput: Model -> (Keys -> KeyState) -> Action
+updateStringTypingInput model keyInfo =
+  case model.currentAction of 
+    TypingInput property string ->          --Period and minus keys are not supported
+      case getKeyCheckFromList (stringKeys ++ [Delete, Backspace, Space]) [JustDown] keyInfo of 
+        Just (Delete) ->
+          TypingInput property (String.dropRight 1 string)
+        Just (Backspace) ->
+          TypingInput property (String.dropRight 1 string)
+        Just Space ->
+          TypingInput property (string ++ " ")
+        Just (Key char) ->
+          if keyInfo Shift == Down then
+            TypingInput property (string ++ (applyShift char))
+          --TODO adjust if Alt key is pressed (in order to get period, comma etc)
+          else 
+            TypingInput property (string ++ char)
+        _ -> 
+          TypingInput property string
+    _ -> 
+      model.currentAction
 
 pasteShapes: Model -> List UserShape -> Model
 pasteShapes model shapes =
@@ -845,10 +941,17 @@ updateTick model getKeyStates =
       else 
         model
     TypingInput property inputStr ->
-      if keyPressed getKeyStates Enter then
-        { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, prevModels = addModelToPrevModels model, currentAction = None}
-      else
-        updateTypingInput model getKeyStates
+      case property of 
+        NumberShapeProperty _ ->
+          if keyPressed getKeyStates Enter then
+            { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = None}
+          else
+            updateNumberTypingInput model getKeyStates
+        StringProperty _ ->
+          if keyPressed getKeyStates Enter then
+            { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = None}
+          else
+            { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = updateStringTypingInput savedModel getKeyStates}
     _ ->
       -- Undo
       if keyPressed getKeyStates Ctrl && getKeyStates (Key "z") == JustDown then
@@ -898,7 +1001,6 @@ update msg model =
             }
         , Cmd.none)
     MouseDownAtShape id point ->
-      
       ({ model |
             selectedShapes =
               case id of 
@@ -923,7 +1025,11 @@ update msg model =
                 BackGround ->
                   None
                 PropertyFieldID property ->
-                  TypingInput property ""
+                  case property of 
+                    NumberShapeProperty _ ->
+                      TypingInput property ""
+                    StringProperty _ ->
+                      TypingInput property (getPropertyString model property)
             ,
             userShapes = 
               case model.currentAction of 

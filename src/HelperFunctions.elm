@@ -12,6 +12,17 @@ tupleToString (float1, float2) =
         |> List.foldr (++) ""
 
 --Returns the value if they are all equal, otherwise Nothing
+allEqual: List (Maybe a) -> Maybe a
+allEqual list =
+  let 
+    returnIfEqual: Maybe a -> Maybe a -> Maybe a
+    returnIfEqual val1 val2 =
+      if val1 == val2 then 
+        val1
+      else Nothing
+  in
+  List.foldl returnIfEqual (Maybe.withDefault Nothing <| List.head list) list
+
 allEqualFloat: List Float -> Maybe Float
 allEqualFloat list =
   List.map (\x -> Just x) list
