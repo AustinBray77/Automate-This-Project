@@ -14,7 +14,7 @@ import Platform.Cmd exposing (none)
 type Action = Dragging
   | None
   | TypingInput ShapeProperty String
-  | Exporting 
+  | Exporting Bool --SelectedShapes only
 
 type ID = Num Int
   | ShapeButton
@@ -588,42 +588,52 @@ myShapes: Model -> List (Shape Msg)
 myShapes model = 
   let
     defaultBuildInfo = BuildShapeInfo False False False
+    
+    userShapes selectedOnly = 
+      if selectedOnly then  
+        List.filter (shapeSelected model) model.userShapes
+      else
+        model.userShapes
+  
+    shapeData selectedOnly = List.map userShapeToData (userShapes selectedOnly)
+
   in
-  if model.currentAction == Exporting then
-    stringToTextShapes (convertShapesToCode CombToGroup 1 (List.map userShapeToData model.userShapes))
-  else
-    [
-      buildShape defaultBuildInfo backgroundHitbox
-      |> addNonUserShapeCallbacks model BackGround
-      ,
-      buildShape defaultBuildInfo baseRect
-        |> notifyMouseDown (CreateShape baseRect)
-        |> addNonUserShapeCallbacks model ShapeButton
-      ,
-      buildShape defaultBuildInfo baseOval
-        |> notifyMouseDown (CreateShape baseOval)
-        |> addNonUserShapeCallbacks model ShapeButton
-      ,
-      buildShape defaultBuildInfo baseNgon
-        |> notifyMouseDown (CreateShape baseNgon)
-        |> addNonUserShapeCallbacks model ShapeButton
-      , 
-      buildShape defaultBuildInfo baseText
-        |> notifyMouseDown (CreateShape baseText)
-        |> addNonUserShapeCallbacks model ShapeButton
-    ]
-    ++ 
-    (
-      buildAndAddCallbacks model model.userShapes
-        |> List.map (notifyMouseMoveAt MouseMove) 
-    )
-    ++
-    (
-      if List.length model.selectedShapes > 0 then 
-        propertyFieldShapes model
-      else  
-        []
-    )
+  case model.currentAction of
+    Exporting selectedOnly ->
+      stringToTextShapes (convertShapesToCode CombToGroup 1 (shapeData selectedOnly))
+    _ ->
+      [
+        buildShape defaultBuildInfo backgroundHitbox
+        |> addNonUserShapeCallbacks model BackGround
+        ,
+        buildShape defaultBuildInfo baseRect
+          |> notifyMouseDown (CreateShape baseRect)
+          |> addNonUserShapeCallbacks model ShapeButton
+        ,
+        buildShape defaultBuildInfo baseOval
+          |> notifyMouseDown (CreateShape baseOval)
+          |> addNonUserShapeCallbacks model ShapeButton
+        ,
+        buildShape defaultBuildInfo baseNgon
+          |> notifyMouseDown (CreateShape baseNgon)
+          |> addNonUserShapeCallbacks model ShapeButton
+        , 
+        buildShape defaultBuildInfo baseText
+          |> notifyMouseDown (CreateShape baseText)
+          |> addNonUserShapeCallbacks model ShapeButton
+      ]
+      ++ 
+      (
+        buildAndAddCallbacks model model.userShapes
+          |> List.map (notifyMouseMoveAt MouseMove) 
+      )
+      ++
+      (
+        if List.length model.selectedShapes > 0 then 
+          propertyFieldShapes model
+        else  
+          []
+      )
 
 -- Temp Function (Makes the outline colour the selected outline colour)
 colourOutline: UserShape -> UserShape
@@ -935,7 +945,7 @@ updateTick model getKeyStates =
     savedModel = {model | prevModels = addModelToPrevModels model}
   in
   case model.currentAction of 
-    Exporting ->
+    Exporting _ ->
       if getKeyStates (Key "e") == JustDown then  
         { savedModel | currentAction = None }
       else 
@@ -970,7 +980,7 @@ updateTick model getKeyStates =
         pasteShapes savedModel model.copiedShapes
       -- Export Mode 
       else if getKeyStates (Key "e") == JustDown then
-        { savedModel | currentAction = Exporting }
+        { savedModel | currentAction = Exporting (getKeyStates Ctrl == Down) }
       -- Delete Selected Shapes
       else if anyKeyPressed [Delete, Backspace] getKeyStates then
           deleteSelectedShapes savedModel (getKeyStates)
