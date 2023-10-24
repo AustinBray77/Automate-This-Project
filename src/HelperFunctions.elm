@@ -6,6 +6,10 @@ import GraphicSVG.EllieApp exposing (..)
 import KeyFunctions exposing (..)
 import Array
 
+addToEnd: appendable -> appendable -> appendable
+addToEnd second first =
+    first ++ second
+
 tupleToString: (Float, Float) -> String
 tupleToString (float1, float2) =
     ["(", String.fromFloat float1, ", ", String.fromFloat float2, ")"]

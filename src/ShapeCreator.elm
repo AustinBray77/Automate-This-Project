@@ -1,153 +1,30 @@
 module ShapeCreator exposing (..)
 
-import GraphicSVG exposing (..)
-import GraphicSVG.EllieApp exposing (..)
+import ShapeCreatorTypes as T exposing (..)
+import ShapesToCode exposing (..)
+import ShapeCreatorConstants exposing (..)
 import KeyFunctions exposing (..)
 import HelperFunctions exposing (..)
+import GraphicSVG exposing (..)
+import GraphicSVG.EllieApp exposing (..)
 import Html exposing (main_)
 import Html.Attributes exposing (height)
 import Html exposing (th)
 import Platform.Cmd exposing (none)
+import Debug exposing (todo)
+import Dict exposing (Dict)
+
+stringToColour: String -> Color
+stringToColour str =
+  Dict.get str baseColours
+    |> Maybe.withDefault red
 
 --TODO Add function descriptions
-
-type Action = Dragging
-  | None
-  | TypingInput ShapeProperty String
-  | Exporting Bool --SelectedShapes only
-
-type ID = Num Int
-  | ShapeButton
-  | BackGround
-  | PropertyFieldID ShapeProperty
-
-type ShapeTypeOnly = RectT | OvalT | NgonT | GroupT | UnionT | TextT
-
--- Takes in one Float for each parameter to build the shape
-type ShapeType = Rect Float Float Float
-  |  Oval Float Float
-  |  Ngon Int Float
-  |  Group (List (ShapeType, ShapeInfo))
-  |  Union (List (ShapeType, ShapeInfo))
-  |  Text String Float 
-
-{-
-type alias TextData = {underlined: Bool, bold: Bool, italic: Bool, strikethrough: Bool}
-type TextAlign = Left | Center | Right -}
-
-type RectProperty = RectWidth | RectHeight | Roundness
-type OvalProperty = OvalWidth | OvalHeight
-type NgonProperty = NgonSides | NgonRadius
-type TextProperty = TextSize
-
-type FloatShapeProperty = PosX | PosY | Rotation | ScaleX | ScaleY | OutlineSize
-type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
-  RectProperty RectProperty |
-  OvalProperty OvalProperty |
-  NgonProperty NgonProperty |
-  TextProperty TextProperty
--- type ColourShapeProperty = OutlineColour | FillColour
--- type ShapeProperty = ColourShapeProperty | NumberShapeProperty
-type ShapeProperty = StringProperty StringProperty | NumberShapeProperty NumberShapeProperty
-type CombineType = CombToGroup | CombToUnion 
-type StringProperty = TextString
-
 userShapeToData: UserShape -> (ShapeType, ShapeInfo)
 userShapeToData shape = (shape.shapeType, shape.shapeInfo)
 
-getTabs: Int -> String
-getTabs number =
-    String.repeat number "  "
-
 snapShapes: Model -> Bool
 snapShapes model = keyPressed model.keyboardInfo Alt
-
-addToEnd: appendable -> appendable -> appendable
-addToEnd second first =
-  first ++ second
-
-convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
-convertShapesToCode combineType tabs shapeDatas =
-  let 
-    shapePropertiesCode: Int -> ShapeType -> ShapeInfo -> String
-    shapePropertiesCode tabs3 shapeType info = 
-      [
-        ["scaleX", String.fromFloat (Tuple.first info.scale)],
-        ["scaleY", String.fromFloat (Tuple.second info.scale)],
-        ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"],
-        ["move", tupleToString info.position]
-      ]
-        |> (
-          case shapeType of 
-            Group _ ->
-              identity
-            Text _ _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "purple"]
-                |> List.singleton
-                |> addToEnd
-            _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
-                |> List.singleton
-                |> addToEnd
-          )
-        --Change later to have custom rgba colours
-        |> List.map (List.intersperse " ") -- L L S
-        |> List.map ((++) ["|> "])           -- L L S
-        |> List.map ((++) [(getTabs tabs3)]) -- L L S
-        |> List.map (List.foldr (++) "")   -- L L S -> L S
-        |> List.intersperse "\n"           -- L S
-        |> List.foldr (++) ""              -- L S -> S
-
-    defaultFill tabs5 = ["\n", (getTabs tabs5), "|>", "filled", "red"]
-
-    shapeCode: Int -> (ShapeType, ShapeInfo) -> String
-    shapeCode tabs2 (shapeType, shapeInfo) = 
-      (case shapeType of
-        Rect width height radius ->
-          ["roundedRect", String.fromFloat width, String.fromFloat height, String.fromFloat radius]
-          ++ defaultFill tabs2
-            |> formatList tabs2
-        Oval width height -> 
-          ["oval", String.fromFloat width, String.fromFloat height]
-            ++ defaultFill tabs2
-            |> formatList tabs2
-        Ngon sides radius -> 
-          ["ngon", String.fromInt sides, String.fromFloat radius]
-            ++ defaultFill tabs2
-            |> formatList tabs2
-        Text str size ->
-          ["text", "\"" ++ str  ++ "\""]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "size", String.fromFloat size]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "alignLeft"]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "filled", "black"]
-            |> formatList tabs2
-        Group groupedShapes ->
-          convertShapesToCode CombToGroup (tabs2 + 1) groupedShapes ++ "\n"
-        Union unionedShapes ->
-          convertShapesToCode CombToUnion (tabs2 + 1) unionedShapes ++ "\n")
-        ++ 
-        shapePropertiesCode (tabs2 + 1) shapeType shapeInfo
-
-    formatList tabs4 list = 
-        (List.intersperse " " list
-          |> List.foldr (++) ""
-          |> (++) (getTabs tabs4))
-        ++ "\n"
-  in
-  (case combineType of 
-    CombToGroup ->
-      ([getTabs tabs, "group", "\n", getTabs tabs, "["]
-          |> List.foldr (++) "")
-    CombToUnion -> 
-      ([getTabs tabs, "List.foldr union (rect 0 0 |> ghost)", "\n", getTabs tabs, "["]
-        |> List.foldr (++) ""))
-    ++
-    (List.map (shapeCode (tabs + 1)) shapeDatas
-      |> List.intersperse ("\n" ++ (getTabs (tabs + 1)) ++ ",\n")
-      |> List.foldr (++) ""
-      |> (++) "\n" 
-      |> (++) (getTabs tabs))
-     ++ "\n" ++ (getTabs tabs) ++ "]"
 
 propertyToShapeType: ShapeProperty -> Maybe ShapeTypeOnly
 propertyToShapeType property = 
@@ -162,6 +39,7 @@ propertyToShapeType property =
     StringProperty stringProperty ->
       case stringProperty of 
         TextString -> Just TextT
+        _ -> Nothing
 
 shapeTypeOnly: ShapeType -> ShapeTypeOnly
 shapeTypeOnly shapeType =
@@ -173,16 +51,7 @@ shapeTypeOnly shapeType =
     Union _ -> UnionT
     Text _ _ -> TextT
 
-emptyShape: Shape Msg
-emptyShape = (rect 0 0 |> ghost)
-
-baseClickableBox : Shape Msg
-baseClickableBox = 
-  roundedRect 30 10 1.5
-  |> filled white
-  |> addOutline (solid 0.75) blue
-
-buildTextShape: String -> Shape Msg
+buildTextShape: String -> Shape T.Msg
 buildTextShape string = 
   text string
     |> selectable
@@ -191,7 +60,7 @@ buildTextShape string =
     --TODO Custom font
     |> filled black
 
-buildLabel: String -> Shape Msg
+buildLabel: String -> Shape T.Msg
 buildLabel string = 
   text string
     |> size 4
@@ -230,6 +99,8 @@ getFieldName property =
     StringProperty stringProperty ->
       case stringProperty of  
         TextString -> "Text"
+        OutlineColour -> "Outline Colour"
+        FillColour -> "Fill Colour"
 
 getShapePropertyValue: NumberShapeProperty -> ShapeType -> Maybe Float
 getShapePropertyValue property shape = 
@@ -258,15 +129,18 @@ getShapePropertyValue property shape =
       Nothing
     Union _ -> Nothing
 
-getStringProperty: StringProperty -> ShapeType -> Maybe String
-getStringProperty property shapeType =
-  case shapeType of
-    Text str _ -> 
-      case property of 
-        TextString ->
+getStringProperty: StringProperty -> (ShapeType, ShapeInfo) -> Maybe String
+getStringProperty property (shapeType, shapeInfo) =
+  case property of 
+    OutlineColour ->
+      Just shapeInfo.outlineColour
+    FillColour ->
+      Just shapeInfo.fillColour
+    TextString ->
+      case shapeType of
+        Text str _ -> 
           Just str
-    _ -> Nothing
-
+        _ -> Nothing
 
 allSameShape: List ShapeType -> Maybe ShapeTypeOnly
 allSameShape shapes =
@@ -298,6 +172,8 @@ getPropertyString model property =
       model.userShapes
         |> List.filter (shapeSelected model)
         |> List.map .shapeType
+
+    selectedShapeDatas = List.map2 Tuple.pair selectedShapeTypes selectedShapeInfos
   in
     case property of 
       NumberShapeProperty numberShapeProperty ->
@@ -312,14 +188,23 @@ getPropertyString model property =
               |> propertyFloatToString model (otherShapeProperty)
       StringProperty stringProperty ->
         case stringProperty of 
-          TextString ->
-            List.map (getStringProperty stringProperty) selectedShapeTypes
-              |> allEqual
-              |> Maybe.withDefault " " 
+          _ ->
+            case model.currentAction of 
+              TypingInput curProperty str ->
+                if property == curProperty then
+                  str
+                else
+                  List.map (getStringProperty stringProperty) selectedShapeDatas
+                    |> allEqual
+                    |> Maybe.withDefault " "  
+              _ ->
+                List.map (getStringProperty stringProperty) selectedShapeDatas
+                      |> allEqual
+                      |> Maybe.withDefault " "             
 
 --TODO If string is empty then leave current model property in box
   -- Maybe highlight it blue or something
-buildPropertyField: Model -> ShapeProperty -> Shape Msg
+buildPropertyField: Model -> ShapeProperty -> Shape T.Msg
 buildPropertyField model property =
   let 
     selectedShapeInfos = 
@@ -336,6 +221,11 @@ buildPropertyField model property =
       allSameShape selectedShapeTypes == propertyToShapeType property ||
       case property of 
         NumberShapeProperty (FloatShapeProperty _) -> True
+        StringProperty stringProperty ->
+          case stringProperty of 
+            OutlineColour -> True
+            FillColour -> True
+            _ -> False
         _ -> False
 
     textString = 
@@ -343,15 +233,18 @@ buildPropertyField model property =
         NumberShapeProperty numberShapeProperty ->
           case numberShapeProperty of 
             FloatShapeProperty floatProperty ->
-              getPropertyString model (NumberShapeProperty numberShapeProperty)
+              getPropertyString model (property)
             otherProperty ->
               if validProperty then
-                getPropertyString model (NumberShapeProperty numberShapeProperty)
+                getPropertyString model (property)
               else 
                 "-"
         StringProperty stringProperty ->
           case stringProperty of 
             TextString -> "Edit"
+            _ -> 
+              getPropertyString model (property)
+
   in
   case validProperty of
     False -> emptyShape
@@ -402,16 +295,7 @@ propertyFloatToString model property propertyFloat =
     _ -> 
       propertyString
 
-propertyFieldOffset: (Float, Float)
-propertyFieldOffset = (70, -20)
-
-propertyFieldYGap: Float
-propertyFieldYGap = -20
-
-propertyFieldXGap: Float
-propertyFieldXGap = 35
-
-propertyFieldShapes: Model -> List (Shape Msg)
+propertyFieldShapes: Model -> List (Shape T.Msg)
 propertyFieldShapes model = 
   [
   --Rect Properties
@@ -463,40 +347,16 @@ propertyFieldShapes model =
     ,
     buildPropertyField model (NumberShapeProperty (FloatShapeProperty OutlineSize))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 2)
+    ,
+    -- Colour Properties
+    buildPropertyField model (StringProperty OutlineColour)
+      |> move (propertyFieldXGap * 1, propertyFieldYGap * -1)
+    ,
+    buildPropertyField model (StringProperty FillColour)
+      |> move (propertyFieldXGap * 0, propertyFieldYGap * -1)
   ]
 
-type alias ShapeInfo = 
-  { position : (Float, Float), 
-    rotation : Float, 
-    scale : (Float, Float), 
-    colour : Color, 
-    outlineStyle : Float -> LineType, 
-    outlineSize : Float, 
-    outlineColour : Color }
-
-defaultShapeInfo : ShapeInfo
-defaultShapeInfo = ShapeInfo (0,0) 0 (1,1) red (solid) 1 black
-
---type EditAction = ColorChange
-type alias UserShape = {shapeType : ShapeType, shapeInfo : ShapeInfo, id: Int} 
-type alias MouseState = ((Float, Float), Bool) --x, y, isClicked
-
-colors : List Color
-colors = [ red, orange, yellow, green, blue, darkBlue, purple, grey, black, white]
-
-selectedOutlineType : (Float -> LineType)
-selectedOutlineType = solid
-selectedOutlineColour : Color
-selectedOutlineColour = green
-groupSelectedOutlineColour = blue 
-xOffset : Float
-xOffset = -110
-maxUndoSteps : Int
-maxUndoSteps = 50
-snapAmount: Float
-snapAmount = 5
-
-addNonUserShapeCallbacks: Model -> ID -> Shape Msg -> Shape Msg
+addNonUserShapeCallbacks: Model -> ID -> Shape T.Msg -> Shape T.Msg
 addNonUserShapeCallbacks model id shape =
   notifyMouseMoveAt MouseMove shape
     |> (
@@ -506,44 +366,27 @@ addNonUserShapeCallbacks model id shape =
       notifyMouseDownAt (MouseDownAtShape id)
     )
 
-baseRect : (ShapeType, ShapeInfo)
-baseRect = (Rect 19 9 0, {defaultShapeInfo | position = (xOffset, 45)})
-   
-baseNgon : (ShapeType, ShapeInfo)
-baseNgon = (Ngon 5 9, {defaultShapeInfo | position = (xOffset, 10)})
-
-baseOval : (ShapeType, ShapeInfo)
-baseOval = (Oval 19 9, {defaultShapeInfo | position = (xOffset, 30)})
-
-baseText: (ShapeType, ShapeInfo)
-baseText = (Text "Text" 9, {defaultShapeInfo | position = (xOffset - 9, 58), outlineSize = 0.3 ,outlineColour = purple})
-
-backgroundHitbox : (ShapeType, ShapeInfo)
-backgroundHitbox = (Rect 10000 5000 0, {defaultShapeInfo | position = (xOffset, 45), colour = blank})
-
-type alias BuildShapeInfo = {snapShape: Bool, addGroupOutline: Bool, selected: Bool}
-
 --Add bool for snapping
 --Add conditon on stop dragging to snap a shape
-buildShape: BuildShapeInfo -> (ShapeType, ShapeInfo) -> Shape Msg
+buildShape: BuildShapeInfo -> (ShapeType, ShapeInfo) -> Shape T.Msg
 buildShape buildInfo (shapeType, shapeInfo) =
   let 
     shape = 
       case shapeType of 
         Rect width height roundness ->
           roundedRect width height roundness
-            |> filled shapeInfo.colour 
+            |> filled (stringToColour shapeInfo.fillColour) 
         Oval width height ->
           oval width height
-            |> filled shapeInfo.colour 
+            |> filled (stringToColour shapeInfo.fillColour) 
         Ngon sides size ->
           ngon sides size
-            |> filled shapeInfo.colour 
+            |> filled (stringToColour shapeInfo.fillColour) 
         Text str fontSize ->
           text str
             |> size fontSize 
             |> alignLeft
-            |> filled black
+            |> filled (stringToColour shapeInfo.fillColour) 
         Group shapeDatas ->
           List.map (buildShape (BuildShapeInfo False True buildInfo.selected)) shapeDatas
             |> group
@@ -558,6 +401,15 @@ buildShape buildInfo (shapeType, shapeInfo) =
           case buildInfo.addGroupOutline of 
             False -> selectedOutlineColour
             True -> groupSelectedOutlineColour
+    
+    outlineStyle = case buildInfo.selected of 
+      False -> shapeInfo.outlineStyle
+      True -> selectedOutlineStyle
+
+    outlineSize = 
+      case buildInfo.selected of 
+        False -> shapeInfo.outlineSize
+        True -> max minSelectedOutlineSize shapeInfo.outlineSize
 
   in
     scaleX (Tuple.first shapeInfo.scale) shape
@@ -573,18 +425,9 @@ buildShape buildInfo (shapeType, shapeInfo) =
         Group _ ->
           identity
         _ -> 
-          addOutline (shapeInfo.outlineStyle shapeInfo.outlineSize) outlineColour
+          addOutline (outlineStyle outlineSize) (stringToColour outlineColour)
 
-stringToTextShapes: String -> List (Shape Msg)
-stringToTextShapes string =
-  String.split "\n" string
-    |> List.map (\str -> text str)
-    |> List.map (size 4)
-    |> List.map selectable
-    |> List.map (filled black)
-    |> List.indexedMap (\index shape -> move (-80, toFloat(60 - index * 4))shape)
-
-myShapes: Model -> List (Shape Msg)
+myShapes: Model -> List (Shape T.Msg)
 myShapes model = 
   let
     defaultBuildInfo = BuildShapeInfo False False False
@@ -644,7 +487,7 @@ colourOutline userShape =
   in
   {userShape | shapeInfo = updatedInfo}
 
-buildAndAddCallbacks: Model -> List UserShape -> List (Shape Msg)
+buildAndAddCallbacks: Model -> List UserShape -> List (Shape T.Msg)
 buildAndAddCallbacks model userShapes = 
   (
   if Tuple.second model.mouseState then
@@ -654,7 +497,7 @@ buildAndAddCallbacks model userShapes =
   )
   |> List.map (notifyMouseMoveAt MouseMove) 
    
-buildAndAddCallback: Model -> (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> UserShape -> Shape Msg
+buildAndAddCallback: Model -> (((Float, Float) -> T.Msg) -> Shape T.Msg -> Shape T.Msg) -> (ID -> (Float, Float) -> T.Msg) -> UserShape -> Shape T.Msg
 buildAndAddCallback model callback msg userShape =
   let 
     selected = shapeSelected model userShape
@@ -663,7 +506,7 @@ buildAndAddCallback model callback msg userShape =
   buildShape (BuildShapeInfo snapShape False selected) (userShape.shapeType, userShape.shapeInfo)
   |> addCallBackWithId callback msg userShape.id
 
-addCallBackWithId: (((Float, Float) -> Msg) -> Shape Msg -> Shape Msg) -> (ID -> (Float, Float) -> Msg) -> Int -> Shape Msg -> Shape Msg
+addCallBackWithId: (((Float, Float) -> T.Msg) -> Shape T.Msg -> Shape T.Msg) -> (ID -> (Float, Float) -> T.Msg) -> Int -> Shape T.Msg -> Shape T.Msg
 addCallBackWithId callback msg id shape = callback (msg (Num id)) shape
 
 shapeSelected: Model -> UserShape -> Bool
@@ -682,21 +525,6 @@ moveShape moveAmount userShape =
     updatedInfo = { shapeInfo | position = (addTuple userShape.shapeInfo.position moveAmount) }
   in
   { userShape | shapeInfo = updatedInfo }
-
---Edit
-changeShapeColor: Color -> UserShape -> UserShape
-changeShapeColor newColour userShape =
-  let
-    shapeInfo = userShape.shapeInfo
-    updatedInfo : ShapeInfo
-    updatedInfo = { shapeInfo | colour = newColour} 
-  in
-  { userShape | shapeInfo = updatedInfo }
-
---Edit
-colorShapeList: Color -> List UserShape -> List UserShape
-colorShapeList newColor shapes = 
-  List.map (changeShapeColor newColor) shapes
 
 defaultKeyboardInfo: Keys -> KeyState
 defaultKeyboardInfo _ = Up 
@@ -717,13 +545,6 @@ addModelToPrevModels model =
      Nothing ->
          List.take maxUndoSteps model.prevModels
          |> (::) (makeModelInfo model)
-     
--- Add messages here
-type Msg = Tick Float GetKeyState
-  |  CreateShape (ShapeType, ShapeInfo)
-  |  MouseDownAtShape ID (Float, Float)
-  |  MouseMove (Float, Float) 
-  |  MouseUpAtShape ID (Float, Float)
 
 combineSelectedShapes: Model -> CombineType -> Model
 combineSelectedShapes model combineType =
@@ -791,9 +612,21 @@ updateShapeString newStr stringProperty userShape =
         Text _ size ->
           case stringProperty of 
             TextString -> Text newStr size
+            _ -> shapeType
         _ -> shapeType
+    
+    shapeInfo = userShape.shapeInfo
+    updatedShapeInfo = 
+      case stringProperty of 
+        OutlineColour ->
+          {shapeInfo | outlineColour = newStr}
+        FillColour ->
+          {shapeInfo | fillColour = newStr}
+        _ ->
+          shapeInfo
+
   in
-  {userShape | shapeType = updatedShapeType}
+  {userShape | shapeType = updatedShapeType, shapeInfo = updatedShapeInfo}
 
 updateShapeInfoValue: Float -> NumberShapeProperty -> UserShape -> UserShape
 updateShapeInfoValue value property userShape = 
@@ -863,36 +696,31 @@ tryUpdateShapeInfoWithInput property string userShapes =
     StringProperty stringProperty->
       List.map (updateShapeString string stringProperty) userShapes
 
---UPDATE FUNCTION WITH NEW TYPES
 tryUpdateSelectedShapes: Model -> ShapeProperty -> String -> List UserShape
 tryUpdateSelectedShapes model property string =
   List.filter (shapeSelected model) model.userShapes
     |> tryUpdateShapeInfoWithInput property string 
     |> (++) (List.filter (shapeNotSelected model) model.userShapes) 
 
-updateNumberTypingInput: Model -> (Keys -> KeyState) -> Model
+updateNumberTypingInput: Model -> (Keys -> KeyState) -> Action
 updateNumberTypingInput model keyInfo =
-  let 
-    newAction = 
-      case model.currentAction of 
-        TypingInput property string ->          --Period and minus keys are not supported
-          case getKeyCheckFromList (numberKeys ++ [Key "m", Key "p", Delete, Backspace]) [JustDown] keyInfo of 
-            Just (Delete) ->
-              TypingInput property (String.dropRight 1 string)
-            Just (Backspace) ->
-              TypingInput property (String.dropRight 1 string)
-            Just (Key "m") ->
-              TypingInput property (string ++ "-")
-            Just (Key "p") ->
-              TypingInput property (string ++ ".")
-            Just (Key char) ->
-              TypingInput property (string ++ char)
-            _ -> 
-              TypingInput property string
+  case model.currentAction of 
+    TypingInput property string ->          --Period and minus keys are not supported
+      case getKeyCheckFromList (numberKeys ++ [Key "m", Key "p", Delete, Backspace]) [JustDown] keyInfo of 
+        Just (Delete) ->
+          TypingInput property (String.dropRight 1 string)
+        Just (Backspace) ->
+          TypingInput property (String.dropRight 1 string)
+        Just (Key "m") ->
+          TypingInput property (string ++ "-")
+        Just (Key "p") ->
+          TypingInput property (string ++ ".")
+        Just (Key char) ->
+          TypingInput property (string ++ char)
         _ -> 
-          model.currentAction
-  in
-  {model | currentAction = newAction}
+          TypingInput property string
+    _ -> 
+      model.currentAction
 
 updateStringTypingInput: Model -> (Keys -> KeyState) -> Action
 updateStringTypingInput model keyInfo =
@@ -951,17 +779,16 @@ updateTick model getKeyStates =
       else 
         model
     TypingInput property inputStr ->
-      case property of 
-        NumberShapeProperty _ ->
-          if keyPressed getKeyStates Enter then
-            { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = None}
-          else
-            updateNumberTypingInput model getKeyStates
-        StringProperty _ ->
-          if keyPressed getKeyStates Enter then
-            { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = None}
-          else
+      if keyPressed getKeyStates Enter then
+        { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = None}
+      else
+        case property of 
+          StringProperty TextString ->
             { savedModel | userShapes = tryUpdateSelectedShapes model property inputStr, currentAction = updateStringTypingInput savedModel getKeyStates}
+          StringProperty _ ->
+            { savedModel | currentAction = updateStringTypingInput savedModel getKeyStates}
+          _ ->
+            { savedModel | currentAction = updateNumberTypingInput model getKeyStates }
     _ ->
       -- Undo
       if keyPressed getKeyStates Ctrl && getKeyStates (Key "z") == JustDown then
@@ -988,7 +815,7 @@ updateTick model getKeyStates =
         model
 
 -- Your update function goes here
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : T.Msg -> Model -> ( Model, Cmd T.Msg )
 update msg model = 
   case msg of
     Tick _ (getKeyStates, _, _) -> 
@@ -1036,10 +863,10 @@ update msg model =
                   None
                 PropertyFieldID property ->
                   case property of 
-                    NumberShapeProperty _ ->
-                      TypingInput property ""
-                    StringProperty _ ->
+                    StringProperty TextString ->
                       TypingInput property (getPropertyString model property)
+                    _ ->
+                      TypingInput property ""
             ,
             userShapes = 
               case model.currentAction of 
@@ -1083,31 +910,6 @@ update msg model =
       } 
       , Cmd.none )
 
--- This is the type of your model
-type alias Model = 
-  {
-    currentShapeID : Int,
-    userShapes : List (UserShape),
-    keyboardInfo : (Keys -> KeyState),
-    selectedShapes : List Int,
-    mouseState : MouseState,
-    currentAction : Action,
-    copiedShapes : List (UserShape),
-    prevModels : List ModelInfo
-  }
-
---Needed for undo feature
-type alias ModelInfo = 
-  { 
-    currentShapeID : Int,
-    userShapes : List (UserShape),
-    keyboardInfo : (Keys -> KeyState),
-    selectedShapes : List Int,
-    mouseState : MouseState,
-    currentAction : Action,
-    copiedShapes : List (UserShape)
-  }
-
 modelFromInfo: ModelInfo -> List ModelInfo -> Model
 modelFromInfo modelInfo prevModels = 
   Model modelInfo.currentShapeID modelInfo.userShapes modelInfo.keyboardInfo modelInfo.selectedShapes modelInfo.mouseState modelInfo.currentAction modelInfo.copiedShapes prevModels
@@ -1121,11 +923,11 @@ init : Model
 init = {currentShapeID = 0, userShapes = [], keyboardInfo = defaultKeyboardInfo, selectedShapes = [], mouseState = ((0, 0), False), currentAction = None, prevModels = [], copiedShapes = [] }
 
 -- Your subscriptions go here
-subscriptions : Model -> Sub Msg
+subscriptions : Model -> Sub T.Msg
 subscriptions model = Sub.none
 
 -- Your main function goes here
-main : EllieAppWithTick () Model Msg
+main : EllieAppWithTick () Model T.Msg
 main = 
   ellieAppWithTick Tick 
     { init = \flags -> (init, Cmd.none)
@@ -1135,7 +937,7 @@ main =
     }
 
 -- You view function goes here
-view : Model -> { title: String, body : Collage Msg }
+view : Model -> { title: String, body : Collage T.Msg }
 view model = 
   {
     title = "Shape Creator v0.3"
