@@ -4,8 +4,17 @@ import Dict exposing (Dict)
 import GraphicSVG exposing (..)
 import ShapeCreatorTypes as T exposing (..)
 
+width: Float
+width = 1920
+height: Float
+height = 1080
+
 emptyShape: Shape T.Msg
 emptyShape = (rect 0 0 |> ghost)
+
+--Number of decimals to round to
+decimals: Int
+decimals = 2
 
 baseClickableBox : Shape T.Msg
 baseClickableBox = 

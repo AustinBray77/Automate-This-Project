@@ -277,7 +277,6 @@ getPropertyFromShapeInfo property info =
 propertyFloatToString: Model -> NumberShapeProperty -> Maybe Float -> String
 propertyFloatToString model property propertyFloat = 
   let 
-    decimals = 3
     propertyString =   
       case propertyFloat of 
         Just float ->
@@ -941,5 +940,5 @@ view : Model -> { title: String, body : Collage T.Msg }
 view model = 
   {
     title = "Shape Creator v0.3"
-  , body = collage 250 140 (myShapes model)
+  , body = collage 1920 1080 (myShapes model)
   }
