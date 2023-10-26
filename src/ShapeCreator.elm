@@ -65,16 +65,17 @@ buildTextShape: String -> Shape T.Msg
 buildTextShape string = 
   text string
     |> selectable
-    |> size 7
-    |> fixedwidth 
-    --TODO Custom font
+    |> size propertyFontSize
+    |> fixedwidth
+    |> centered 
     |> filled black
 
 buildLabel: String -> Shape T.Msg
 buildLabel string = 
   text string
-    |> size 4
+    |> size labelFontSize
     |> fixedwidth 
+    |> centered
     |> filled black
 
 getFieldName: ShapeProperty -> String
@@ -267,11 +268,11 @@ buildPropertyField model boxType property =
           Wide -> wideClickableBox
         ,
         buildTextShape textString
-        |> move ((toFloat (String.length textString) * -1.9) - 0 , -2.2)
+        |> move (0, -10)
         ,
         getFieldName property
           |> buildLabel
-          |> move (((toFloat (String.length (getFieldName property))) * -1.1) , 7)
+          |> move (0, 35)
       ]
         |> notifyMouseMoveAt MouseMove
         |> addNonUserShapeCallbacks model (PropertyFieldID (property))
@@ -969,5 +970,5 @@ view : Model -> { title: String, body : Collage T.Msg }
 view model = 
   {
     title = "Shape Creator v0.3"
-  , body = collage 320 180 (myShapes model)
+  , body = collage 1920 1080 (myShapes model)
   }

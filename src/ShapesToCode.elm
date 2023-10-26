@@ -15,10 +15,10 @@ stringToTextShapes: String -> List (Shape T.Msg)
 stringToTextShapes string =
   String.split "\n" string
     |> List.map (\str -> text str)
-    |> List.map (size 4)
+    |> List.map (size 15)
     |> List.map selectable
     |> List.map (filled black)
-    |> List.indexedMap (\index shape -> move (-80, toFloat(60 - index * 4))shape)
+    |> List.indexedMap (\index shape -> move (-300, toFloat (500 - index * 15)) shape)
 
 getColourString: String -> String
 getColourString colString =
@@ -45,37 +45,72 @@ getColourString colString =
           |> (++) "(rgb "
       _ -> default
 
-convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
-convertShapesToCode combineType tabs shapeDatas =
+getShapeModifiers: ShapeInfo -> ShapeType -> List (List String)
+getShapeModifiers info shapeType =
   let 
-    shapePropertiesCode: Int -> ShapeType -> ShapeInfo -> String
-    shapePropertiesCode tabs3 shapeType info = 
-      [
-        ["scaleX", String.fromFloat (Tuple.first info.scale)],
-        ["scaleY", String.fromFloat (Tuple.second info.scale)],
-        ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"],
-        ["move", tupleToString info.position]
-      ]
-        |> (
-          case shapeType of 
-            Group _ ->
-              identity
-            Text _ _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
-                |> List.singleton
-                |> addToEnd
-            _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
-                |> List.singleton
-                |> addToEnd
-          )
+    scaleXFunc: (List String -> List String)
+    scaleXFunc = 
+      if floatEqual (Tuple.first info.scale) 1 then
+        identity
+      else 
+        (++) ["scaleX", String.fromFloat (Tuple.first info.scale)] 
+
+    scaleYFunc: (List String -> List String)
+    scaleYFunc = 
+      if floatEqual (Tuple.second info.scale) 1 then
+        identity
+      else 
+        (++) ["scaleY", String.fromFloat (Tuple.second info.scale)]
+    
+    rotateFunc: (List String -> List String)
+    rotateFunc =
+      if floatEqual info.rotation 0 then
+        identity
+      else
+        (++) ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"]
+    
+    moveFunc: (List String -> List String)
+    moveFunc = 
+      if floatTupleEqual info.position (0, 0) then
+        identity
+      else
+        (++) ["move", tupleToString info.position]
+
+    outlineFunc: (List String -> List String)
+    outlineFunc = 
+      case shapeType of 
+        Group _ ->
+          identity
+        _ ->
+          (++) ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
+  in
+    []
+    |> outlineFunc
+    |> rotateFunc
+    |> scaleYFunc
+    |> scaleXFunc
+    |> moveFunc
+    |> List.singleton
+
+shapePropertiesCode: Int -> ShapeType -> ShapeInfo -> String
+shapePropertiesCode tabs3 shapeType info = 
+  let
+     shapeModifiers = getShapeModifiers info shapeType
+  in
+  case shapeModifiers of 
+    [[]] -> ""
+    _ ->
+      getShapeModifiers info shapeType
         |> List.map (List.intersperse " ") -- L L S
         |> List.map ((++) ["|> "])           -- L L S
         |> List.map ((++) [(getTabs tabs3)]) -- L L S
         |> List.map (List.foldr (++) "")   -- L L S -> L S
         |> List.intersperse "\n"           -- L S
-        |> List.foldr (++) ""              -- L S -> S
+        |> List.foldr (++) ""  
 
+convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
+convertShapesToCode combineType tabs shapeDatas =
+  let 
     defaultFill: Int -> String -> List String
     defaultFill tabs5 colourStr = ["\n", (getTabs tabs5), "|>", "filled", getColourString colourStr]
 

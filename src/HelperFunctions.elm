@@ -55,6 +55,10 @@ floatEqual float1 float2 =
   in
     abs (float1 - float2) <= tolerance
 
+floatTupleEqual: (Float, Float) -> (Float, Float) -> Bool
+floatTupleEqual (x1, y1) (x2, y2) =
+  floatEqual x1 x2 && floatEqual y1 y2
+
 positionDelta: (Float, Float) -> (Float, Float) -> (Float, Float)
 positionDelta (x1, y1) (x2, y2) = (x2 - x1, y2 - y1)
 
