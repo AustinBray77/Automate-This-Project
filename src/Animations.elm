@@ -19,16 +19,10 @@ type alias TimeData = {
 -- type input for antimation functions
 type alias AnimateFuncInput = { 
     time : Float, 
-    shape : Shape Msg,
-    ease : Maybe Ease
+    shape : Shape Msg
     }
 
 type alias Ease = (Float -> Float)
-
---Takes in a animation func input and swaps the start and end times (useful for reverse animations)
--- flipInputTime: AnimateFuncInput -> AnimateFuncInput
--- flipInputTime input = 
---     AnimateFuncInput input.x input.y (TimeData input.time.end input.time.current input.time.start) input.shape
 
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float
@@ -46,26 +40,33 @@ tanScaled x =
     tan (pi/2 * x)
 
 -- Sin function scaled to have it's period between 0 and 1
-fullSinScaled: Float -> Float
-fullSinScaled x =
-    sin(pi * (x - 0.5))+1
+-- ease in and out
+easeInAndOut: Float -> Float
+easeInAndOut x =
+    clamp 0 1 (sin (pi * (x - 0.5)) / 2 + 0.5)
 
 --Sin function scaled to have only the top left quarter of the period between 0 and 1
-topSinScaled: Float -> Float
-topSinScaled x =
-    sin(pi * x)
+easeOut: Float -> Float
+easeOut x =
+    clamp 0 1 (sin (pi * x / 2))
 
 --Sin function scaled to have only the bottom left quarter of the period between 0 and 1
-bottomSinScaled: Float -> Float
-bottomSinScaled x =
-    sin(pi * (x - 1))
+easeIn: Float -> Float
+easeIn x =
+    sin(pi / 2 * (x - 1)) + 1
 
 -- makes the animation run in the given TimeData interval
 -- this function assumes that the given animation is originally done in 1 second
-fromTill: TimeData -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
-fromTill timeData animation input =
-        animation (AnimateFuncInput ((percentCompleted timeData) input.time) input.shape input.ease)
-
+fromTill: TimeData -> Maybe Ease -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
+fromTill timeData easeFunc animation input =
+    let
+        ease = 
+            case easeFunc of 
+                Nothing -> identity
+                Just func -> func
+    in
+        animation (AnimateFuncInput (ease ((percentCompleted timeData) input.time)) input.shape)
+        
 -- Converts type alias RGBA to Color type 
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =
@@ -125,24 +126,24 @@ particlizeShape radius resolution shape =
             |> List.map (clipShapes shape)
 
 
-moveBasedOnIndex: Ease -> Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-moveBasedOnIndex ease square speed currentTime shapeTuple =
+moveBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
+moveBasedOnIndex square speed currentTime shapeTuple =
     let
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
 
-        xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * (ease (currentTime))
-        yPos = (toFloat (index//square - square//2) + 0.5) * -speed * (ease (currentTime))
+        xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * currentTime
+        yPos = (toFloat (index//square - square//2) + 0.5) * -speed * currentTime
     in
         (index, move (xPos, yPos) shape)
 
-explodeParticlizedShape: Ease -> Float -> Float -> List (Shape Msg) -> List (Shape Msg)
-explodeParticlizedShape ease speed currentTime shapes =
+explodeParticlizedShape: Float -> Float -> List (Shape Msg) -> List (Shape Msg)
+explodeParticlizedShape speed currentTime shapes =
     let
         square = round(sqrt (toFloat (List.length shapes)))
     in
         List.indexedMap Tuple.pair shapes
-        |> List.map (moveBasedOnIndex ease square speed currentTime)
+        |> List.map (moveBasedOnIndex square speed currentTime)
         |> List.unzip
         |> Tuple.second
 
@@ -152,14 +153,11 @@ particlizeAndExplodeShape speed x y input =
         radius = x
         resolution = round(y)
         shapes = particlizeShape radius resolution input.shape
-        ease = case input.ease of
-            Just e -> e
-            Nothing -> tanScaled
     in
-        group (explodeParticlizedShape ease speed input.time shapes)
+        group (explodeParticlizedShape speed input.time shapes)
 
-rotateBasedOnIndex: Ease -> Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-rotateBasedOnIndex ease square speed currentTime shapeTuple =
+rotateBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
+rotateBasedOnIndex square speed currentTime shapeTuple =
     let
         index = Tuple.first shapeTuple
         shape = Tuple.second shapeTuple
@@ -170,18 +168,18 @@ rotateBasedOnIndex ease square speed currentTime shapeTuple =
         dist = sqrt(xPos^2 + yPos^2)
     in
         (index, 
-            rotate (dist * speed * degrees (ease currentTime))
+            rotate (dist * speed * degrees currentTime)
             (shape)
         )
 
-explodeRotateShape: Ease -> Float -> Float -> Float -> List (Shape Msg) -> List (Shape Msg)
-explodeRotateShape ease speed rotateSpeed currentTime shapes =
+explodeRotateShape: Float -> Float -> Float -> List (Shape Msg) -> List (Shape Msg)
+explodeRotateShape speed rotateSpeed currentTime shapes =
     let
         square = round(sqrt (toFloat (List.length shapes)))
     in
         List.indexedMap Tuple.pair shapes
-        |> List.map (moveBasedOnIndex ease square speed currentTime)
-        |> List.map (rotateBasedOnIndex ease square rotateSpeed currentTime)
+        |> List.map (moveBasedOnIndex square speed currentTime)
+        |> List.map (rotateBasedOnIndex square rotateSpeed currentTime)
         |> List.unzip
         |> Tuple.second
 
@@ -189,15 +187,13 @@ tornadoShape: Float -> Float -> Float -> Int -> AnimateFuncInput -> Shape Msg
 tornadoShape speed rotateSpeed radius resolution input = 
     let
         shapes = particlizeShape radius resolution input.shape
-        ease = case input.ease of
-            Just e -> e
-            Nothing -> tanScaled
     in
-        group (explodeRotateShape ease speed rotateSpeed input.time shapes)
+        group (explodeRotateShape speed rotateSpeed input.time shapes)
 
 -- moves the shape x, y amount of pixels after the start time over the duration
 moveAni : Float -> Float -> AnimateFuncInput -> Shape Msg
 moveAni x y input = 
+    
         input.shape
             |> move ((x * input.time), (y * input.time))
 
@@ -245,14 +241,14 @@ typeWriter string speed blinkSpeed time currentTime =
 
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
-            -> Float -> Maybe Ease -> Shape Msg -> Shape Msg -- takes in the current time and shape
-animate animations time ease shape =
-    subAnimate (AnimateFuncInput time shape ease) animations -- calling all the animations
+            -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape
+animate animations time shape =
+    subAnimate (AnimateFuncInput time shape) animations -- calling all the animations
 
 -- backend function
 -- used to loop thorugh each animation for the given shape
 subAnimate : AnimateFuncInput -> List (AnimateFuncInput -> Shape Msg) -> Shape Msg
 subAnimate input animationFuncs =
     case animationFuncs of
-        x :: xs -> subAnimate (AnimateFuncInput input.time (x input) input.ease) xs -- calling the animation on the shape until list is empty
+        x :: xs -> subAnimate (AnimateFuncInput input.time (x input)) xs -- calling the animation on the shape until list is empty
         _ -> input.shape -- returning shape with animations applied once list is empty
