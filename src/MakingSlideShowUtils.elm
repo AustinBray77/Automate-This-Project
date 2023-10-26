@@ -53,7 +53,7 @@ slide color time =
     ,
     rect 100 100
         |> outlined (solid 5) black
-        |> animate [(rotateAni 25)] time
+        |> animate [(rotateAni 25)] time Nothing
         |> move (-screen.x/2+50, -screen.y/2+50)
     ] 
 
@@ -95,10 +95,10 @@ displaySlide s time =
         _ -> s.displaySlide (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)
 
 -- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
-transition : List (AnimateFuncInput -> Shape Msg) -> Float -> SlideState -> Shape Msg -> Shape Msg
-transition animations time state shape =
+transition : List (AnimateFuncInput -> Shape Msg) -> Float -> SlideState -> Maybe Ease -> Shape Msg -> Shape Msg
+transition animations time state ease shape =
     case state of 
-        Transitioning -> animate animations time shape
+        Transitioning -> animate animations time ease shape
         _ -> shape
 
 update : Msg -> Model -> Model
@@ -176,7 +176,7 @@ intro input =
         |> filled white
         |> scale 10
         |> animate [(fromTill (TimeData 2 3) (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), 
-                    (fromTill (TimeData 2 3) (tornadoShape 5 5 120 36))] input.time
+                    (fromTill (TimeData 2 3) (particlizeAndExplodeShape 5 120 36))] input.time (Just (\x -> 50 * fullSinScaled x))
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
@@ -184,7 +184,7 @@ intro input =
         |> animate [(fadeShapeToColor (RGBA 0 0 255 255) (RGBA 266 166 0 255))] 0 0 (TimeData 2 input.time 4)
         |> animate [rotateAnimation] 100 0 (TimeData 2 input.time 4)--}
     ]
-    |> transition [(bounceBack 1000 0), (slideOut 0 1000)] input.transitionTime input.state
+    |> transition [(bounceBack 1000 0), (slideOut 0 1000)] input.transitionTime input.state Nothing
 
 creating1 : SlideInput -> Shape Msg
 creating1 input =
@@ -194,35 +194,35 @@ creating1 input =
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 2 4) (moveAni 1910 0))] input.time Nothing
         |> move (-950, 200),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 3 4) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 3 4) (moveAni 1910 0))] input.time Nothing
         |> move (-950, 100),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 4 5) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 4 5) (moveAni 1910 0))] input.time Nothing
         |> move (-950, 0),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 5 6) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 5 6) (moveAni 1910 0))] input.time Nothing
         |> move (-950, -100),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 6 7) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 6 7) (moveAni 1910 0))] input.time Nothing
         |> move (-950, -200),
         text "Second slide"
         |> centered
         |> filled white
         |> scale 10
-        |> animate [fromTill (TimeData 4 2) (particlizeAndExplodeShape 5 300 36)] input.time
+        |> animate [fromTill (TimeData 4 2) (particlizeAndExplodeShape 5 300 36)] input.time Nothing
     ]
-    |> transition [(rotateAni 100), (bounceBack 1000 2000)] input.transitionTime input.state
+    |> transition [(rotateAni 100), (bounceBack 1000 2000)] input.transitionTime input.state Nothing
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = [intro, creating1] } -- the slides are in order 
