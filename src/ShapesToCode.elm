@@ -48,59 +48,59 @@ getColourString colString =
 getShapeModifiers: ShapeInfo -> ShapeType -> List (List String)
 getShapeModifiers info shapeType =
   let 
-    scaleXFunc: (List String -> List String)
+    scaleXFunc: (List (List String) -> List (List String)) 
     scaleXFunc = 
       if floatEqual (Tuple.first info.scale) 1 then
         identity
       else 
-        (++) ["scaleX", String.fromFloat (Tuple.first info.scale)] 
+        (::) ["scaleX", String.fromFloat (Tuple.first info.scale)] 
 
-    scaleYFunc: (List String -> List String)
+    scaleYFunc: (List (List String) -> List (List String)) 
     scaleYFunc = 
       if floatEqual (Tuple.second info.scale) 1 then
         identity
       else 
-        (++) ["scaleY", String.fromFloat (Tuple.second info.scale)]
+        (::) ["scaleY", String.fromFloat (Tuple.second info.scale)]
     
-    rotateFunc: (List String -> List String)
+    rotateFunc: (List (List String) -> List (List String)) 
     rotateFunc =
       if floatEqual info.rotation 0 then
         identity
       else
-        (++) ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"]
+        (::) ["rotate", "(degrees", String.fromFloat (info.rotation * -1), ")"]
     
-    moveFunc: (List String -> List String)
+    moveFunc: (List (List String) -> List (List String)) 
     moveFunc = 
       if floatTupleEqual info.position (0, 0) then
         identity
       else
-        (++) ["move", tupleToString info.position]
+        (::) ["move", tupleToString info.position]
 
-    outlineFunc: (List String -> List String)
+    outlineFunc: (List (List String) -> List (List String)) 
     outlineFunc = 
       case shapeType of 
         Group _ ->
           identity
         _ ->
-          (++) ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
+          (::) ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
   in
     []
     |> outlineFunc
+    |> moveFunc
     |> rotateFunc
     |> scaleYFunc
     |> scaleXFunc
-    |> moveFunc
-    |> List.singleton
+
 
 shapePropertiesCode: Int -> ShapeType -> ShapeInfo -> String
 shapePropertiesCode tabs3 shapeType info = 
   let
-     shapeModifiers = getShapeModifiers info shapeType
+    shapeModifiers = getShapeModifiers info shapeType
   in
   case shapeModifiers of 
-    [[]] -> ""
+    [] -> ""
     _ ->
-      getShapeModifiers info shapeType
+      shapeModifiers
         |> List.map (List.intersperse " ") -- L L S
         |> List.map ((++) ["|> "])           -- L L S
         |> List.map ((++) [(getTabs tabs3)]) -- L L S
@@ -108,46 +108,48 @@ shapePropertiesCode tabs3 shapeType info =
         |> List.intersperse "\n"           -- L S
         |> List.foldr (++) ""  
 
+defaultFill: Int -> String -> List String
+defaultFill tabs5 colourStr = ["\n", (getTabs tabs5), "|>", "filled", getColourString colourStr]
+
+shapeCode: Int -> (ShapeType, ShapeInfo) -> String
+shapeCode tabs2 (shapeType, shapeInfo) = 
+  (
+  case shapeType of
+    Rect width height radius ->
+      ["roundedRect", String.fromFloat width, String.fromFloat height, String.fromFloat radius]
+      ++ defaultFill tabs2 shapeInfo.fillColour
+        |> formatList tabs2
+    Oval width height -> 
+      ["oval", String.fromFloat width, String.fromFloat height]
+        ++ defaultFill tabs2 shapeInfo.fillColour
+        |> formatList tabs2
+    Ngon sides radius -> 
+      ["ngon", String.fromInt sides, String.fromFloat radius]
+        ++ defaultFill tabs2 shapeInfo.fillColour
+        |> formatList tabs2
+    Text str size ->
+      ["text", "\"" ++ str  ++ "\""]
+        |> addToEnd ["\n", (getTabs tabs2), "|>", "size", String.fromFloat size]
+        |> addToEnd ["\n", (getTabs tabs2), "|>", "alignLeft"]
+        |> addToEnd ["\n", (getTabs tabs2), "|>", "filled", "black"]
+        |> formatList tabs2
+    Group groupedShapes ->
+      convertShapesToCode CombToGroup (tabs2 + 1) groupedShapes ++ "\n"
+    Union unionedShapes ->
+      convertShapesToCode CombToUnion (tabs2 + 1) unionedShapes ++ "\n"
+    )
+    ++ 
+    shapePropertiesCode (tabs2 + 1) shapeType shapeInfo
+
+formatList: Int -> List String -> String
+formatList tabs4 list = 
+    (List.intersperse " " list
+      |> List.foldr (++) ""
+      |> (++) (getTabs tabs4))
+    ++ "\n"
+
 convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
 convertShapesToCode combineType tabs shapeDatas =
-  let 
-    defaultFill: Int -> String -> List String
-    defaultFill tabs5 colourStr = ["\n", (getTabs tabs5), "|>", "filled", getColourString colourStr]
-
-    shapeCode: Int -> (ShapeType, ShapeInfo) -> String
-    shapeCode tabs2 (shapeType, shapeInfo) = 
-      (case shapeType of
-        Rect width height radius ->
-          ["roundedRect", String.fromFloat width, String.fromFloat height, String.fromFloat radius]
-          ++ defaultFill tabs2 shapeInfo.fillColour
-            |> formatList tabs2
-        Oval width height -> 
-          ["oval", String.fromFloat width, String.fromFloat height]
-            ++ defaultFill tabs2 shapeInfo.fillColour
-            |> formatList tabs2
-        Ngon sides radius -> 
-          ["ngon", String.fromInt sides, String.fromFloat radius]
-            ++ defaultFill tabs2 shapeInfo.fillColour
-            |> formatList tabs2
-        Text str size ->
-          ["text", "\"" ++ str  ++ "\""]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "size", String.fromFloat size]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "alignLeft"]
-            |> addToEnd ["\n", (getTabs tabs2), "|>", "filled", "black"]
-            |> formatList tabs2
-        Group groupedShapes ->
-          convertShapesToCode CombToGroup (tabs2 + 1) groupedShapes ++ "\n"
-        Union unionedShapes ->
-          convertShapesToCode CombToUnion (tabs2 + 1) unionedShapes ++ "\n")
-        ++ 
-        shapePropertiesCode (tabs2 + 1) shapeType shapeInfo
-
-    formatList tabs4 list = 
-        (List.intersperse " " list
-          |> List.foldr (++) ""
-          |> (++) (getTabs tabs4))
-        ++ "\n"
-  in
   (case combineType of 
     CombToGroup ->
       ([getTabs tabs, "group", "\n", getTabs tabs, "["]

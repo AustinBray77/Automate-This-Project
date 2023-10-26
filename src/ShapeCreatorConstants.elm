@@ -36,8 +36,12 @@ wideClickableBox =
   |> filled white
   |> addOutline (solid 5) blue
 
-propertyFieldOffset: (Float, Float)
-propertyFieldOffset = (685, 0)
+propertyFieldOffsetRight: (Float, Float)
+propertyFieldOffsetRight = (685, 0)
+
+propertyFieldOffsetLeft: (Float, Float)
+propertyFieldOffsetLeft = (-685 - propertyFieldXGap, 0)
+
 
 propertyFieldYGap: Float
 propertyFieldYGap = -110

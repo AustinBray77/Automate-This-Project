@@ -214,6 +214,13 @@ getPropertyString model property =
                       |> allEqual
                       |> Maybe.withDefault " "             
 
+getOffset: Model -> (Float, Float)
+getOffset model =
+  if model.currentAction == Dragging && (Tuple.first <| Tuple.first <| model.mouseState) > 300 then
+    propertyFieldOffsetLeft
+  else
+    propertyFieldOffsetRight
+
 --TODO If string is empty then leave current model property in box
   -- Maybe highlight it blue or something
 buildPropertyField: Model -> BoxType -> ShapeProperty -> Shape T.Msg
@@ -276,7 +283,7 @@ buildPropertyField model boxType property =
       ]
         |> notifyMouseMoveAt MouseMove
         |> addNonUserShapeCallbacks model (PropertyFieldID (property))
-        |> move propertyFieldOffset
+        |> move (getOffset model)
 
 getPropertyFromShapeInfo: FloatShapeProperty -> ShapeInfo -> Float
 getPropertyFromShapeInfo property info =
@@ -431,30 +438,59 @@ buildShape buildInfo (shapeType, shapeInfo) =
   in
     scaleX (Tuple.first shapeInfo.scale) shape
     |> scaleY (Tuple.second shapeInfo.scale) 
-      |> rotate (degrees shapeInfo.rotation * -1)
-      |> move 
-          (if buildInfo.snapShape then
-            roundTupleToNearest snapAmount (shapeInfo.position)
-          else 
-            shapeInfo.position)
-      |>
-        case shapeType of 
-        Group _ ->
-          identity
-        _ -> 
-          addOutline (outlineStyle outlineSize) (stringToColour outlineColour)
+    |> rotate (degrees shapeInfo.rotation * -1)
+    |> move 
+        (if buildInfo.snapShape then
+          roundTupleToNearest snapAmount (shapeInfo.position)
+        else 
+          shapeInfo.position)
+    |>
+      case shapeType of 
+      Group _ ->
+        identity
+      _ -> 
+        addOutline (outlineStyle outlineSize) (stringToColour outlineColour)
 
 getOrder: UserShape -> Int
 getOrder shape =
   shape.shapeInfo.order
 
+buildBaseShapes: Model -> List (Shape T.Msg)
+buildBaseShapes model =       
+  let
+    defaultBuildInfo = BuildShapeInfo False False False
+  in
+  if model.currentAction == Dragging then
+    buildShape defaultBuildInfo backgroundHitbox
+      |> addNonUserShapeCallbacks model BackGround
+      |> List.singleton
+  else
+    [
+      buildShape defaultBuildInfo backgroundHitbox
+      |> addNonUserShapeCallbacks model BackGround
+      ,
+      buildShape defaultBuildInfo baseRect
+        |> notifyMouseDown (CreateShape baseRect)
+        |> addNonUserShapeCallbacks model ShapeButton
+      ,
+      buildShape defaultBuildInfo baseOval
+        |> notifyMouseDown (CreateShape baseOval)
+        |> addNonUserShapeCallbacks model ShapeButton
+      ,
+      buildShape defaultBuildInfo baseNgon
+        |> notifyMouseDown (CreateShape baseNgon)
+        |> addNonUserShapeCallbacks model ShapeButton
+      , 
+      buildShape defaultBuildInfo baseText
+        |> notifyMouseDown (CreateShape baseText)
+        |> addNonUserShapeCallbacks model ShapeButton
+    ]
+
 myShapes: Model -> List (Shape T.Msg)
 myShapes model = 
   let
     sortedShapes = List.sortBy (getOrder) model.userShapes 
-    
-    defaultBuildInfo = BuildShapeInfo False False False
-    
+
     userShapes selectedOnly = 
       if selectedOnly then  
         List.filter (shapeSelected model) sortedShapes
@@ -462,7 +498,6 @@ myShapes model =
         sortedShapes
 
     shapeData selectedOnly = 
-
       List.map userShapeToData (userShapes selectedOnly)
 
   in
@@ -470,26 +505,7 @@ myShapes model =
     Exporting selectedOnly ->
       stringToTextShapes (convertShapesToCode CombToGroup 1 (shapeData selectedOnly))
     _ ->
-      [
-        buildShape defaultBuildInfo backgroundHitbox
-        |> addNonUserShapeCallbacks model BackGround
-        ,
-        buildShape defaultBuildInfo baseRect
-          |> notifyMouseDown (CreateShape baseRect)
-          |> addNonUserShapeCallbacks model ShapeButton
-        ,
-        buildShape defaultBuildInfo baseOval
-          |> notifyMouseDown (CreateShape baseOval)
-          |> addNonUserShapeCallbacks model ShapeButton
-        ,
-        buildShape defaultBuildInfo baseNgon
-          |> notifyMouseDown (CreateShape baseNgon)
-          |> addNonUserShapeCallbacks model ShapeButton
-        , 
-        buildShape defaultBuildInfo baseText
-          |> notifyMouseDown (CreateShape baseText)
-          |> addNonUserShapeCallbacks model ShapeButton
-      ]
+        buildBaseShapes model
       ++ 
       (
         buildAndAddCallbacks model sortedShapes
@@ -773,10 +789,10 @@ updateStringTypingInput model keyInfo =
     _ -> 
       model.currentAction
 
-pasteShapes: Model -> List UserShape -> Model
-pasteShapes model shapes =
+addShapes: Model -> Bool -> List UserShape -> Model
+addShapes model copyShapes shapes =
   let 
-    startID = model.currentShapeID + 1
+    startID = model.currentShapeID
 
     setId: Int -> UserShape -> UserShape
     setId newId shape = 
@@ -791,9 +807,9 @@ pasteShapes model shapes =
   in
     { model | 
         userShapes = updatedCopiedShapes ++ model.userShapes,
-        currentShapeID = model.currentShapeID + (List.length shapes) + 1,
+        currentShapeID = model.currentShapeID + (List.length shapes),
         selectedShapes = List.range startID (startID + (List.length shapes)),
-        copiedShapes = updatedCopiedShapes
+        copiedShapes = if copyShapes then updatedCopiedShapes else []
     }
 
 updateTick: Model -> (Keys -> KeyState) -> Model
@@ -828,15 +844,17 @@ updateTick model getKeyStates =
       -- Combine: Union
       else if getKeyStates (Key "u") == JustDown then
         combineSelectedShapes savedModel CombToUnion
+      else if getKeyStates (Key "s") == JustDown then
+        model --TODO Add splitting shapes
       -- Copy
       else if keyPressed getKeyStates Ctrl && getKeyStates (Key "c") == JustDown then
         {savedModel | copiedShapes = List.filter (shapeSelected model) model.userShapes} 
       -- Paste
       else if keyPressed getKeyStates Ctrl && getKeyStates (Key "v") == JustDown then
-        pasteShapes savedModel model.copiedShapes
+        addShapes savedModel True model.copiedShapes
       -- Export Mode 
       else if getKeyStates (Key "e") == JustDown then
-        { savedModel | currentAction = Exporting (getKeyStates Ctrl == Down) }
+        { savedModel | currentAction = Exporting (getKeyStates UpArrow == Down) }
       -- Delete Selected Shapes
       else if anyKeyPressed [Delete, Backspace] getKeyStates then
           deleteSelectedShapes savedModel (getKeyStates)
