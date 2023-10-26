@@ -2,39 +2,15 @@ module MakingSlideShowUtils exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import Animations exposing (Msg)
+import SlideUtilTypes exposing (..)
+import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
-import KeyFunctions exposing (anyKeyJustPressed)
-
--- can transition for a max of 3 seconds
-type SlideState = Visible | Transitioning | Hidden
-
--- the input that a slides function is required to have
-type alias SlideInput = {
-    time : Float,
-    transitionTime : Float,
-    state : SlideState}
-
--- content is used for the content of the slide
--- slide is used for moving the slide out of view
-type AnimationType = SlideAnimation | ContentAnimation
-
--- backend Slide defenition
-type alias Slide =
-    {state : SlideState, -- the state of this slide
-     displaySlide : (SlideInput -> Shape Msg), -- function that creates the slide
-     startTime : Float, -- the time this slide started being seen (used for slide animtation)
-     transitionTime : Float -- the time that the transition started
-    } 
+import KeyFunctions exposing (..)
 
 type alias Model = {time : Float, 
                     slideNumber : Int, 
                     slides : List Slide, 
                     slideTextStartTime : Float}
-
--- storage for screen size
-screen : { x : number, y : number}
-screen = { x = 1920, y = 1080 }
 
 view : Model -> Collage Msg
 view model =
@@ -44,18 +20,6 @@ view model =
         displaySlideNum model -- displays the slide number
         ]
 
--- template for a slide background
-slide : Color -> Float -> Shape Msg
-slide color time =
-    group [
-    rect screen.x screen.y
-        |> filled color
-    ,
-    rect 100 100
-        |> outlined (solid 5) black
-        |> animate [(rotateAni 25)] time
-        |> move (-screen.x/2+50, -screen.y/2+50)
-    ] 
 
 displaySlideNum : Model -> Shape Msg
 displaySlideNum model =
@@ -93,13 +57,6 @@ displaySlide s time =
     case s.state of 
         Hidden -> filled black (rect 0 0) -- returning a shape that wont be drawn
         _ -> s.displaySlide (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)
-
--- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
-transition : List (AnimateFuncInput -> Shape Msg) -> Float -> SlideState -> Shape Msg -> Shape Msg
-transition animations time state shape =
-    case state of 
-        Transitioning -> animate animations time shape
-        _ -> shape
 
 update : Msg -> Model -> Model
 update msg model =

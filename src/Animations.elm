@@ -1,28 +1,8 @@
 module Animations exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-
-type Msg = Tick Float GetKeyState 
-
-type alias RGBA = {
-    r: Float,
-    g: Float,
-    b: Float,
-    a: Float
-    }
-
-type alias TimeData = {
-    start: Float,
-    end: Float
-    }
-
--- type input for antimation functions
-type alias AnimateFuncInput = { 
-    time : Float, 
-    shape : Shape Msg
-    }
-
-type alias Ease = (Float -> Float)
+import SlideUtilTypes exposing (..)
+import SlideUtilTypes exposing (Msg)
 
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float
@@ -252,3 +232,10 @@ subAnimate input animationFuncs =
     case animationFuncs of
         x :: xs -> subAnimate (AnimateFuncInput input.time (x input)) xs -- calling the animation on the shape until list is empty
         _ -> input.shape -- returning shape with animations applied once list is empty
+
+-- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
+transition : List (AnimateFuncInput -> Shape Msg) -> Float -> SlideState -> Shape Msg -> Shape Msg
+transition animations time state shape =
+    case state of 
+        Transitioning -> animate animations time shape
+        _ -> shape
