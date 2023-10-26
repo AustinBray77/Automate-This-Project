@@ -92,8 +92,8 @@ placeShapesBasedOnIndex radius resolution squareSize shapeTuple =
             (shape)
         )
 
-particlizeShape: Float -> Int -> Shape Msg -> List (Shape Msg)
-particlizeShape radius resolution shape = 
+particlizeShape: Float -> Int -> (Float, Float) -> Shape Msg -> List (Shape Msg)
+particlizeShape radius resolution position shape = 
     let
         squareSize = radius*2 / (sqrt (toFloat resolution))
         baseSquare = 
@@ -101,6 +101,7 @@ particlizeShape radius resolution shape =
             |> filled grey
     in
         List.repeat resolution (baseSquare)
+            |> List.map (\x -> x |> move position)
             |> List.indexedMap Tuple.pair
             |> List.map (placeShapesBasedOnIndex radius resolution squareSize)
             |> List.map (clipShapes shape)
@@ -127,12 +128,10 @@ explodeParticlizedShape speed currentTime shapes =
         |> List.unzip
         |> Tuple.second
 
-particlizeAndExplodeShape: Float -> Float -> Float -> AnimateFuncInput -> Shape Msg
-particlizeAndExplodeShape speed x y input = 
+particlizeAndExplodeShape: Float -> Float -> Int -> (Float, Float) -> AnimateFuncInput -> Shape Msg
+particlizeAndExplodeShape speed radius resolution position input= 
     let
-        radius = x
-        resolution = round(y)
-        shapes = particlizeShape radius resolution input.shape
+        shapes = particlizeShape radius resolution position input.shape
     in
         group (explodeParticlizedShape speed input.time shapes)
 
@@ -163,10 +162,10 @@ explodeRotateShape speed rotateSpeed currentTime shapes =
         |> List.unzip
         |> Tuple.second
 
-tornadoShape: Float -> Float -> Float -> Int -> AnimateFuncInput -> Shape Msg
-tornadoShape speed rotateSpeed radius resolution input = 
+tornadoShape: Float -> Float -> Float -> Int -> (Float, Float) -> AnimateFuncInput -> Shape Msg
+tornadoShape speed rotateSpeed radius resolution position input = 
     let
-        shapes = particlizeShape radius resolution input.shape
+        shapes = particlizeShape radius resolution position input.shape
     in
         group (explodeRotateShape speed rotateSpeed input.time shapes)
 
@@ -218,6 +217,21 @@ typeWriter string speed blinkSpeed time currentTime =
             else 
                 " "
         )
+
+--Blank shape used for hide animation optimization
+blankShape: Shape Msg
+blankShape = 
+    rect 0 0 
+    |> filled (rgba 0 0 0 0)
+
+-- Hides shape after given time, if start time == end time it will be hidden immediately
+hideShape: RGBA -> AnimateFuncInput -> Shape Msg
+hideShape shapeColor input =
+    if input.time < 1 then
+        input.shape
+        |> repaint (rgbaToColor (calculateColor input shapeColor (RGBA 0 0 0 0) ))
+    else 
+        blankShape
 
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide

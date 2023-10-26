@@ -6,6 +6,7 @@ import SlideUtilTypes exposing (..)
 import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
 import KeyFunctions exposing (..)
+import EntertainmentSlides exposing (entertainmentSlide1)
 
 type alias Model = {time : Float, 
                     slideNumber : Int, 
@@ -133,7 +134,7 @@ intro input =
         |> filled white
         |> scale 10
         |> animate [(fromTill (TimeData 2 3) Nothing (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), 
-                    (fromTill (TimeData 2 3) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 120 36))] input.time
+                    (fromTill (TimeData 2 3) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 120 36 (0,0)))] input.time
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
@@ -177,12 +178,12 @@ creating1 input =
         |> centered
         |> filled white
         |> scale 10
-        |> animate [fromTill (TimeData 4 2) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 300 36)] input.time 
+        |> animate [fromTill (TimeData 4 2) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 300 36 (0, 0))] input.time 
     ]
     |> transition [(rotateAni 100), (bounceBack 1000 2000)] input.transitionTime input.state
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [intro, creating1] } -- the slides are in order 
+slideFunctions = { get = [entertainmentSlide1] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 
