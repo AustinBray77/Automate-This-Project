@@ -35,8 +35,17 @@ applyShift char =
     Dict.get char dict 
       |> Maybe.withDefault char
 
---Use this for all of the weird special characters
--- applyAlt
+applyUp: String -> String
+applyUp char = 
+  let 
+    keys = List.map String.fromChar <| String.toList "pm123456789qwertyuio"
+    vals = List.map String.fromChar <| String.toList ".-{}[]_=+;:\'\"`~\\|,<>"
+    dict = 
+      List.map2 Tuple.pair keys vals
+        |> Dict.fromList
+  in  
+    Dict.get char dict 
+      |> Maybe.withDefault char
 
 
 -- Takes in a Ellie App KeyState and a Key

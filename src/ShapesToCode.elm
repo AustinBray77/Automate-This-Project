@@ -4,6 +4,8 @@ import GraphicSVG exposing (..)
 import ShapeCreatorTypes as T exposing (..)
 import HelperFunctions exposing (..)
 import KeyFunctions exposing (..)
+import Dict 
+import ShapeCreatorConstants exposing (colStringToExportString)
 
 getTabs: Int -> String
 getTabs number =
@@ -17,6 +19,31 @@ stringToTextShapes string =
     |> List.map selectable
     |> List.map (filled black)
     |> List.indexedMap (\index shape -> move (-80, toFloat(60 - index * 4))shape)
+
+getColourString: String -> String
+getColourString colString =
+  let
+    default = "red"
+  in
+  if Dict.member colString colStringToExportString then
+    Dict.get colString colStringToExportString 
+      |> Maybe.withDefault default 
+  else
+    case (String.split " " colString 
+      |> List.filterMap String.toFloat) of 
+      (r::g::b::a::[]) ->
+        List.map (clamp 0 255) [r,g,b, min 1 a]
+          |> List.map String.fromFloat 
+          |> List.intersperse " "
+          |> List.foldr (++) ")"
+          |> (++) "(rgba "
+      (r::g::b::[]) ->
+        List.map (clamp 0 255) [r,g,b]
+          |> List.map String.fromFloat 
+          |> List.intersperse " "
+          |> List.foldr (++) ")"
+          |> (++) "(rgb "
+      _ -> default
 
 convertShapesToCode: CombineType -> Int -> List (ShapeType, ShapeInfo) -> String
 convertShapesToCode combineType tabs shapeDatas =
@@ -34,15 +61,14 @@ convertShapesToCode combineType tabs shapeDatas =
             Group _ ->
               identity
             Text _ _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "purple"]
+              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
                 |> List.singleton
                 |> addToEnd
             _ ->
-              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , "black"]
+              ["addOutline", "(solid ", String.fromFloat info.outlineSize, ")" , getColourString info.outlineColour]
                 |> List.singleton
                 |> addToEnd
           )
-        --Change later to have custom rgba colours
         |> List.map (List.intersperse " ") -- L L S
         |> List.map ((++) ["|> "])           -- L L S
         |> List.map ((++) [(getTabs tabs3)]) -- L L S
@@ -50,22 +76,23 @@ convertShapesToCode combineType tabs shapeDatas =
         |> List.intersperse "\n"           -- L S
         |> List.foldr (++) ""              -- L S -> S
 
-    defaultFill tabs5 = ["\n", (getTabs tabs5), "|>", "filled", "red"]
+    defaultFill: Int -> String -> List String
+    defaultFill tabs5 colourStr = ["\n", (getTabs tabs5), "|>", "filled", getColourString colourStr]
 
     shapeCode: Int -> (ShapeType, ShapeInfo) -> String
     shapeCode tabs2 (shapeType, shapeInfo) = 
       (case shapeType of
         Rect width height radius ->
           ["roundedRect", String.fromFloat width, String.fromFloat height, String.fromFloat radius]
-          ++ defaultFill tabs2
+          ++ defaultFill tabs2 shapeInfo.fillColour
             |> formatList tabs2
         Oval width height -> 
           ["oval", String.fromFloat width, String.fromFloat height]
-            ++ defaultFill tabs2
+            ++ defaultFill tabs2 shapeInfo.fillColour
             |> formatList tabs2
         Ngon sides radius -> 
           ["ngon", String.fromInt sides, String.fromFloat radius]
-            ++ defaultFill tabs2
+            ++ defaultFill tabs2 shapeInfo.fillColour
             |> formatList tabs2
         Text str size ->
           ["text", "\"" ++ str  ++ "\""]
