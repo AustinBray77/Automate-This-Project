@@ -4,6 +4,8 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Platform.Cmd exposing (none)
 
+type BoxType = Normal | Wide
+
 type Action = Dragging
   | None
   | TypingInput ShapeProperty String
@@ -39,7 +41,7 @@ type NumberShapeProperty = FloatShapeProperty FloatShapeProperty |
   NgonProperty NgonProperty |
   TextProperty TextProperty
 
-type FloatShapeProperty = PosX | PosY | Rotation | ScaleX | ScaleY | OutlineSize
+type FloatShapeProperty = PosX | PosY | Rotation | ScaleX | ScaleY | OutlineSize | Order
 
 type RectProperty = RectWidth | RectHeight | Roundness
 type OvalProperty = OvalWidth | OvalHeight
@@ -55,7 +57,8 @@ type alias ShapeInfo =
     fillColour : String, 
     outlineStyle : Float -> LineType, 
     outlineSize : Float, 
-    outlineColour : String }
+    outlineColour : String,
+    order: Int }
 
 type alias BuildShapeInfo = {snapShape: Bool, addGroupOutline: Bool, selected: Bool}
 

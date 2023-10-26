@@ -4,10 +4,12 @@ import Dict exposing (Dict)
 import GraphicSVG exposing (..)
 import ShapeCreatorTypes as T exposing (..)
 
+{-
 width: Float
 width = 1920
 height: Float
-height = 1080
+height = 1080 
+-}
 
 emptyShape: Shape T.Msg
 emptyShape = (rect 0 0 |> ghost)
@@ -22,8 +24,14 @@ baseClickableBox =
   |> filled white
   |> addOutline (solid 0.75) blue
 
+wideClickableBox : Shape T.Msg
+wideClickableBox =
+  roundedRect (30 + propertyFieldXGap) 10 1.5
+  |> filled white
+  |> addOutline (solid 0.75) blue
+
 propertyFieldOffset: (Float, Float)
-propertyFieldOffset = (70, -20)
+propertyFieldOffset = (105, 0)
 
 propertyFieldYGap: Float
 propertyFieldYGap = -20
@@ -32,7 +40,7 @@ propertyFieldXGap: Float
 propertyFieldXGap = 35
 
 defaultShapeInfo : ShapeInfo
-defaultShapeInfo = ShapeInfo (0,0) 0 (1,1) "red" (solid) 1 "black"
+defaultShapeInfo = ShapeInfo (0,0) 0 (1,1) "red" (solid) 1 "black" 0
 
 selectedOutlineStyle : (Float -> LineType)
 selectedOutlineStyle = dashed
@@ -41,7 +49,7 @@ selectedOutlineColour = "green"
 groupSelectedOutlineColour: String
 groupSelectedOutlineColour = "blue"
 xOffset : Float   
-xOffset = -110
+xOffset = -145
 maxUndoSteps : Int
 maxUndoSteps = 50
 snapAmount: Float
@@ -105,5 +113,43 @@ baseColours =
     ("while", white),
     ("yellow",yellow)]
 
-
+colStringToExportString: Dict String String
+colStringToExportString = 
+  Dict.fromList 
+    [
+    ("black", "black"),
+    ("blank", "blank"),
+    ("blue", "blue"),
+    ("brown", "brown"),
+    ("charcoal", "charcoal"),
+    ("dark blue", "darkBlue"),
+    ("dark brown", "darkBrown"),
+    ("dark charcoal", "darkCharcoal"),
+    ("dark gray", "darkGray"),
+    ("dark green", "darkGreen"),
+    ("dark grey", "darkGrey"),
+    ("dark orange", "darkOrange"),
+    ("dark purple", "darkPurple"),
+    ("dark red", "darkRed"),
+    ("dark yellow", "darkYellow"),
+    ("gray", "gray"),
+    ("green", "green"),
+    ("grey", "grey"),
+    ("hot pink", "hotPink"),
+    ("light blue", "lightBlue"),
+    ("light brown", "lightBrown"),
+    ("light charcoal", "lightCharcoal"),
+    ("light gray", "lightGray"),
+    ("light green", "lightGreen"),
+    ("light grey", "lightGrey"),
+    ("light orange", "lightOrange"),
+    ("light purple", "lightPurple"),
+    ("light red", "lightRed"),
+    ("light yellow", "lightYellow"),
+    ("orange", "orange"),
+    ("pink", "pink"),
+    ("purple", "purple"),
+    ("red", "red"),
+    ("while", "white"),
+    ("yellow","yellow")]
     

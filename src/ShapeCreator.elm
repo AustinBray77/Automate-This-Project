@@ -16,10 +16,20 @@ import Dict exposing (Dict)
 
 stringToColour: String -> Color
 stringToColour str =
-  Dict.get str baseColours
-    |> Maybe.withDefault red
+  let
+    default = red
+  in
+  case Dict.get str baseColours of 
+    Just col ->
+      col
+    Nothing ->
+      case (String.split " " str |> List.filterMap String.toFloat) of 
+        (r::g::b::a::[]) ->
+          rgba r g b a
+        (r::g::b::[]) ->
+          rgb r g b
+        _ -> default
 
---TODO Add function descriptions
 userShapeToData: UserShape -> (ShapeType, ShapeInfo)
 userShapeToData shape = (shape.shapeType, shape.shapeInfo)
 
@@ -80,6 +90,7 @@ getFieldName property =
             ScaleX -> "X Scale"
             ScaleY -> "Y Scale"
             OutlineSize -> "Outline Size"
+            Order -> "Order"
         RectProperty rectProperty ->
           case rectProperty of
             RectWidth -> "Width"
@@ -204,8 +215,8 @@ getPropertyString model property =
 
 --TODO If string is empty then leave current model property in box
   -- Maybe highlight it blue or something
-buildPropertyField: Model -> ShapeProperty -> Shape T.Msg
-buildPropertyField model property =
+buildPropertyField: Model -> BoxType -> ShapeProperty -> Shape T.Msg
+buildPropertyField model boxType property =
   let 
     selectedShapeInfos = 
       model.userShapes
@@ -251,7 +262,9 @@ buildPropertyField model property =
     True ->
       group 
       [
-        baseClickableBox
+        case boxType of 
+          Normal -> baseClickableBox
+          Wide -> wideClickableBox
         ,
         buildTextShape textString
         |> move ((toFloat (String.length textString) * -1.9) - 0 , -2.2)
@@ -273,6 +286,7 @@ getPropertyFromShapeInfo property info =
     ScaleX -> Tuple.first info.scale
     ScaleY -> Tuple.second info.scale
     OutlineSize -> info.outlineSize 
+    Order -> toFloat info.order
 
 propertyFloatToString: Model -> NumberShapeProperty -> Maybe Float -> String
 propertyFloatToString model property propertyFloat = 
@@ -298,61 +312,64 @@ propertyFieldShapes: Model -> List (Shape T.Msg)
 propertyFieldShapes model = 
   [
   --Rect Properties
-    buildPropertyField model (NumberShapeProperty (RectProperty RectWidth))
+    buildPropertyField model Normal (NumberShapeProperty (RectProperty RectWidth))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (NumberShapeProperty (RectProperty RectHeight))
+    buildPropertyField model Normal (NumberShapeProperty (RectProperty RectHeight))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (NumberShapeProperty (RectProperty Roundness))
+    buildPropertyField model Normal (NumberShapeProperty (RectProperty Roundness))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
     ,
   --Oval Properties
-    buildPropertyField model (NumberShapeProperty (OvalProperty OvalWidth))
+    buildPropertyField model Normal (NumberShapeProperty (OvalProperty OvalWidth))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (NumberShapeProperty (OvalProperty OvalHeight))
+    buildPropertyField model Normal (NumberShapeProperty (OvalProperty OvalHeight))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
   --Ngon Properties
-    buildPropertyField model (NumberShapeProperty (NgonProperty NgonSides))
+    buildPropertyField model Normal (NumberShapeProperty (NgonProperty NgonSides))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
     ,
-    buildPropertyField model (NumberShapeProperty (NgonProperty NgonRadius))
+    buildPropertyField model Normal (NumberShapeProperty (NgonProperty NgonRadius))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
   --Text Properties
-    buildPropertyField model (StringProperty TextString)
+    buildPropertyField model Normal (StringProperty TextString)
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -3)
     ,
-    buildPropertyField model (NumberShapeProperty (TextProperty TextSize))
+    buildPropertyField model Normal (NumberShapeProperty (TextProperty TextSize))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * -2)
     ,
   --Float Shape Properties
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty PosX))
-      |> move (propertyFieldXGap * 0, propertyFieldYGap * 0)
-    ,
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty PosY))
-      |> move (propertyFieldXGap * 1, propertyFieldYGap * 0)
-    ,    
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty ScaleX))
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty PosX))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * 1)
     ,
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty ScaleY))
+    buildPropertyField model Normal(NumberShapeProperty (FloatShapeProperty PosY))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 1)
-    ,
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty Rotation))
+    ,    
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty ScaleX))
       |> move (propertyFieldXGap * 0, propertyFieldYGap * 2)
     ,
-    buildPropertyField model (NumberShapeProperty (FloatShapeProperty OutlineSize))
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty ScaleY))
       |> move (propertyFieldXGap * 1, propertyFieldYGap * 2)
     ,
-    -- Colour Properties
-    buildPropertyField model (StringProperty OutlineColour)
-      |> move (propertyFieldXGap * 1, propertyFieldYGap * -1)
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty Rotation))
+      |> move (propertyFieldXGap * 0, propertyFieldYGap * 3)
     ,
-    buildPropertyField model (StringProperty FillColour)
-      |> move (propertyFieldXGap * 0, propertyFieldYGap * -1)
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty OutlineSize))
+      |> move (propertyFieldXGap * 1, propertyFieldYGap * 3)
+    ,
+    buildPropertyField model Normal (NumberShapeProperty (FloatShapeProperty Order))
+      |> move (propertyFieldXGap * 1, propertyFieldYGap * 4)
+    ,
+    -- Colour Properties
+    buildPropertyField model Wide (StringProperty OutlineColour)
+      |> move (propertyFieldXGap * 0.5, propertyFieldYGap * 0)
+    ,
+    buildPropertyField model Wide (StringProperty FillColour)
+      |> move (propertyFieldXGap * 0.5, propertyFieldYGap * -1)
   ]
 
 addNonUserShapeCallbacks: Model -> ID -> Shape T.Msg -> Shape T.Msg
@@ -426,18 +443,26 @@ buildShape buildInfo (shapeType, shapeInfo) =
         _ -> 
           addOutline (outlineStyle outlineSize) (stringToColour outlineColour)
 
+getOrder: UserShape -> Int
+getOrder shape =
+  shape.shapeInfo.order
+
 myShapes: Model -> List (Shape T.Msg)
 myShapes model = 
   let
+    sortedShapes = List.sortBy (getOrder) model.userShapes 
+    
     defaultBuildInfo = BuildShapeInfo False False False
     
     userShapes selectedOnly = 
       if selectedOnly then  
-        List.filter (shapeSelected model) model.userShapes
+        List.filter (shapeSelected model) sortedShapes
       else
-        model.userShapes
-  
-    shapeData selectedOnly = List.map userShapeToData (userShapes selectedOnly)
+        sortedShapes
+
+    shapeData selectedOnly = 
+
+      List.map userShapeToData (userShapes selectedOnly)
 
   in
   case model.currentAction of
@@ -466,7 +491,7 @@ myShapes model =
       ]
       ++ 
       (
-        buildAndAddCallbacks model model.userShapes
+        buildAndAddCallbacks model sortedShapes
           |> List.map (notifyMouseMoveAt MouseMove) 
       )
       ++
@@ -549,6 +574,7 @@ combineSelectedShapes: Model -> CombineType -> Model
 combineSelectedShapes model combineType =
   let 
     selectedShapes = List.filter (shapeSelected model) model.userShapes
+                       |> List.sortBy getOrder
     
     newId = case List.head selectedShapes of 
       Nothing -> 0
@@ -642,6 +668,7 @@ updateShapeInfoValue value property userShape =
           ScaleY -> {shapeInfo | scale = (Tuple.first shapeInfo.scale, value)}
           Rotation -> {shapeInfo | rotation = value}
           OutlineSize -> {shapeInfo | outlineSize = value}
+          Order -> {shapeInfo | order = round value}
         _ -> shapeInfo
 
     updatedShapeType = 
@@ -735,6 +762,8 @@ updateStringTypingInput model keyInfo =
         Just (Key char) ->
           if keyInfo Shift == Down then
             TypingInput property (string ++ (applyShift char))
+          else if keyInfo UpArrow == Down then
+            TypingInput property (string ++ (applyUp char))
           --TODO adjust if Alt key is pressed (in order to get period, comma etc)
           else 
             TypingInput property (string ++ char)
@@ -940,5 +969,5 @@ view : Model -> { title: String, body : Collage T.Msg }
 view model = 
   {
     title = "Shape Creator v0.3"
-  , body = collage 1920 1080 (myShapes model)
+  , body = collage 320 180 (myShapes model)
   }
