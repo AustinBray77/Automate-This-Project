@@ -7,6 +7,7 @@ import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
 import KeyFunctions exposing (..)
 import EntertainmentSlides exposing (entertainmentSlide1)
+import BackgroundSlides exposing (..)
 
 type alias Model = {time : Float, 
                     slideNumber : Int, 
@@ -124,8 +125,13 @@ updateSlides slides slideNum time =
                 (updateSlides xs (slideNum - 1) time))
         _ -> []
 
+testingSlide: SlideInput -> Shape Msg
+testingSlide input =
+    thirdBackground input.time
+        |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
+
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [entertainmentSlide1] } -- the slides are in order 
+slideFunctions = { get = [testingSlide] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 
