@@ -13,6 +13,7 @@ import Html exposing (th)
 import Platform.Cmd exposing (none)
 import Debug exposing (todo)
 import Dict exposing (Dict)
+import Html.Attributes exposing (id)
 
 stringToColour: String -> Color
 stringToColour str =
@@ -801,7 +802,7 @@ addShapes model copyShapes shapes =
     offset = (snapAmount, snapAmount)   
 
     updatedCopiedShapes = 
-      (List.map2 setId (List.range startID (startID + (List.length shapes))) shapes
+      (List.map2 setId (List.range startID (startID + (List.length shapes) - 1)) shapes
         |> List.map (moveShape offset))
 
   in
@@ -812,6 +813,51 @@ addShapes model copyShapes shapes =
         copiedShapes = if copyShapes then updatedCopiedShapes else []
     }
 
+getChildShapes: UserShape -> List (ShapeType, ShapeInfo)
+getChildShapes shape =
+  case shape.shapeType of 
+    Group children -> children
+    Union children -> children
+    _ -> []
+
+groupOrUnion: UserShape -> Bool
+groupOrUnion shape =
+  let
+    typeOnly = shapeTypeOnly shape.shapeType
+  in
+    typeOnly == GroupT || typeOnly == UnionT
+  
+buildUserShapeFromData: Int -> (ShapeType, ShapeInfo) -> UserShape
+buildUserShapeFromData id (shapeType, info) =
+  UserShape shapeType info id
+
+--Maybe apply reverse of tranformations of union/group so that objects don't move when ungrouped?
+splitSelectedShapes: Model -> Model
+splitSelectedShapes model = 
+  let
+    combinedShapes = 
+      model.userShapes 
+        |> List.filter (shapeSelected model)
+        |> List.filter (groupOrUnion) 
+      
+    childShapes =
+      List.map getChildShapes combinedShapes 
+        |> List.foldr (++) [] 
+
+    combinedShapeIds = List.map .id combinedShapes
+
+    newIds = List.range model.currentShapeID (model.currentShapeID + (List.length childShapes) - 1)
+
+  in
+    { model | userShapes = 
+      (List.map2 (buildUserShapeFromData) newIds childShapes)
+      ++
+      (model.userShapes 
+        |> List.filter (\shape -> not (List.member shape.id combinedShapeIds)))
+      ,
+      currentShapeID = model.currentShapeID + (List.length childShapes)
+    }
+  
 updateTick: Model -> (Keys -> KeyState) -> Model
 updateTick model getKeyStates =
   let 
@@ -845,7 +891,7 @@ updateTick model getKeyStates =
       else if getKeyStates (Key "u") == JustDown then
         combineSelectedShapes savedModel CombToUnion
       else if getKeyStates (Key "s") == JustDown then
-        model --TODO Add splitting shapes
+        splitSelectedShapes model   
       -- Copy
       else if keyPressed getKeyStates Ctrl && getKeyStates (Key "c") == JustDown then
         {savedModel | copiedShapes = List.filter (shapeSelected model) model.userShapes} 
