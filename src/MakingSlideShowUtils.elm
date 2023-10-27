@@ -29,6 +29,7 @@ displaySlideNum model =
     [
         roundedRect 100 100 5
         |> filled white
+        |> addOutline (solid 5) black 
         ,
         text (String.fromInt (model.slideNumber + 1))
         |> size 50
@@ -36,7 +37,7 @@ displaySlideNum model =
         |> filled black
         |> move (0,-15)
     ]
-        |> move (-screen.x/2 + 50, screen.y/2 - 50)
+        |> move (-screen.x/2 + 55, screen.y/2 - 55)
         -- makes the current slide number transparent over one second
         -- after having been shown for a second
         |> makeTransparent (
