@@ -1,7 +1,6 @@
 module EntertainmentSlides exposing (..)
 import GraphicSVG exposing (..)
 import SlideUtilTypes exposing (..)
-import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
 
 entertainmentSlide1: SlideInput -> Shape Msg

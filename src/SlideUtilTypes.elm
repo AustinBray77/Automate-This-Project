@@ -43,7 +43,7 @@ type AnimationType = SlideAnimation | ContentAnimation
 -- backend Slide defenition
 type alias Slide =
     {state : SlideState, -- the state of this slide
-     displaySlide : (SlideInput -> Shape Msg), -- function that creates the slide
+     displaySlideFunc : (SlideInput -> Shape Msg), -- function that creates the slide
      startTime : Float, -- the time this slide started being seen (used for slide animtation)
      transitionTime : Float -- the time that the transition started
     } 

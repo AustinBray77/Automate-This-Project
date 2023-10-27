@@ -6,7 +6,6 @@ import SlideUtilTypes exposing (..)
 import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
 import KeyFunctions exposing (..)
-import EntertainmentSlides exposing (entertainmentSlide1)
 import BackgroundSlides exposing (..)
 
 type alias Model = {time : Float, 
@@ -21,7 +20,6 @@ view model =
         displaySlides model.slides model.time, -- displays the slides
         displaySlideNum model -- displays the slide number
         ]
-
 
 displaySlideNum : Model -> Shape Msg
 displaySlideNum model =
@@ -59,7 +57,7 @@ displaySlide : Slide -> Float -> Shape Msg
 displaySlide s time = 
     case s.state of 
         Hidden -> filled black (rect 0 0) -- returning a shape that wont be drawn
-        _ -> s.displaySlide (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)
+        _ -> (s.displaySlideFunc (SlideInput (time - s.startTime) (time - s.transitionTime) s.state))
 
 update : Msg -> Model -> Model
 update msg model =
@@ -96,9 +94,9 @@ updateTransitioningSlides slides slideNum time =
     case slides of
         x::xs -> List.append 
             [if x.state == Transitioning && (time - x.transitionTime) >= 3 then
-                (Slide Hidden x.displaySlide x.startTime x.transitionTime)
+                (Slide Hidden x.displaySlideFunc x.startTime x.transitionTime)
             else 
-                (Slide x.state x.displaySlide x.startTime x.transitionTime)] 
+                (Slide x.state x.displaySlideFunc x.startTime x.transitionTime)] 
             (if slideNum <= 1 then
                 xs -- stop iterating through once we reach the current slide
             else
@@ -111,15 +109,15 @@ updateSlides slides slideNum time =
     case slides of
         x::xs -> List.append 
             [if x.state == Transitioning && (time - x.transitionTime) >= 3 then
-                (Slide Hidden x.displaySlide x.startTime x.transitionTime)
+                (Slide Hidden x.displaySlideFunc x.startTime x.transitionTime)
             else if slideNum == 1 && x.state == Visible then -- if this slide was being shown before slide change
-                (Slide Transitioning x.displaySlide x.startTime time)
+                (Slide Transitioning x.displaySlideFunc x.startTime time)
             else if slideNum == 0 then -- updates the current slides state
-                (Slide Visible x.displaySlide time time)
+                (Slide Visible x.displaySlideFunc time time)
             else if slideNum == -1 then -- if we went back a slide need to hide previous page
-                (Slide Hidden x.displaySlide time time)
+                (Slide Hidden x.displaySlideFunc time time)
             else 
-                (Slide x.state x.displaySlide x.startTime x.transitionTime)] 
+                (Slide x.state x.displaySlideFunc x.startTime x.transitionTime)] 
             (if slideNum <= -1 then
                 xs -- stop iterating through once we have check the next slide and the previous slide
             else
@@ -131,8 +129,23 @@ testingSlide input =
     thirdBackground input.time
         |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
 
+testingSlide2: SlideInput -> Shape Msg
+testingSlide2 input =
+    firstBackground input.time
+        |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
+
+testingSlide3: SlideInput -> Shape Msg
+testingSlide3 input =
+    secondBackground input.time
+        |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
+
+testingSlide4: SlideInput -> Shape Msg
+testingSlide4 input = 
+    fourthBackground input.time
+        |> transition [(moveAni 2000 0)] input.transitionTime input.state
+
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [testingSlide] } -- the slides are in order 
+slideFunctions = { get = [testingSlide2, testingSlide3, testingSlide, testingSlide4] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 
