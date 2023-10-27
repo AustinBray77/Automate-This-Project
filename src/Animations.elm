@@ -250,6 +250,19 @@ rotateAni : Float -> AnimateFuncInput -> Shape Msg
 rotateAni rotation input = 
         rotate (degrees (rotation * input.time)) input.shape
 
+-- multiplies a tuple of floats by a given float k
+multTuple: Float -> (Float, Float) -> (Float, Float)
+multTuple k (x, y) =
+  (k*x, k*y)
+
+-- rotates around a shape 
+rotateAround : Float -> (Float, Float) -> AnimateFuncInput -> Shape Msg
+rotateAround speed position input =
+    input.shape
+    |> move (multTuple -1 position)
+    |> rotate (speed * input.time)
+    |> move position
+
 -- backend function
 typeWriter: String -> Float -> Float -> TimeData -> Float -> String
 typeWriter string speed blinkSpeed time currentTime = 
