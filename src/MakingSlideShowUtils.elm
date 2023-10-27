@@ -129,12 +129,12 @@ intro input =
     group 
     [
         slide blue input.time,
-        text (typeWriter "Intro" 0.2 0 (TimeData 0 0) input.time)
+        text (typeWriter "Intro" 0.2 0 (TimeData 0 0 Once) input.time)
         |> centered
         |> filled white
         |> scale 10
-        |> animate [(fromTill (TimeData 2 3) Nothing (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), 
-                    (fromTill (TimeData 2 3) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 120 36 (0,0)))] input.time
+        |> animate [(fromTill (TimeData 2 3 Once) Nothing (fadeShapeToColor (RGBA 255 255 255 2) (RGBA 255 255 255 0))), 
+                    (fromTill (TimeData 2 3 Once) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 120 36 (0,0)))] input.time
         --|> animate [(tornadoShape 5 3)] 120 36 (TimeData 2 input.time 4)
         {--rect 100 100
         |> filled (rgb 0 0 255)
@@ -152,38 +152,38 @@ creating1 input =
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) (Just easeInAndOut) (moveAni 1910 0))] input.time
+                    (fromTill (TimeData 2 4 RepeatLoop) (Just easeInAndOut) (moveAni 1910 0))] input.time
         |> move (-950, 200),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) (Just easeIn) (moveAni 1910 0))] input.time 
+                    (fromTill (TimeData 2 4 RepeatFromStart) (Just easeIn) (moveAni 1910 0))] input.time 
         |> move (-950, 100),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) (Just easeOut) (moveAni 1910 0))] input.time 
+                    (fromTill (TimeData 2 4 RepeatFromStartWithPause) (Just easeOut) (moveAni 1910 0))] input.time 
         |> move (-950, 0),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) Nothing (moveAni 1910 0))] input.time 
+                    (fromTill (TimeData 2 4 Once) Nothing (moveAni 1910 0))] input.time 
         |> move (-950, -100),
         rect 30 30
         |> filled red
         |> animate [(rotateAni 100), 
-                    (fromTill (TimeData 2 4) Nothing (moveAni 1910 0))] input.time 
+                    (fromTill (TimeData 2 4 Once) Nothing (moveAni 1910 0))] input.time 
         |> move (-950, -200),
         text "Second slide"
         |> centered
         |> filled white
         |> scale 10
-        |> animate [fromTill (TimeData 4 2) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 300 36 (0, 0))] input.time 
+        |> animate [fromTill (TimeData 4 2 Once) (Just (\x -> 50 * tanScaled (easeInAndOut x))) (particlizeAndExplodeShape 5 300 36 (0, 0))] input.time 
     ]
     |> transition [(rotateAni 100), (bounceBack 1000 2000)] input.transitionTime input.state
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [entertainmentSlide1] } -- the slides are in order 
+slideFunctions = { get = [entertainmentSlide1, creating1] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 

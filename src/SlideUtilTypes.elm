@@ -11,9 +11,12 @@ type alias RGBA = {
     a: Float
     }
 
+type Repeat = RepeatFromStart | RepeatFromStartWithPause | RepeatLoop | Once
+
 type alias TimeData = {
     start: Float,
-    end: Float
+    end: Float,
+    repeating: Repeat
     }
 
 -- type input for antimation functions
@@ -56,9 +59,4 @@ slide color time =
     group [
     rect screen.x screen.y
         |> filled color
-    {--,
-    rect 100 100
-        |> outlined (solid 5) black
-        |> animate [(rotateAni 25)] time
-        |> move (-screen.x/2+50, -screen.y/2+50)--}
     ] 

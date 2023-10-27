@@ -8,10 +8,57 @@ import SlideUtilTypes exposing (Msg)
 percentCompleted: TimeData -> Float -> Float
 percentCompleted time currentTime = 
     let
-        timePercentage = ((currentTime - time.start) / (time.end - time.start))
+        timePercentage = 
+            case time.repeating of
+                RepeatFromStart -> repeatFromStart time currentTime
+                RepeatFromStartWithPause -> repeatFromStartWithPause time currentTime
+                RepeatLoop -> repeatLoop time currentTime
+                Once -> ((currentTime - time.start) / (time.end - time.start))
         percent = (min 1 (max 0 timePercentage)) -- how far through the animation we are
     in 
         percent
+
+fmod: Float -> Float -> Float
+fmod divisor dividend = 
+  if divisor > dividend then
+    dividend
+  else
+    fmod divisor (dividend - divisor)
+
+--RepeatFromStart
+repeatLoop: TimeData -> Float -> Float
+repeatLoop timeData curTime = 
+    let 
+        difference = timeData.end - timeData.start
+        percentTime = (fmod (difference * 2) (curTime - timeData.start)) /  difference
+    in
+    if curTime < timeData.start then
+        0
+    else if percentTime <= 1 then
+        percentTime
+    else 
+        2 - percentTime
+
+repeatFromStartWithPause: TimeData -> Float -> Float
+repeatFromStartWithPause timeData curTime = 
+    let 
+        modTime = (fmod (timeData.end) (curTime))
+    in
+    if modTime < timeData.start then
+        0
+    else    
+        (modTime - timeData.start) / (timeData.end - timeData.start)
+
+repeatFromStart: TimeData -> Float -> Float
+repeatFromStart timeData curTime = 
+    let 
+        difference = timeData.end - timeData.start
+        percentTime = (fmod difference (curTime - timeData.start)) /  difference
+    in
+    if curTime < timeData.start then
+        0
+    else
+        percentTime
 
 -- EASING FUNCTIONS
 --Tan function scaled down to have it's period between 0 and 1
@@ -46,7 +93,7 @@ fromTill timeData easeFunc animation input =
                 Just func -> func
     in
         animation (AnimateFuncInput (ease ((percentCompleted timeData) input.time)) input.shape)
-        
+
 -- Converts type alias RGBA to Color type 
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =

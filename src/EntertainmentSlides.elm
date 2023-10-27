@@ -10,8 +10,9 @@ entertainmentSlide1 input =
         slide (rgba 0 178 255 1) input.time,
         face
         |> move(-250, 250)
-        |> animate [(fromTill (TimeData 1 3) (Just tanScaled) (particlizeAndExplodeShape 5 350 36 (75, -100)))] input.time
+        |> animate [(fromTill (TimeData 1 3 Once) (Just tanScaled) (particlizeAndExplodeShape 5 350 36 (75, -100)))] input.time
     ]
+    |> transition [(moveAni 1000 2000)] input.transitionTime input.state
 
 face: Shape Msg
 face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455,36),
