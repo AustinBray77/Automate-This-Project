@@ -7,8 +7,12 @@ import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
 import ShapeCreatorTypes exposing (Action(..))
 
-firstBackground: Float -> Shape Msg
-firstBackground time =
+-- red: 209 80 67
+-- blue: 64 143 225
+-- yellow: 221 213 32
+
+background1: Float -> Shape Msg
+background1 time =
   group
   [  
     rect screen.x screen.y
@@ -45,8 +49,8 @@ firstBackground time =
       |> move (960, 60)
   ]
 
-secondBackground: Float -> Shape Msg
-secondBackground time =
+background2: Float -> Shape Msg
+background2 time =
   group
   [  
       group
@@ -97,8 +101,8 @@ secondBackground time =
       |> addOutline (solid  0 ) black
   ]
 
-thirdBackground: Float -> Shape Msg
-thirdBackground time =
+background3: Float -> Shape Msg
+background3 time =
   group
   [  
     rect screen.x screen.y
@@ -123,8 +127,8 @@ thirdBackground time =
       |> addOutline (solid  0 ) black
   ]
 
-fourthBackground: Float -> Shape Msg
-fourthBackground time =
+background4: Float -> Shape Msg
+background4 time =
   group
   [  
     rect screen.x screen.y
@@ -161,5 +165,158 @@ fourthBackground time =
       |> animate [(rotateAni 30)] time
       |> rotate (degrees -30 )
       |> move (860, -440)
+      |> addOutline (solid  0 ) black
+  ]
+
+background5: Float -> Shape Msg
+background5 time =
+  group
+  [  
+    rect screen.x screen.y
+      |> filled white
+      |> addOutline (solid 2) black
+    ,
+    ngon 6 100 
+      |> filled (rgb 221 213 32)
+      |> animate [(rotateAni -30)] time
+      |> rotate (degrees -30 )
+      |> move (320, 520)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 150 
+      |> filled black
+      |> animate [(rotateAni 25)] time
+      |> rotate (degrees -30 )
+      |> move (620, 440)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 100 
+      |> filled (rgb 209 80 67)
+      |> animate [(rotateAni -30)] time
+      |> rotate (degrees -30 )
+      |> move (880, 520)
+      |> addOutline (solid  0 ) black
+    ,
+    group
+    [      
+      oval 150 150 
+        |> filled (rgb 64 143 225)
+        |> move (-120, 220)
+        |> addOutline (solid  0 ) black
+      ,
+      oval 150 150 
+        |> filled (rgb 64 143 225)
+        |> scaleX 2
+        |> scaleY 0.5
+        |> move (-216.89691817215726, 171.96599362380448)
+        |> addOutline (solid  0 ) black
+    ]
+    |> move (-786.8862911795961, 323.4431455897981)
+  ]
+
+background6: Float -> Shape Msg
+background6 time = 
+  group
+  [  
+    rect screen.x screen.y
+      |> filled white
+      |> addOutline (solid 2) black
+    ,
+    ngon 6 100 
+      |> filled (rgb 221 213 32)
+      |> animate [(rotateAni -30)] time
+      |> rotate (degrees -30 )
+      |> move (-440, -420)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 150 
+      |> filled black
+      |> animate [(rotateAni 25)] time
+      |> rotate (degrees -30 )
+      |> move (-700, -580)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 100 
+      |> filled (rgb 209 80 67)
+      |> animate [(rotateAni -30)] time
+      |> rotate (degrees -30 )
+      |> move (-960, -420)
+      |> addOutline (solid  0 ) black
+    ,
+    group
+    [      
+      oval 150 150 
+        |> filled (rgb 64 143 225)
+        |> move (-120, 220)
+        |> addOutline (solid  0 ) black
+      ,
+      oval 150 150 
+        |> filled (rgb 64 143 225)
+        |> scaleX 2
+        |> scaleY 0.5
+        |> move (-216.89691817215726, 171.96599362380448)
+        |> addOutline (solid  0 ) black
+    ]
+    |> move (-786.8862911795961, 323.4431455897981)
+  ]
+
+background7: Float -> Shape Msg
+background7 time = 
+  group
+  [  
+    rect screen.x screen.y
+      |> filled white
+      |> addOutline (solid 2) black
+    ,
+    oval 55 55 
+      |> filled black
+      |> scaleX 5
+      |> scaleY 5
+      |> move (980, 60)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 50 
+      |> filled (rgb 209 80 67)
+      |> animate [(rotateAni -35)] time
+      |> rotate (degrees -30 )
+      |> move (-740, 160)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 100 
+      |> filled (rgb 64 143 225)
+      |> animate [(rotateAni -30)] time
+      |> rotate (degrees -30 )
+      |> move (-860, -20)
+      |> addOutline (solid  0 ) black
+    ,
+    ngon 6 200 
+      |> filled (rgb 221 213 32)
+      |> animate [(rotateAni 20)] time
+      |> rotate (degrees -30 )
+      |> move (-1020, 260)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 55 55 
+      |> filled black
+      |> animate [fromTill (TimeData 0 3 RepeatLoop) (Just easeInAndOut) (scaleAni (1.1,1.1))] time
+      |> scaleX 2
+      |> scaleY 2
+      |> move (883.5281615302869, 57.02444208289053)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 55 55 
+      |> filled black
+      |> animate [fromTill (TimeData 2 4 RepeatLoop) (Just easeInAndOut) (scaleAni (1.1,1.1))] time
+      |> scaleX 5
+      |> scaleY 5
+      |> move (957.7045696068013, 112.62486716259298)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 55 55 
+      |> filled black
+      |> animate [fromTill (TimeData 1 5 RepeatLoop) (Just easeInAndOut) (scaleAni (1.1,1.1))] time
+      |> scaleX 5
+      |> scaleY 5
+      |> move (984.5908607863975, 134.9202975557917)
       |> addOutline (solid  0 ) black
   ]
