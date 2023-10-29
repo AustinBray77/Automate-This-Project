@@ -1,4 +1,4 @@
-module SlideUtilTypes exposing (..)
+module BackendFiles.SlideUtilTypes exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 

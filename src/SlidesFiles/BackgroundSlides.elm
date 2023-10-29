@@ -1,11 +1,11 @@
-module BackgroundSlides exposing (..)
-import SlideUtilTypes exposing (..)
+module SlidesFiles.BackgroundSlides exposing (..)
+import BackendFiles.SlideUtilTypes exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import SlideUtilTypes exposing (Msg)
+import BackendFiles.SlideUtilTypes exposing (Msg)
 
-import Animations exposing (..)
-import ShapeCreatorTypes exposing (Action(..))
+import BackendFiles.Animations exposing (..)
+import BackendFiles.ShapeCreatorTypes exposing (Action(..))
 
 -- red: 209 80 67
 -- blue: 64 143 225

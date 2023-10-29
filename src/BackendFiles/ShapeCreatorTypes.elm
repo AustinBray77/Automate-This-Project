@@ -1,4 +1,4 @@
-module ShapeCreatorTypes exposing (..)
+module BackendFiles.ShapeCreatorTypes exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)

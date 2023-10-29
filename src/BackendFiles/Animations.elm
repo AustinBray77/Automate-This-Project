@@ -1,8 +1,8 @@
-module Animations exposing (..)
+module BackendFiles.Animations exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import SlideUtilTypes exposing (..)
-import SlideUtilTypes exposing (Msg)
+import BackendFiles.SlideUtilTypes exposing (..)
+import BackendFiles.SlideUtilTypes exposing (Msg)
 
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float

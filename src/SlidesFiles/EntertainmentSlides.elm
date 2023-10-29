@@ -1,9 +1,9 @@
-module EntertainmentSlides exposing (..)
+module SlidesFiles.EntertainmentSlides exposing (..)
 import GraphicSVG exposing (..)
-import SlideUtilTypes exposing (..)
-import SlideUtilTypes exposing (Msg)
-import Animations exposing (..)
-import BackgroundSlides exposing (..)
+import BackendFiles.SlideUtilTypes exposing (..)
+import BackendFiles.SlideUtilTypes exposing (Msg)
+import BackendFiles.Animations exposing (..)
+import SlidesFiles.BackgroundSlides exposing (..)
 
 entertainmentIntroSlide: SlideInput -> Shape Msg
 entertainmentIntroSlide input = 

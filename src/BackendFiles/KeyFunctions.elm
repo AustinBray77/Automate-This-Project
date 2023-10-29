@@ -1,4 +1,4 @@
-module KeyFunctions exposing (..)
+module BackendFiles.KeyFunctions exposing (..)
 import Dict exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)

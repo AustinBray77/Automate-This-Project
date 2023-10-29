@@ -1,8 +1,8 @@
-module ShapeCreatorConstants exposing (..)
+module BackendFiles.ShapeCreatorConstants exposing (..)
 
 import Dict exposing (Dict)
 import GraphicSVG exposing (..)
-import ShapeCreatorTypes as T exposing (..)
+import BackendFiles.ShapeCreatorTypes as T exposing (..)
 
 {- 
 width: Float 

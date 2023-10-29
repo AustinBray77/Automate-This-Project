@@ -1,11 +1,11 @@
-module ShapesToCode exposing (..)
+module BackendFiles.ShapesToCode exposing (..)
 
 import GraphicSVG exposing (..)
-import ShapeCreatorTypes as T exposing (..)
-import HelperFunctions exposing (..)
-import KeyFunctions exposing (..)
-import Dict 
-import ShapeCreatorConstants exposing (colStringToExportString)
+import BackendFiles.ShapeCreatorTypes as T exposing (..)
+import BackendFiles.HelperFunctions exposing (..)
+import BackendFiles.KeyFunctions exposing (..)
+import BackendFiles.ShapeCreatorConstants exposing (colStringToExportString)
+import Dict
 
 getTabs: Int -> String
 getTabs number =

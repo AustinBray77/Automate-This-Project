@@ -1,9 +1,9 @@
-module HelperFunctions exposing (..)
+module BackendFiles.HelperFunctions exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 
-import KeyFunctions exposing (..)
+import BackendFiles.KeyFunctions exposing (..)
 import Array
 
 addToEnd: appendable -> appendable -> appendable

@@ -1,12 +1,12 @@
-module MakingSlideShowUtils exposing (..)
+module SlidesPlayer exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
-import SlideUtilTypes exposing (..)
-import SlideUtilTypes exposing (Msg)
-import Animations exposing (..)
-import KeyFunctions exposing (..)
-import BackgroundSlides exposing (..)
+import BackendFiles.SlideUtilTypes exposing (..)
+import BackendFiles.SlideUtilTypes exposing (Msg)
+import BackendFiles.Animations exposing (..)
+import BackendFiles.KeyFunctions exposing (..)
+import SlidesFiles.BackgroundSlides exposing (..)
 
 type alias Model = {time : Float, 
                     slideNumber : Int, 
