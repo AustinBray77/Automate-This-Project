@@ -5,7 +5,7 @@ import GraphicSVG.EllieApp exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 
 import BackendFiles.Animations exposing (..)
-import BackendFiles.ShapeCreatorTypes exposing (Action(..))
+import BackendFiles.ShapeCreator.ShapeCreatorTypes exposing (Action(..))
 
 -- red: 209 80 67
 -- blue: 64 143 225

@@ -1,8 +1,8 @@
-module BackendFiles.ShapeCreator exposing (..)
+module BackendFiles.ShapeCreator.ShapeCreator exposing (..)
 
-import BackendFiles.ShapeCreatorTypes as T exposing (..)
-import BackendFiles.ShapesToCode exposing (..)
-import BackendFiles.ShapeCreatorConstants exposing (..)
+import BackendFiles.ShapeCreator.ShapeCreatorTypes as T exposing (..)
+import BackendFiles.ShapeCreator.ShapesToCode exposing (..)
+import BackendFiles.ShapeCreator.ShapeCreatorConstants exposing (..)
 import BackendFiles.KeyFunctions exposing (..)
 import BackendFiles.HelperFunctions exposing (..)
 import GraphicSVG exposing (..)

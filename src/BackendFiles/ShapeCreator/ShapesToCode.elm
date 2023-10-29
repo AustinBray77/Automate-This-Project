@@ -1,10 +1,10 @@
-module BackendFiles.ShapesToCode exposing (..)
+module BackendFiles.ShapeCreator.ShapesToCode exposing (..)
 
 import GraphicSVG exposing (..)
-import BackendFiles.ShapeCreatorTypes as T exposing (..)
+import BackendFiles.ShapeCreator.ShapeCreatorTypes as T exposing (..)
 import BackendFiles.HelperFunctions exposing (..)
 import BackendFiles.KeyFunctions exposing (..)
-import BackendFiles.ShapeCreatorConstants exposing (colStringToExportString)
+import BackendFiles.ShapeCreator.ShapeCreatorConstants exposing (colStringToExportString)
 import Dict
 
 getTabs: Int -> String

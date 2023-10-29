@@ -7,6 +7,7 @@ import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import BackendFiles.KeyFunctions exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
+import SlidesFiles.FinanceSlides exposing (..)
 
 type alias Model = {time : Float, 
                     slideNumber : Int, 
@@ -163,7 +164,7 @@ testingSlide7 input =
         |> transition [(moveAni 2000 0)] input.transitionTime input.state
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
-slideFunctions = { get = [testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] } -- the slides are in order 
+slideFunctions = { get = [financeIntro, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] } -- the slides are in order 
 
 init : Model
 init = { time = 0, 

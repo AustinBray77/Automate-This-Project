@@ -70,7 +70,7 @@ tanScaled x =
 -- ease in and out
 easeInAndOut: Float -> Float
 easeInAndOut x =
-    clamp 0 1 (sin (pi * (x - 0.5)) / 2 + 0.5)
+    clamp 0 1 (sin (2 * pi * (x - 0.25)) / 2 + 0.5)
 
 --Sin function scaled to have only the top left quarter of the period between 0 and 1
 easeOut: Float -> Float
@@ -219,19 +219,24 @@ tornadoShape speed rotateSpeed radius resolution position input =
 -- moves the shape x, y amount of pixels after the start time over the duration
 moveAni : Float -> Float -> AnimateFuncInput -> Shape Msg
 moveAni x y input = 
-    
         input.shape
             |> move ((x * input.time), (y * input.time))
 
 -- scales the shape by the given x, y factor after the start time over the duration
 scaleAni : (Float, Float)-> AnimateFuncInput -> Shape Msg
 scaleAni xy input = 
-        let
-            rtn = input.shape
-                |> scaleX (1 + max 0 ((Tuple.first xy - 1) * input.time))
-                |> scaleY (1 + max 0 ((Tuple.second xy - 1) * input.time))
-        in
-            rtn
+    input.shape
+        |> scaleX (1 + ((Tuple.first xy - 1) * input.time))
+        |> scaleY (1 + ((Tuple.second xy - 1) * input.time))
+
+-- scales the shape by the given x, y factor once time is greator than 0
+scaleInstant : (Float, Float)-> AnimateFuncInput -> Shape Msg
+scaleInstant xy input = 
+    if input.time > 0 then
+        input.shape
+            |> scaleX (Tuple.first xy)
+            |> scaleY (Tuple.second xy)
+    else input.shape
 
 slideOut : Float -> Float -> AnimateFuncInput -> Shape Msg
 slideOut x y input = 
@@ -284,7 +289,7 @@ blankShape =
     rect 0 0 
     |> filled blank
 
--- Hides shape after given time, if start time == end time it will be hidden immediately
+-- Hides shape after 1 second
 hideShape: RGBA -> AnimateFuncInput -> Shape Msg
 hideShape shapeColor input =
     if input.time < 1 then
