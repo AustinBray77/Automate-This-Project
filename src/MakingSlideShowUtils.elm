@@ -16,10 +16,10 @@ type alias Model = {time : Float,
 view : Model -> Collage Msg
 view model =
     collage screen.x screen.y
-        [
+    [
         displaySlides model.slides model.time, -- displays the slides
         displaySlideNum model -- displays the slide number
-        ]
+    ]
 
 displaySlideNum : Model -> Shape Msg
 displaySlideNum model =
@@ -56,8 +56,8 @@ displaySlides slides time =
 displaySlide : Slide -> Float -> Shape Msg
 displaySlide s time = 
     case s.state of 
-        Hidden -> filled black (rect 0 0) -- returning a shape that wont be drawn
-        _ -> (s.displaySlideFunc (SlideInput (time - s.startTime) (time - s.transitionTime) s.state))
+        Hidden -> filled blank (rect 0 0) -- returning a shape that wont be drawn
+        _ -> ((s.displaySlideFunc (SlideInput (time - s.startTime) (time - s.transitionTime) s.state)))
 
 update : Msg -> Model -> Model
 update msg model =
@@ -131,8 +131,11 @@ testingSlide input =
 
 testingSlide2: SlideInput -> Shape Msg
 testingSlide2 input =
-    background1 input.time
-        |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
+    group
+    [
+        background1 input.time
+    ]
+    |> transition [(bounceBack 2000 1000)] input.transitionTime input.state
 
 testingSlide3: SlideInput -> Shape Msg
 testingSlide3 input =

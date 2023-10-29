@@ -52,11 +52,3 @@ type alias Slide =
 -- storage for screen size
 screen : { x : number, y : number}
 screen = { x = 1920, y = 1080 }
-
--- template for a slide background
-slide : Color -> Float -> Shape Msg
-slide color time =
-    group [
-    rect screen.x screen.y
-        |> filled color
-    ] 

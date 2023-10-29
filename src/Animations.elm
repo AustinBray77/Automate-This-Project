@@ -282,7 +282,7 @@ typeWriter string speed blinkSpeed time currentTime =
 blankShape: Shape Msg
 blankShape = 
     rect 0 0 
-    |> filled (rgba 0 0 0 0)
+    |> filled blank
 
 -- Hides shape after given time, if start time == end time it will be hidden immediately
 hideShape: RGBA -> AnimateFuncInput -> Shape Msg
