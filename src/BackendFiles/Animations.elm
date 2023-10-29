@@ -12,6 +12,7 @@ percentCompleted time currentTime =
             case time.repeating of
                 RepeatFromStart -> repeatFromStart time currentTime
                 RepeatFromStartWithPause -> repeatFromStartWithPause time currentTime
+                RepeatFromEndWithPause -> repeatFromEndWithPause time currentTime
                 RepeatLoop -> repeatLoop time currentTime
                 Once -> ((currentTime - time.start) / (time.end - time.start))
         percent = (min 1 (max 0 timePercentage)) -- how far through the animation we are
@@ -48,6 +49,16 @@ repeatFromStartWithPause timeData curTime =
         0
     else    
         (modTime - timeData.start) / (timeData.end - timeData.start)
+
+repeatFromEndWithPause: TimeData -> Float -> Float
+repeatFromEndWithPause timeData curTime = 
+    let 
+        modTime = (fmod (timeData.end) (curTime))
+    in
+    if modTime < timeData.start then
+        1
+    else    
+        1 - (modTime - timeData.start) / (timeData.end - timeData.start)
 
 repeatFromStart: TimeData -> Float -> Float
 repeatFromStart timeData curTime = 

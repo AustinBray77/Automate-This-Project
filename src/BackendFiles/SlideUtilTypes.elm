@@ -11,7 +11,7 @@ type alias RGBA = {
     a: Float
     }
 
-type Repeat = RepeatFromStart | RepeatFromStartWithPause | RepeatLoop | Once
+type Repeat = RepeatFromStart | RepeatFromStartWithPause | RepeatFromEndWithPause | RepeatLoop | Once
 
 type alias TimeData = {
     start: Float,

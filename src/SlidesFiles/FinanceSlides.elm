@@ -89,79 +89,79 @@ server time =
       |> filled red
       |> move (-200, -200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0.5 0.8  RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 0.5 0.8  RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, -200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1 1.1 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1 1.1 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, -120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.3 1.4 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.3 1.4 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, -120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0.5 0.7 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 0.5 0.7 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, -40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.2 1.1 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.2 1.1 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, -40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.8 2 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.8 2 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, 40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.2 1.3 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.2 1.3 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, 40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1 1.2 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1 1.2 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, 120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.7 1.8 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.7 1.8 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, 120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.6 1.7 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.6 1.7 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, 200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 2.3 2.4 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 2.3 2.4 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, 200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 2.8 3 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 2.8 3 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
       |> move (-200, 280)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 2.3 2.5 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 2.3 2.5 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 135 5 0 
       |> filled lightBlue
@@ -212,17 +212,43 @@ dollarSign textSize color =
   |> centered
   |> filled color
 
+-- only works when start time is 0
+dollarSignAnimation: Float -> Float -> TimeData -> Float -> Shape Msg
+dollarSignAnimation x y timeData time =
+  dollarSign 50 green
+    |> animate [(fromTill (TimeData timeData.end (timeData.end + (timeData.end - timeData.start)) RepeatFromStartWithPause) Nothing (scaleInstant (0.5, 0.5))),
+                (fromTill timeData (Just easeIn) (moveAni x 0)),
+                (fromTill timeData (Just easeInAndOut) (moveAni 0 y))] time
+
 financeIntro: SlideInput -> Shape Msg
 financeIntro input =
   group
   [  
     background1 input.time
     ,
-    dollarSign 50 green
-    |> animate [(fromTill (TimeData 5 10 RepeatFromStartWithPause) Nothing (scaleInstant (0.5, 0.5))),
-                (fromTill (TimeData 0 5 RepeatLoop) Nothing (moveAni 650 0)),
-                (fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 0 100))] input.time
+    dollarSignAnimation 650 100 (TimeData 0 5 RepeatLoop) input.time
     |> move (-600, -100)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 4 RepeatLoop) input.time
+    |> move (-600, -150)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
+    |> move (-600, -200)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 2.5 RepeatLoop) input.time
+    |> move (-600, -250)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
+    |> move (-600, -300)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
+    |> move (-600, -350)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 4.5 RepeatLoop) input.time
+    |> move (-600, -400)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
+    |> move (-600, -450)
     ,
     server input.time
     |> mirrorX
