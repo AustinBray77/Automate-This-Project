@@ -81,7 +81,7 @@ backgroundHitbox : (ShapeType, ShapeInfo)
 backgroundHitbox = (Rect 10000 5000 0, {defaultShapeInfo | position = (xOffset, 45), fillColour = "blank"})
 
 minSelectedOutlineSize: Float
-minSelectedOutlineSize = 2
+minSelectedOutlineSize = 5
 
 baseColours: Dict String Color
 baseColours = 
