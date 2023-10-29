@@ -1,15 +1,60 @@
 module EntertainmentSlides exposing (..)
 import GraphicSVG exposing (..)
 import SlideUtilTypes exposing (..)
+import SlideUtilTypes exposing (Msg)
 import Animations exposing (..)
+import BackgroundSlides exposing (..)
+
+entertainmentIntroSlide: SlideInput -> Shape Msg
+entertainmentIntroSlide input = 
+    group [
+      background5 input.time,
+      group
+      [  
+        text (typeWriter "Algorithms and Art" 0.2 0.2 (TimeData 0 2 Once) input.time)
+        |> size 144 
+        |> alignLeft 
+        |> filled black
+        |> move (-575, -10)
+        |> addOutline (solid  1 ) black
+      ]
+    ]
 
 entertainmentSlide1: SlideInput -> Shape Msg
 entertainmentSlide1 input =
     group [
-        slide (rgba 0 178 255 1) input.time,
-        face
-        |> move(-250, 250)
-        |> animate [(fromTill (TimeData 1 3 Once) (Just tanScaled) (particlizeAndExplodeShape 5 350 36 (75, -100)))] input.time
+        background7 input.time,
+        text "A&Rs:"
+        |> size 144 
+        |> alignLeft 
+        |> filled black
+        |> move (-500, 400)
+        |> animate [(fromTill (TimeData 3 5 Once) (Just easeInAndOut) (hideShape (RGBA 0 0 0 1)))] input.time,
+        group [
+          face
+          |> scale 0.4
+          |> move(-250, 150),
+          face
+          |> scaleX -1
+          |> scale 0.5
+          |> move(350, -150),
+          face
+          |> scale 0.45
+          |> move(-400, -100),
+          face
+          |> scaleX -1
+          |> scale 0.3
+          |> move(250, 200)
+        ]
+        |> animate [(fromTill (TimeData 4.5 4.5 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time
+        |> animate [(fromTill (TimeData 3 5 Once) (Just tanScaled) (bounceBack 1000 1000))] input.time,
+        computer
+        |> move (0, -1000)
+        |> animate [(fromTill (TimeData 5 7 Once) (Just easeOut) (moveAni 0 1100))] input.time,
+        drawInCircle 125 "Polyphonic 🎵  HMI 🎵 "
+        |> animate [(fromTill (TimeData 7 9 Once) (Just easeInAndOut) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1))),
+                    (fromTill (TimeData 7 21 RepeatFromStart) Nothing (rotateAni -360))] input.time
+        |> move (0, 100)
     ]
     |> transition [(moveAni 1000 2000)] input.transitionTime input.state
 
@@ -58,6 +103,7 @@ computer =   group
       |> move (0, 0)
       |> addOutline (solid  0 ) black
   ]
+  |> scale 12
  
 drawInCircle: Float -> String -> Shape Msg
 drawInCircle radius message =
@@ -70,7 +116,7 @@ drawInCircle radius message =
 drawChar: Float -> Int -> (Int, Char) -> Shape Msg
 drawChar radius count (index, character) =
   text (String.fromChar character)
-  |> size 6
+  |> size 68
   |> fixedwidth
   |> filled black
   |> move (0, radius)
