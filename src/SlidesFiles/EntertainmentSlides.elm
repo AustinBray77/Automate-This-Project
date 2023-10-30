@@ -62,28 +62,43 @@ entertainmentSlide2: SlideInput -> Shape Msg
 entertainmentSlide2 input =
     group [
         background4 input.time,
-        copeDrawing
-        |> move (-75, -300),
-        circle 30
-        |> filled white
-        |> addOutline (solid 5) black
-        |> move (-175, 0)
-        |> animate [(fromTill (TimeData 4 5 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
-        circle 40
-        |> filled white
-        |> addOutline (solid 5) black
-        |> move (-100, 50)
-        |> animate [(fromTill (TimeData 5 6 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
-        circle 50
-        |> filled white
-        |> addOutline (solid 5) black
-        |> move (0, 125)
-        |> animate [(fromTill (TimeData 6 7 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
-        speechBubble
-        |> scale 2
-        |> move (550, -75)
-        |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 255 255 255 1))),
-                    (fromTill (TimeData 7 8 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 20))] input.time
+        group [ copeDrawing
+          |> move (-75, -300),
+          text "Dr. David Cope (USC) \\/"
+          |> size 62
+          |> filled black
+          |> move (-850, 100)
+          |> animate [(fromTill (TimeData 4 6 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time
+        ]
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni -1000 -1000))] input.time,
+        group [ 
+          circle 30
+          |> filled white
+          |> addOutline (solid 5) black
+          |> move (-175, 0)
+          |> animate [(fromTill (TimeData 4 5 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          circle 40
+          |> filled white
+          |> addOutline (solid 5) black
+          |> move (-100, 50)
+          |> animate [(fromTill (TimeData 5 6 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          circle 50
+          |> filled white
+          |> addOutline (solid 5) black
+          |> move (0, 125)
+          |> animate [(fromTill (TimeData 6 7 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          speechBubble
+          |> scale 2
+          |> move (550, -75)
+          |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 255 255 255 1))),
+                      (fromTill (TimeData 7 8 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 20))] input.time,
+          text "Algorithms vs Bach???"
+          |> size 74
+          |> filled black
+          |> move (-200, 260)
+          |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1)))] input.time
+        ]
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni 1000 1000))] input.time
     ]
     |> transition [(bounceBack 1000 1000)] input.transitionTime input.state
 
