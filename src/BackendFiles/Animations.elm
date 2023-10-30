@@ -131,6 +131,18 @@ fadeShapeToColor startColor targetColor input =
         in
             repaint (rgbaToColor newColor) input.shape
 
+--Takes in a start and end color as well as an animate func input and resturns an animation of the shapes outline between the two given colors
+-- takes 1 second to turn from start to end color (use fromTill function to make this duration longer or shorter)
+fadeOutlineToColor: RGBA -> RGBA -> Float -> AnimateFuncInput -> Shape Msg
+fadeOutlineToColor startColor targetColor outlineThickness input = 
+    if input.time > 1 then
+        addOutline (solid outlineThickness) (rgbaToColor targetColor) input.shape
+    else
+        let 
+            newColor = (calculateColor input startColor targetColor)
+        in
+            addOutline (solid outlineThickness) (rgbaToColor newColor) input.shape
+
 clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
 clipShapes shape shapeTuple = 
     clip (Tuple.second shapeTuple) shape
