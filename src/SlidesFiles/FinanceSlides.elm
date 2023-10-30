@@ -95,7 +95,7 @@ server time =
       |> filled green
       |> move (-220, -200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1 1.1 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1 1.1 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
@@ -107,7 +107,7 @@ server time =
       |> filled green
       |> move (-220, -120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0.5 0.7 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 0.5 0.7 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
@@ -119,7 +119,7 @@ server time =
       |> filled green
       |> move (-220, -40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.8 2 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.8 2 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
@@ -131,7 +131,7 @@ server time =
       |> filled green
       |> move (-220, 40)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1 1.2 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1 1.2 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
@@ -143,13 +143,13 @@ server time =
       |> filled green
       |> move (-220, 120)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 1.6 1.7 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 1.6 1.7 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled green
       |> move (-220, 200)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 2.3 2.4 RepeatFromEndWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
+      |> animate [(fromTill (TimeData 2.3 2.4 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
     ,
     roundedRect 5 5 0 
       |> filled red
