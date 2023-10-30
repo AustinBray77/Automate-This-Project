@@ -101,41 +101,56 @@ entertainmentSlide2 input =
           |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1)))] input.time
         ]
         |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni 1000 1000))] input.time,
-        fullCrowd
+        fullCrowd input.time
         |> scale 3
         |> move (-1000, 1000)
-        |> move (-350, 0)
+        |> move (-550, 0)
         |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni 1000 -1000))] input.time,
-        text "🎶"
-        |> size 74
+        flyingTextAnimation "🎶" -700 200 input.time
+        |> move (input.time * sin(input.time), -15 * input.time * cos(input.time)),
+        flyingTextAnimation "🎵" -700 0 input.time
+        |> move (3 * input.time * sin(input.time), 18 * input.time * cos(input.time)),
+        flyingTextAnimation "🎹" -700 -200 input.time
+        |> move (2 * input.time * sin(input.time), -25 * input.time * cos(input.time)),
+        flyingTextAnimation "🎶" -400 500 input.time
+        |> move (20 * input.time * sin(input.time), -2 * input.time * cos(input.time)),
+        flyingTextAnimation "🎵" -400 0 input.time
+        |> move (23 * input.time * sin(input.time), 3 * input.time * cos(input.time)),
+        flyingTextAnimation "🎹" -400 -500 input.time
+        |> move (22 * input.time * sin(input.time), -5 * input.time * cos(input.time)),
+        text "OMG It's Bach!"
+        |> size 52
         |> filled black
-        |> move(350, 0)
-        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
-        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 100))] input.time,
-        text "🎵"
-        |> size 74
+        |> move(-700, 200)
+        |> animate [(fromTill (TimeData 18 19 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
+        text "Bach!! Sounds so good"
+        |> size 52
         |> filled black
-        |> move(350, 0)
-        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
-        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 0))] input.time,
-        text "🎹"
-        |> size 74
+        |> move(-550, 300)
+        |> animate [(fromTill (TimeData 19 20 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
+        text "This is incredible a computer could never do this!"
+        |> size 52
         |> filled black
-        |> move(350, 0)
-        |> move (100 * (sin input.time), 50 * (cos input.time))
-        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
-        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 -100))] input.time,
+        |> move(-900, 400)
+        |> animate [(fromTill (TimeData 20 21 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
         computer
         |> scale 0.5
         |> move (1000, -1000)
-        |> move (350, 0)
+        |> move (550, 0)
         |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni -1000 1000))] input.time
     ]
     |> transition [(bounceBack 1000 1000)] input.transitionTime input.state
 
-flyingTextAnimation: String -> Float -> Float -> Shape Msg
-flyingTextAnimation string x y =
-    blankShape
+entertainmentConclusion: SlideInput -> Shape Msg
+entertainmentConclusion input = blankShape
+
+flyingTextAnimation: String -> Float -> Float -> Float -> Shape Msg
+flyingTextAnimation string x y time =
+    text string
+    |> size 74
+    |> filled black
+    |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1))), 
+                (fromTill (TimeData 15 18 RepeatLoop) (Just easeIn) (moveAni x y))] time
 
 face: Shape Msg
 face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455,36),
@@ -290,36 +305,45 @@ speechBubble =
       |> addOutline (solid  20 ) black
   ]
 
-fullCrowd: Shape Msg
-fullCrowd = 
+fullCrowd: Float -> Shape Msg
+fullCrowd time = 
   group [
       crowd
       |> scale 0.4
-      |> move (0, 30),
+      |> move (0, 30)
+      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.4
-      |> move (-30, 30),
+      |> move (-30, 30)
+      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 5))] time,
       crowd
       |> scale 0.4
-      |> move (30, 30),
+      |> move (30, 30)
+      |> animate [(fromTill (TimeData 18.5 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 20))] time,
       crowd
       |> scale 0.5
-      |> move (50, 25),
+      |> move (50, 25)
+      |> animate [(fromTill (TimeData 17.5 20 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 10))] time,
       crowd
       |> scale 0.6
-      |> move (-15, 10),
+      |> move (-15, 10)
+      |> animate [(fromTill (TimeData 18.25 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 17.5))] time,
       crowd
       |> scale 0.7
-      |> move (75, 0),
+      |> move (75, 0)
+      |> animate [(fromTill (TimeData 18 22 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.7
-      |> move (15, 0),
+      |> move (15, 0)
+      |> animate [(fromTill (TimeData 18.75 21.25 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 12.5))] time,
       crowd
       |> scale 0.8
-      |> move (45, -10),
+      |> move (45, -10)
+      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.9
       |> move (-10, -10)
+      |> animate [(fromTill (TimeData 18.3 21.6 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 16))] time
   ]
 
 crowd: Shape Msg
