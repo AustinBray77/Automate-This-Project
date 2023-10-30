@@ -70,7 +70,9 @@ entertainmentSlide2 input =
           |> move (-850, 100)
           |> animate [(fromTill (TimeData 4 6 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time
         ]
-        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni -1000 -1000))] input.time,
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni -1000 -1000))] input.time
+        |> transition [(fromTill (TimeData 0 0.01 Once) Nothing (hideShape (RGBA 255 255 255 255)))] input.transitionTime input.state
+        ,
         group [ 
           circle 30
           |> filled white
