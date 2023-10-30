@@ -258,7 +258,9 @@ background6 time =
     ,
     ngon 6 100 
       |> filled (rgb 221 213 32)
-      |> animate [(rotateAni -30)] time
+      -- |> animate [(rotateAni -30)] time
+      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 50 0)),
+                  (fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (rotateAni 100))] time
       |> rotate (degrees -30 )
       |> move (-440, -420)
       |> addOutline (solid  0 ) black
@@ -266,7 +268,9 @@ background6 time =
     ,
     ngon 6 150 
       |> filled black
-      |> animate [(rotateAni 25)] time
+      -- |> animate [(rotateAni 25)] time
+      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 0 50)),
+                  (fromTill (TimeData 0 5 RepeatLoop) Nothing (rotateAni (cos(time) * 80)))] time
       |> rotate (degrees -30 )
       |> move (-700, -580)
       |> addOutline (solid  0 ) black
@@ -274,32 +278,20 @@ background6 time =
     ,
     ngon 6 100 
       |> filled (rgb 209 80 67)
-      |> animate [(rotateAni -30)] time
+      -- |> animate [(rotateAni -30)] time
+      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 50 0)),
+                  (fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (rotateAni 100))] time
       |> rotate (degrees -30 )
       |> move (-960, -420)
       |> addOutline (solid  0 ) black
       |> clipToScreen
     ,
-    group
-    [      
-      oval 150 150 
-        |> filled (rgb 64 143 225)
-        |> move (-906.89, 543.4431455897981)
-        |> addOutline (solid  0 ) black
-        |> clip ( -- clipping as it goes outside of the slide
-          rect screen.x screen.y
-          |> filled blank)
-      ,
-      oval 150 150 
-        |> filled (rgb 64 143 225)
-        |> scaleX 2
-        |> scaleY 0.5
-        |> move (-1003.78, 495.41)
-        |> addOutline (solid  0 ) black
-        |> clip ( -- clipping as it goes outside of the slide
-          rect screen.x screen.y
-          |> filled blank)
-    ]
+    oval 700 400 
+      |> filled (rgb 27 83 141)
+      |> move (-1000, 600)
+      |> addOutline (solid  0 ) black 
+      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 100 0))] time
+      |> clipToScreen 
   ]
 
 background7: Float -> Shape Msg
