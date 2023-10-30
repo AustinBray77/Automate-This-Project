@@ -100,7 +100,6 @@ stringRoundToDecimals digits string =
       (String.left digits decimal)
         |> (++) "."
         |> (++) (Maybe.withDefault "" <| Array.get 0 parts)
-      
 
 
 

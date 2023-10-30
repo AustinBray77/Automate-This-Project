@@ -4,6 +4,10 @@ import GraphicSVG.EllieApp exposing (..)
 
 type Msg = Tick Float GetKeyState 
 
+clipToScreen: Shape Msg -> Shape Msg
+clipToScreen shape =
+    clip (rect screen.x screen.y |> filled blank) shape
+
 type alias RGBA = {
     r: Float,
     g: Float,

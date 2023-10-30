@@ -8,13 +8,14 @@ import SlidesFiles.BackgroundSlides exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
 import SlidesFiles.FinanceSlides exposing (..)
 import SlidesFiles.EntertainmentSlides exposing (..)
+import SlidesFiles.Medical exposing (..)
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = (
   -- the slides are in order 
-  --!! Put slides here
-  [financeIntro, entertainmentSlide2, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
-  --!! ---------------
+  --!! Put slides here !!
+  [medicalSlide, financeIntro, entertainmentSlide2, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
+  --!! --------------- !!
   )} 
 
 

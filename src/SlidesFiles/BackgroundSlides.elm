@@ -26,9 +26,7 @@ background1 time =
       |> filled (rgb 27 83 141)
       |> move (-900, 0)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 100 
       |> filled (rgb 209 80 67)
@@ -53,9 +51,7 @@ background1 time =
       |> animate [(rotateAni 15)] time
       |> rotate (degrees -30 )
       |> move (960, 60)
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
   ]
 
 background2: Float -> Shape Msg
@@ -120,9 +116,7 @@ background2 time =
       |> rotate (degrees -90 )
       |> move (-960, -340)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
   ]
 
 background3: Float -> Shape Msg
@@ -149,9 +143,7 @@ background3 time =
       |> animate [(rotateAni -15)] time
       |> move (-980, -380)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
   ]
 
 background4: Float -> Shape Msg
@@ -192,9 +184,7 @@ background4 time =
       |> rotate (degrees -30 )
       |> move (920, -280)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 100
       |> filled (rgb 209 80 67)
@@ -218,9 +208,7 @@ background5 time =
       |> rotate (degrees -30 )
       |> move (320, 520)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 150 
       |> filled black
@@ -228,9 +216,7 @@ background5 time =
       |> rotate (degrees -30 )
       |> move (620, 440)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 100 
       |> filled (rgb 209 80 67)
@@ -238,9 +224,7 @@ background5 time =
       |> rotate (degrees -30 )
       |> move (880, 520)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     group
     [      
@@ -278,9 +262,7 @@ background6 time =
       |> rotate (degrees -30 )
       |> move (-440, -420)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 150 
       |> filled black
@@ -288,9 +270,7 @@ background6 time =
       |> rotate (degrees -30 )
       |> move (-700, -580)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     ngon 6 100 
       |> filled (rgb 209 80 67)
@@ -298,9 +278,7 @@ background6 time =
       |> rotate (degrees -30 )
       |> move (-960, -420)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     group
     [      
@@ -359,9 +337,7 @@ background7 time =
       |> rotate (degrees -30 )
       |> move (-1020, 260)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     oval 55 55 
       |> filled black
@@ -370,9 +346,7 @@ background7 time =
       |> scaleY 2
       |> move (883.5281615302869, 57.02444208289053)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     oval 55 55 
       |> filled black
@@ -381,9 +355,7 @@ background7 time =
       |> scaleY 5
       |> move (957.7045696068013, 112.62486716259298)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
     ,
     oval 55 55 
       |> filled black
@@ -392,7 +364,5 @@ background7 time =
       |> scaleY 5
       |> move (984.5908607863975, 134.9202975557917)
       |> addOutline (solid  0 ) black
-      |> clip ( -- clipping as it goes outside of the slide
-        rect screen.x screen.y
-        |> filled blank)
+      |> clipToScreen
   ]
