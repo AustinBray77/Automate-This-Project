@@ -81,7 +81,7 @@ tanScaled x =
 -- ease in and out
 easeInAndOut: Float -> Float
 easeInAndOut x =
-    clamp 0 1 (sin (2 * pi * (x - 0.25)) / 2 + 0.5)
+    clamp 0 1 (sin (pi * (x - 0.5)) / 2 + 0.5)
 
 --Sin function scaled to have only the top left quarter of the period between 0 and 1
 easeOut: Float -> Float
