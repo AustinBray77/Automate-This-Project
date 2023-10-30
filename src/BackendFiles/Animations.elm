@@ -321,6 +321,15 @@ hideShape shapeColor input =
     else 
         blankShape
 
+showShape: RGBA -> AnimateFuncInput -> Shape Msg
+showShape shapeColor input = 
+    if input.time == 0 then
+        blankShape
+    else if input.time == 1 then
+        input.shape
+    else 
+        input.shape
+        |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
             -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape

@@ -100,9 +100,42 @@ entertainmentSlide2 input =
           |> move (-200, 260)
           |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1)))] input.time
         ]
-        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni 1000 1000))] input.time
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni 1000 1000))] input.time,
+        fullCrowd
+        |> scale 3
+        |> move (-1000, 1000)
+        |> move (-350, 0)
+        |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni 1000 -1000))] input.time,
+        text "🎶"
+        |> size 74
+        |> filled black
+        |> move(350, 0)
+        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
+        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 100))] input.time,
+        text "🎵"
+        |> size 74
+        |> filled black
+        |> move(350, 0)
+        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
+        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 0))] input.time,
+        text "🎹"
+        |> size 74
+        |> filled black
+        |> move(350, 0)
+        |> move (100 * (sin input.time), 50 * (cos input.time))
+        |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1)))] input.time
+        |> animate [(fromTill (TimeData 15 18 RepeatFromStartWithPause) (Just (\x -> tan (degrees (90* sin x)))) (moveAni -700 -100))] input.time,
+        computer
+        |> scale 0.5
+        |> move (1000, -1000)
+        |> move (350, 0)
+        |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni -1000 1000))] input.time
     ]
     |> transition [(bounceBack 1000 1000)] input.transitionTime input.state
+
+flyingTextAnimation: String -> Float -> Float -> Shape Msg
+flyingTextAnimation string x y =
+    blankShape
 
 face: Shape Msg
 face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455,36),
@@ -123,7 +156,6 @@ computer =   group
       |> scaleY 1
       |> rotate (degrees 0 )
       |> move (0, -45)
-      |> addOutline (solid  1 ) black
     ,
     roundedRect 10 25 0 
       |> filled grey
@@ -131,7 +163,6 @@ computer =   group
       |> scaleY 1
       |> rotate (degrees 0 )
       |> move (0, -30)
-      |> addOutline (solid  1 ) black
     ,
     roundedRect 80 45 0 
       |> filled grey
@@ -139,7 +170,6 @@ computer =   group
       |> scaleY 1
       |> rotate (degrees 0 )
       |> move (0, 0)
-      |> addOutline (solid  1 ) black
     ,
     roundedRect 70 35 0 
       |> filled blue
@@ -147,8 +177,8 @@ computer =   group
       |> scaleY 1
       |> rotate (degrees 0 )
       |> move (0, 0)
-      |> addOutline (solid  0 ) black
   ]
+  |> addOutline (solid 2) black
   |> scale 12
 
 copeDrawing: Shape Msg
@@ -259,6 +289,49 @@ speechBubble =
       ]
       |> addOutline (solid  20 ) black
   ]
+
+fullCrowd: Shape Msg
+fullCrowd = 
+  group [
+      crowd
+      |> scale 0.4
+      |> move (0, 30),
+      crowd
+      |> scale 0.4
+      |> move (-30, 30),
+      crowd
+      |> scale 0.4
+      |> move (30, 30),
+      crowd
+      |> scale 0.5
+      |> move (50, 25),
+      crowd
+      |> scale 0.6
+      |> move (-15, 10),
+      crowd
+      |> scale 0.7
+      |> move (75, 0),
+      crowd
+      |> scale 0.7
+      |> move (15, 0),
+      crowd
+      |> scale 0.8
+      |> move (45, -10),
+      crowd
+      |> scale 0.9
+      |> move (-10, -10)
+  ]
+
+crowd: Shape Msg
+crowd = group (
+  [
+  curve (-8.971,16.867) [Pull (-7.775,22.250) (-6.579,27.633),Pull (-5.502,31.342) (-4.426,35.050),Pull (-1.674,35.289) (1.0766,35.528),Pull (2.8710,34.452) (4.6654,33.375),Pull (5.8616,29.428) (7.0579,25.480),Pull (7.6560,23.207) (8.2542,20.934),Pull (9.9289,19.379) (11.603,17.824),Pull (11.962,16.269) (12.321,14.714),Pull (12.082,11.962) (11.842,9.2112),Pull (11.962,6.3401) (12.082,3.4691),Pull (11.723,1.9140) (11.364,0.3588),Pull (11.364,-0.957) (11.364,-2.272),Pull (11.125,-3.828) (10.885,-5.383),Pull (-0.717,-5.143) (-12.32,-4.904),Pull (-13.39,0) (-14.47,4.9046),Pull (-14.71,8.2542) (-14.95,11.603),Pull (-14.95,14.115) (-14.95,16.628),Pull (-12.8,16.986) (-10.64,17.345)]
+  ,curve (-86.25,-21.17) [Pull (-87.08,-14.95) (-87.92,-8.732),Pull (-87.32,-3.947) (-86.72,0.8373),Pull (-84.81,4.3065) (-82.90,7.7757),Pull (-77.15,10.407) (-71.41,13.039),Pull (-70.93,16.149) (-70.45,19.259),Pull (-71.53,22.011) (-72.61,24.762),Pull (-71.65,28.112) (-70.69,31.461),Pull (-68.42,33.495) (-66.15,35.528),Pull (-63.64,35.768) (-61.12,36.007),Pull (-59.69,34.452) (-58.25,32.897),Pull (-56.82,30.624) (-55.38,28.351),Pull (-55.14,24.403) (-54.90,20.456),Pull (-54.90,19.140) (-54.90,17.824),Pull (-55.14,14.714) (-55.38,11.603),Pull (-51.08,9.4504) (-46.77,7.2971),Pull (-44.97,1.7943) (-43.18,-3.708),Pull (-43.30,-8.134) (-43.42,-12.56),Pull (-44.02,-14.71) (-44.62,-16.86),Pull (-44.38,-19.14) (-44.14,-21.41)]
+  ,curve (-5.622,-34.81) [Pull (-5.742,-32.53) (-5.861,-30.26),Pull (-2.631,-29.18) (0.5981,-28.11),Pull (1.0766,-21.89) (1.5551,-15.67),Pull (0.9570,-9.450) (0.3588,-3.229),Pull (-0.957,1.6747) (-2.272,6.5794),Pull (-6.818,9.4504) (-11.36,12.321),Pull (-14.35,13.158) (-17.34,13.996),Pull (-17.82,16.628) (-18.30,19.259),Pull (-17.10,23.087) (-15.91,26.915),Pull (-16.38,29.428) (-16.86,31.940),Pull (-19.49,33.614) (-22.13,35.289),Pull (-24.76,35.887) (-27.39,36.485),Pull (-28.82,34.571) (-30.26,32.657),Pull (-31.22,30.265) (-32.17,27.872),Pull (-31.22,24.882) (-30.26,21.891),Pull (-29.30,19.618) (-28.35,17.345),Pull (-28.23,15.072) (-28.11,12.8),Pull (-29.66,11.364) (-31.22,9.9289),Pull (-34.09,8.9719) (-36.96,8.0149),Pull (-38.63,7.5364) (-40.31,7.0579),Pull (-41.86,-2.512) (-43.42,-12.08),Pull (-43.66,-17.10) (-43.90,-22.13),Pull (-42.46,-25.48) (-41.03,-28.82),Pull (-39.47,-28.82) (-37.92,-28.82),Pull (-35.88,-28.59) (-33.85,-28.35),Pull (-33.25,-30.74) (-32.65,-33.13)]
+  ,curve (-27.15,-35.76) [Pull (-29.18,-31.94) (-31.22,-28.11),Pull (-33.73,-28.11) (-36.24,-28.11),Pull (-36.96,-19.85) (-37.68,-11.60),Pull (-38.87,-5.143) (-40.07,1.3158),Pull (-44.02,5.0242) (-47.97,8.7327),Pull (-52.39,8.6130) (-56.82,8.4934),Pull (-60.05,5.5028) (-63.28,2.5121),Pull (-64.71,-3.229) (-66.15,-8.971),Pull (-66.99,-14.71) (-67.82,-20.45),Pull (-68.78,-23.32) (-69.74,-26.19),Pull (-72.85,-27.51) (-75.96,-28.82),Pull (-76.32,-31.22) (-76.68,-33.61),Pull (-76.68,-34.33) (-76.68,-35.05)]
+  ]
+  |> List.map (\x -> x |> filled (rgba 50 50 50 1) |> addOutline (solid 2) black)
+  )
 
 drawInCircle: Float -> String -> Shape Msg
 drawInCircle radius message =
