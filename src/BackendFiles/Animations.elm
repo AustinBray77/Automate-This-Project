@@ -291,10 +291,13 @@ rotateAround speed position input =
     |> rotate (speed * input.time)
     |> move position
 
--- backend function
+-- Animates a string being typed out at a given speed
 typeWriter: String -> Float -> Float -> TimeData -> Float -> String
-typeWriter string speed blinkSpeed time currentTime = 
-    if time.start > currentTime then ""
+typeWriter string speed blinkSpeed time givenTime = 
+    let
+        currentTime = givenTime - time.start
+    in
+    if currentTime < 0 then ""
     else if floor (currentTime / speed) >= (String.length string) then
         string
     else
@@ -321,6 +324,7 @@ hideShape shapeColor input =
     else 
         blankShape
 
+-- Shows shape after 1 second
 showShape: RGBA -> AnimateFuncInput -> Shape Msg
 showShape shapeColor input = 
     if input.time == 0 then
@@ -330,6 +334,7 @@ showShape shapeColor input =
     else 
         input.shape
         |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
+
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
             -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape
