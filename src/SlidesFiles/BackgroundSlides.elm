@@ -258,9 +258,7 @@ background6 time =
     ,
     ngon 6 100 
       |> filled (rgb 221 213 32)
-      -- |> animate [(rotateAni -30)] time
-      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 50 0)),
-                  (fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (rotateAni 100))] time
+      |> animate [(rotateAni -30)] time
       |> rotate (degrees -30 )
       |> move (-440, -420)
       |> addOutline (solid  0 ) black
@@ -268,9 +266,7 @@ background6 time =
     ,
     ngon 6 150 
       |> filled black
-      -- |> animate [(rotateAni 25)] time
-      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 0 50)),
-                  (fromTill (TimeData 0 5 RepeatLoop) Nothing (rotateAni (cos(time) * 80)))] time
+      |> animate [(rotateAni 25)] time
       |> rotate (degrees -30 )
       |> move (-700, -580)
       |> addOutline (solid  0 ) black
@@ -278,9 +274,7 @@ background6 time =
     ,
     ngon 6 100 
       |> filled (rgb 209 80 67)
-      -- |> animate [(rotateAni -30)] time
-      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 50 0)),
-                  (fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (rotateAni 100))] time
+      |> animate [(rotateAni -30)] time
       |> rotate (degrees -30 )
       |> move (-960, -420)
       |> addOutline (solid  0 ) black
@@ -290,7 +284,6 @@ background6 time =
       |> filled (rgb 27 83 141)
       |> move (-1000, 600)
       |> addOutline (solid  0 ) black 
-      |> animate [(fromTill (TimeData 0 5 RepeatLoop) (Just easeInAndOut) (moveAni 100 0))] time
       |> clipToScreen 
   ]
 
