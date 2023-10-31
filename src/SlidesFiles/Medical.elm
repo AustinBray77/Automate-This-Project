@@ -5,6 +5,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
+import SlidesFiles.EntertainmentSlides exposing (..) -- using the face function
 
 personalityBots: SlideInput -> Shape Msg
 personalityBots input = 
@@ -13,7 +14,7 @@ personalityBots input =
     background3 input.time
     ,
     text (typeWriter "Categorizing Humankind" 0.2 0.2 (TimeData 0 1 Once) input.time)
-    |> size 120 
+      |> size 120 
       |> alignLeft
       |> filled black
       |> move (-900, 375)
@@ -21,19 +22,61 @@ personalityBots input =
     ,
     spaceShip input.time 500 -250
     ,
+    let
+        time = if input.time > 15 then (input.time - 7)*3 -- increaing time for one group of animations (makes sense when slide is playing)
+               else (input.time - 7)
+    in
+      group 
+      [
+        personalityTypes
+          |> scale 0.75
+          |> move (-400, -50)
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 0 2 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni -225 76))] time
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 3 6 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni 0 145))] time
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 2 4 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni 200 93))] time
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 1 3 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni 205 -65))] time
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 5 7 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni 0 -150))] time
+        ,
+        face
+          |> scale 0.1
+          |> move (-425, -25)
+          |> animate [(fromTill (TimeData 4 5 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni -225 -70))] time
+      ]
+      |> animate [(fromTill (TimeData 9 7 Once) Nothing (makeShapeTransparent))] input.time
+    ,
     paper3Hour
-    |> scale 0.95
-    |> move (-1500, -125)
-    |> animate [(fromTill (TimeData 7 0 Once) Nothing makeTransparentInstant),
+      |> scale 0.95
+      |> move (-1500, -125)
+      |> animate [(fromTill (TimeData 7 0 Once) Nothing makeTransparentInstant),
                 (fromTill (TimeData 7 8 Once) (Just easeInAndOut) (moveAni 1900 0)),
                 (fromTill (TimeData 17 100000 Once) Nothing makeTransparentInstant),
                 (fromTill (TimeData 15.5 16.5 Once) (Just easeOut) (moveAni -1900 -500))] input.time
     ,
     paper5Min
-    |> scale 0.95
-    |> move (1500, 625)
-    |> animate [(fromTill (TimeData 15 0 Once) Nothing makeTransparentInstant),
-                (fromTill (TimeData 15 16 Once) (Just easeInAndOut) (moveAni -1000 -750))] input.time
+      |> scale 0.95
+      |> move (1500, 625)
+      |> animate [(fromTill (TimeData 15 0 Once) Nothing makeTransparentInstant),
+                (fromTill (TimeData 15 16 Once) (Just easeInAndOut) (moveAni -1100 -700))] input.time
   ]
   |> transition [(moveAni 2000 -500)] input.transitionTime input.state
 
@@ -793,6 +836,12 @@ paper3Hour =
       |> alignLeft
       |> filled black
       |> move (-240, 310)
+    ,
+    text "Personality Test"
+      |> size 20
+      |> alignRight
+      |> filled black
+      |> move (240, 310)
   ]
 
 paper5Min: Shape Msg
@@ -891,4 +940,91 @@ paper5Min =
       |> alignLeft
       |> filled black
       |> move (-240, 310)
+    ,
+    text "Personality Test"
+      |> size 20
+      |> alignRight
+      |> filled black
+      |> move (240, 310)
+  ]
+
+personalityTypes: Shape Msg
+personalityTypes = 
+  group
+  [  
+    oval 50 50 
+      |> filled white
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 235 65 0 
+      |> filled white
+      |> move (-295.2391073326247, 76.89691817215727)
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 175 65 0 
+      |> filled white
+      |> move (5.526036131774603, 185.92986184909674)
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 275 65 0 
+      |> filled white
+      |> move (295.2603613177471, 93.92136025504782)
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 275 65 0 
+      |> filled white
+      |> move (303.93198724760913, -91.79596174282682)
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 250 65 0 
+      |> filled white
+      |> move (-296.0680127523914, -104.42082890541977)
+      |> addOutline (solid  2 ) black
+    ,
+    roundedRect 335 65 0 
+      |> filled white
+      |> move (7.20510095642932, -216.38682252922428)
+      |> addOutline (solid  2 ) black
+    ,
+    text "Thinker" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (-408.35281615302847, 56.89691817215728)
+      |> addOutline (solid  0 ) blue
+    ,
+    text "Rebel" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (-74.47396386822547, 165.92986184909668)
+      |> addOutline (solid  0 ) blue
+    ,
+    text "Promoter" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (162.14665249734327, 75.06907545164718)
+      |> addOutline (solid  0 ) blue
+    ,
+    text "Imaginer" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (174.750265674814, -110.64824654622743)
+      |> addOutline (solid  0 ) blue
+    ,
+    text "Persister" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (-416.0680127523914, -124.42082890541977)
+      |> addOutline (solid  0 ) blue
+    ,
+    text "Harmoniser" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (-160.82890541976622, -236.38682252922428)
+      |> addOutline (solid  0 ) blue
   ]
