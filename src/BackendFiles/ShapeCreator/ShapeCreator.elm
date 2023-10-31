@@ -458,18 +458,10 @@ getOrder shape =
 
 buildBaseShapes: Model -> List (Shape T.Msg)
 buildBaseShapes model =       
-  let
-    defaultBuildInfo = BuildShapeInfo False False False
-  in
   if model.currentAction == Dragging then
-    buildShape defaultBuildInfo backgroundHitbox
-      |> addNonUserShapeCallbacks model BackGround
-      |> List.singleton
+    []
   else
     [
-      buildShape defaultBuildInfo backgroundHitbox
-      |> addNonUserShapeCallbacks model BackGround
-      ,
       buildShape defaultBuildInfo baseRect
         |> notifyMouseDown (CreateShape baseRect)
         |> addNonUserShapeCallbacks model ShapeButton
@@ -500,14 +492,19 @@ myShapes model =
 
     shapeData selectedOnly = 
       List.map userShapeToData (userShapes selectedOnly)
+    
+    backGround = 
+      buildShape defaultBuildInfo backgroundHitbox
+      |> addNonUserShapeCallbacks model BackGround
+      |> List.singleton
 
   in
   case model.currentAction of
     Exporting selectedOnly ->
       stringToTextShapes (convertShapesToCode CombToGroup 1 (shapeData selectedOnly))
     _ ->
-        buildBaseShapes model
-      ++ 
+      backGround
+      ++
       (
         buildAndAddCallbacks model sortedShapes
           |> List.map (notifyMouseMoveAt MouseMove) 
@@ -519,6 +516,8 @@ myShapes model =
         else  
           []
       )
+      ++
+      buildBaseShapes model
 
 -- Temp Function (Makes the outline colour the selected outline colour)
 colourOutline: UserShape -> UserShape
