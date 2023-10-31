@@ -274,7 +274,6 @@ financeTest1: SlideInput -> Shape Msg
 financeTest1 input = 
   group [newYorkStockExchange, skyScraper, mcMasterShape]
 
-
 mcMasterShape : Shape Msg
 mcMasterShape = 
    group
@@ -8751,6 +8750,2087 @@ skyScraper =
           |> move (-60, -180)
       ]
   ]
+
+person : Shape Msg
+person = 
+  group
+  [  
+      group
+      [      
+        oval 140 140 
+          |> filled white
+          |> move (-60, 180)
+          |> addOutline (solid  10 ) black
+        ,
+          List.foldr union (rect 0 0 |> ghost)
+          [          
+            roundedRect 300 80 0 
+              |> filled white
+              |> move (-60, -80)
+              |> addOutline (solid  10 ) black
+            ,
+            roundedRect 300 200 40 
+              |> filled white
+              |> move (-60, -20)
+              |> addOutline (solid  10 ) black
+          ]
+          |> addOutline (solid  20 ) black
+      ]
+  ]
+
+graduate : Shape Msg
+graduate =   group
+  [  
+    group
+    [      
+      oval 140 140 
+        |> filled white
+        |> move (-60, 180)
+        |> addOutline (solid  10 ) black
+      ,
+        List.foldr union (rect 0 0 |> ghost)
+        [          
+          roundedRect 300 80 0 
+            |> filled white
+            |> move (-60, -80)
+            |> addOutline (solid  10 ) black
+          ,
+          roundedRect 300 200 40 
+            |> filled white
+            |> move (-60, -20)
+            |> addOutline (solid  10 ) black
+        ]
+        |> addOutline (solid  20 ) black
+    ]
+    ,
+      group
+      [      
+        oval 135 55 
+          |> filled black
+          |> rotate (degrees -10 )
+          |> move (-35.53488372093023, 240)
+          |> addOutline (solid  5 ) black
+        ,
+          group
+          [          
+            roundedRect 135 65 0 
+              |> filled (rgb 50 50 60)
+              |> rotate (degrees -20 )
+              |> move (-11.069767441860463, 338.3255813953489)
+              |> addOutline (solid  5 ) black
+          ]
+          |> scaleX 1.75
+          |> move (0, -60)
+      ]
+    ,
+    roundedRect 135 65 0 
+      |> filled red
+      |> move (-870, 300)
+      |> addOutline (solid  5 ) black
+  ]
+
+startingSalary : Shape Msg
+startingSalary = 
+  group
+  [  
+      group
+      [      
+          group
+          [          
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-0.8372093023255616, 162.88372093023264)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (1.4883720930232585, 325.95348837209315)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-10.60465116279073, -162.4186046511628)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-8.27906976744191, 0.6511627906976543)
+          ]
+          |> move (-59.53488372093017, 11.906976744186053)
+        ,
+          group
+          [          
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-0.8372093023255616, 162.88372093023264)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (1.4883720930232585, 325.95348837209315)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-10.60465116279073, -162.4186046511628)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-8.27906976744191, 0.6511627906976543)
+          ]
+          |> move (57.209302325581405, 9.581395348837209)
+        ,
+          group
+          [          
+            text "Starting" 
+              |> size 70 
+              |> alignLeft 
+              |> filled black
+              |> move (-560.8837209302326, -159.62790697674419)
+              |> addOutline (solid  0 ) blue
+            ,
+            text "Salary" 
+              |> size 70 
+              |> alignLeft 
+              |> filled black
+              |> move (-537.0697674418602, -216.18604651162795)
+              |> addOutline (solid  0 ) blue
+          ]
+          |> move (-28.279069767441854, 343.81395348837214)
+      ]
+  ]
+
+signOnBonus : Shape Msg
+signOnBonus = 
+  group
+  [  
+      group
+      [      
+          group
+          [          
+            text "Bonus" 
+              |> size 70 
+              |> alignLeft 
+              |> filled black
+              |> move (-169.44186046511624, -226.60465116279073)
+              |> addOutline (solid  0 ) blue
+            ,
+            text "Sign-On" 
+              |> size 70 
+              |> alignLeft 
+              |> filled black
+              |> move (-203.67441860465124, -161.11627906976742)
+              |> addOutline (solid  0 ) blue
+          ]
+          |> move (26.790697674418627, 343)
+        ,
+          group
+          [          
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-0.8372093023255616, 162.88372093023264)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (1.4883720930232585, 325.95348837209315)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-10.60465116279073, -162.4186046511628)
+            ,
+              group
+              [              
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 1.5
+                  |> scaleY 1.5
+                  |> move (-500.69767441860444, -313.7674418604652)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-507.67441860465095, -243.34883720930236)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-447.11627906976724, -270.60465116279073)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-535.9534883720928, -341.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> move (-535.5813953488372, -293.5813953488372)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-514.4651162790695, -323.0697674418605)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-517.9069767441858, -372.65116279069775)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-445.81395348837185, -313.95348837209303)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (-480.04651162790674, -383.9069767441861)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.5
+                  |> scaleY 0.5
+                  |> move (-539.7674418604649, -385.58139534883725)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-446.83720930232533, -371.5348837209302)
+                  |> addOutline (solid  0 ) blue
+                ,
+                text "$" 
+                  |> size 70 
+                  |> alignLeft 
+                  |> filled black
+                  |> scaleX 0.4
+                  |> scaleY 0.4
+                  |> move (-459.58139534883696, -339.62790697674427)
+                  |> addOutline (solid  0 ) blue
+              ]
+              |> move (-8.27906976744191, 0.6511627906976543)
+          ]
+          |> move (424.83720930232585, 2.1395348837209287)
+      ]
+  ]
+
+wallStreetBanner : Shape Msg
+wallStreetBanner = 
+  group
+  [  
+      group
+      [      
+        roundedRect 650 125 10 
+          |> filled white
+          |> move (-289.5348837209301, 422.046511627907)
+          |> addOutline (solid  10 ) black
+        ,
+        text "Wall Street" 
+          |> size 120 
+          |> alignLeft 
+          |> filled black
+          |> move (-559.3953488372093, 385.1162790697674)
+          |> addOutline (solid  0 ) blue
+      ]
+  ]
+
+whiteCover : Shape Msg
+whiteCover = 
+  group
+  [  
+    roundedRect 800 500 0 
+      |> filled white
+      |> move (-459.2093023255816, -432.27906976744185)
+      |> addOutline (solid  0 ) red
+  ]
+
+stockLine : Shape Msg
+stockLine = 
+  curve (-64,44.617) [Pull (-55.58,38.948) (-47.17,33.28),Pull (-42.05,36.571) (-36.93,39.862),Pull (-29.25,27.062) (-21.57,14.262),Pull (-19.74,15.177) (-17.92,16.091),Pull (-12.61,-4.022) (-7.314,-24.13),Pull (-5.302,-20.29) (-3.291,-16.45),Pull (1.28,-25.23) (5.8514,-34.01),Pull (10.605,-30.72) (15.36,-27.42),Pull (21.759,-30.53) (28.16,-33.64),Pull (39.314,-31.45) (50.468,-29.25),Pull (55.04,-30.72) (59.611,-32.18),Pull (73.508,-26.14) (87.405,-20.11)]
+     |> outlined (solid 2) red
+
+stockBackground : Shape Msg
+stockBackground =
+  group
+  [  
+      group
+      [      
+        roundedRect 700 600 5 
+          |> filled white
+          |> move (-500, 200)
+          |> addOutline (solid  10 ) black
+        ,
+          group
+          [          
+            roundedRect 10 600 0 
+              |> filled black
+              |> rotate (degrees -90 )
+              |> move (-500, -55)
+              |> addOutline (solid  0 ) black
+            ,
+            roundedRect 10 520 0 
+              |> filled black
+              |> move (-795, 200)
+              |> addOutline (solid  0 ) black
+          ]
+      ]
+  ]
+
+sadThought : Shape Msg
+sadThought = 
+  group
+  [  
+      group
+      [      
+          List.foldr union (rect 0 0 |> ghost)
+          [          
+            oval 300 150 
+              |> filled white
+              |> move (107.86046511627914, -293.3023255813955)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (-14.372093023255772, -283.06976744186056)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (62.00000000000004, -226.04651162790708)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (110.27906976744188, -216.46511627906986)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (160.04651162790702, -233.67441860465127)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (211.30232558139537, -255.34883720930242)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (252.13953488372096, -291.9069767441862)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (237.90697674418612, -324.0000000000001)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (183.4883720930233, -345.67441860465124)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (114.18604651162795, -364.3720930232559)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (50.27906976744191, -350.88372093023264)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (-5.7209302325581195, -325.0232558139536)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (18.186046511627953, -246.04651162790705)
+              |> addOutline (solid  10 ) black
+          ]
+          |> move (-20, 0)
+          |> addOutline (solid  14 ) black
+        ,
+          group
+          [          
+              group
+              [              
+                oval 15 15 
+                  |> filled black
+                  |> move (160, -260)
+                  |> addOutline (solid  5 ) black
+                ,
+                oval 15 15 
+                  |> filled black
+                  |> move (220, -260)
+                  |> addOutline (solid  5 ) black
+                ,
+                  group
+                  [                  
+                    oval 100 55 
+                      |> filled white
+                      |> move (180, 120)
+                      |> addOutline (solid  10 ) black
+                    ,
+                    roundedRect 120 40 0 
+                      |> filled white
+                      |> move (180, 105.11627906976744)
+                      |> addOutline (solid  0 ) black
+                    ,
+                    ngon 3 20 
+                      |> filled white
+                      |> move (130.18604651162795, 115.90697674418604)
+                      |> addOutline (solid  0 ) white
+                    ,
+                    ngon 3 20 
+                      |> filled white
+                      |> rotate (degrees -180 )
+                      |> move (238, 119.53488372093024)
+                      |> addOutline (solid  0 ) white
+                  ]
+                  |> scaleX 0.8
+                  |> scaleY 0.8
+                  |> move (46.13953488372093, -422.6976744186049)
+              ]
+              |> move (-21.906976744186068, 2.02325581395354)
+            ,
+            text "$$$" 
+              |> size 100 
+              |> alignLeft 
+              |> filled black
+              |> move (-38.465116279069576, -318.8837209302325)
+              |> addOutline (solid  0 ) blue
+          ]
+        ,
+        oval 100 100 
+          |> filled white
+          |> move (-161.72093023255792, -308.37209302325596)
+          |> addOutline (solid  7 ) black
+        ,
+        oval 60 60 
+          |> filled white
+          |> move (-365.441860465116, -366.23255813953494)
+          |> addOutline (solid  7 ) black
+        ,
+        oval 80 80 
+          |> filled white
+          |> move (-271.0232558139533, -341.7674418604652)
+          |> addOutline (solid  7 ) black
+      ]
+  ]
+
+facebookLogo : Shape Msg
+facebookLogo =
+  curve (-30.40,-33.95) [Pull (-36.31,-34.07) (-42.23,-34.18),Pull (-42.11,-16.56) (-41.99,1.0646),Pull (-46.01,1.1829) (-50.04,1.3012),Pull (-50.15,6.5064) (-50.27,11.711),Pull (-46.13,11.829) (-41.99,11.948),Pull (-41.99,15.970) (-41.99,19.992),Pull (-42.43,40.473) (-16.68,36.554),Pull (-16.56,30.876) (-16.44,25.197),Pull (-20.34,24.961) (-24.25,24.724),Pull (-29.49,23.585) (-29.92,19.046),Pull (-30.16,15.733) (-30.40,12.421),Pull (-23.42,12.066) (-16.44,11.711),Pull (-17.27,6.5064) (-18.09,0),Pull (-30.40,0.2365) (-30.87,0)]
+    |> filled white
+
+facebookBackground : Shape Msg
+facebookBackground = 
+  group
+  [  
+    roundedRect 100 100 20 
+      |> filled blue
+      |> move (554.3720930232558, -450.13953488372084)
+      |> addOutline (solid  0 ) black
+  ]
+
+emptyThought : Shape Msg
+emptyThought = 
+  group
+  [  
+      group
+      [      
+          List.foldr union (rect 0 0 |> ghost)
+          [          
+            oval 300 150 
+              |> filled white
+              |> move (107.86046511627914, -293.3023255813955)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (-14.372093023255772, -283.06976744186056)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (62.00000000000004, -226.04651162790708)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (110.27906976744188, -216.46511627906986)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (160.04651162790702, -233.67441860465127)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (211.30232558139537, -255.34883720930242)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (252.13953488372096, -291.9069767441862)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (237.90697674418612, -324.0000000000001)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (183.4883720930233, -345.67441860465124)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (114.18604651162795, -364.3720930232559)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (50.27906976744191, -350.88372093023264)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (-5.7209302325581195, -325.0232558139536)
+              |> addOutline (solid  10 ) black
+            ,
+            oval 100 60 
+              |> filled white
+              |> move (18.186046511627953, -246.04651162790705)
+              |> addOutline (solid  10 ) black
+          ]
+          |> move (192.83720930232562, 526.8837209302325)
+          |> addOutline (solid  14 ) black
+        ,
+        oval 60 60 
+          |> filled white
+          |> move (-12.697674418604237, 99.62790697674414)
+          |> addOutline (solid  7 ) black
+        ,
+        oval 80 80 
+          |> filled white
+          |> move (77.25581395348851, 144.93023255813952)
+          |> addOutline (solid  7 ) black
+      ]
+  ]
+
+groupThoughts : Shape Msg
+groupThoughts =
+  group
+  [  
+      List.foldr union (rect 0 0 |> ghost)
+      [      
+        oval 300 150 
+          |> filled white
+          |> move (107.86046511627914, -293.3023255813955)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-14.372093023255772, -283.06976744186056)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (62.00000000000004, -226.04651162790708)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (110.27906976744188, -216.46511627906986)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (160.04651162790702, -233.67441860465127)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (211.30232558139537, -255.34883720930242)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (252.13953488372096, -291.9069767441862)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (237.90697674418612, -324.0000000000001)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (183.4883720930233, -345.67441860465124)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (114.18604651162795, -364.3720930232559)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (50.27906976744191, -350.88372093023264)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-5.7209302325581195, -325.0232558139536)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (18.186046511627953, -246.04651162790705)
+          |> addOutline (solid  10 ) black
+      ]
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (303.6279069767445, 338.5116279069766)
+      |> addOutline (solid  14 ) black
+    ,
+      List.foldr union (rect 0 0 |> ghost)
+      [      
+        oval 300 150 
+          |> filled white
+          |> move (107.86046511627914, -293.3023255813955)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-14.372093023255772, -283.06976744186056)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (62.00000000000004, -226.04651162790708)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (110.27906976744188, -216.46511627906986)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (160.04651162790702, -233.67441860465127)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (211.30232558139537, -255.34883720930242)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (252.13953488372096, -291.9069767441862)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (237.90697674418612, -324.0000000000001)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (183.4883720930233, -345.67441860465124)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (114.18604651162795, -364.3720930232559)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (50.27906976744191, -350.88372093023264)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-5.7209302325581195, -325.0232558139536)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (18.186046511627953, -246.04651162790705)
+          |> addOutline (solid  10 ) black
+      ]
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (347.4418604651166, 776.744186046511)
+      |> addOutline (solid  14 ) black
+    ,
+      List.foldr union (rect 0 0 |> ghost)
+      [      
+        oval 300 150 
+          |> filled white
+          |> move (107.86046511627914, -293.3023255813955)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-14.372093023255772, -283.06976744186056)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (62.00000000000004, -226.04651162790708)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (110.27906976744188, -216.46511627906986)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (160.04651162790702, -233.67441860465127)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (211.30232558139537, -255.34883720930242)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (252.13953488372096, -291.9069767441862)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (237.90697674418612, -324.0000000000001)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (183.4883720930233, -345.67441860465124)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (114.18604651162795, -364.3720930232559)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (50.27906976744191, -350.88372093023264)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-5.7209302325581195, -325.0232558139536)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (18.186046511627953, -246.04651162790705)
+          |> addOutline (solid  10 ) black
+      ]
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (-610.4186046511624, 786.3255813953488)
+      |> addOutline (solid  14 ) black
+    ,
+      List.foldr union (rect 0 0 |> ghost)
+      [      
+        oval 300 150 
+          |> filled white
+          |> move (107.86046511627914, -293.3023255813955)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-14.372093023255772, -283.06976744186056)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (62.00000000000004, -226.04651162790708)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (110.27906976744188, -216.46511627906986)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (160.04651162790702, -233.67441860465127)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (211.30232558139537, -255.34883720930242)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (252.13953488372096, -291.9069767441862)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (237.90697674418612, -324.0000000000001)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (183.4883720930233, -345.67441860465124)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (114.18604651162795, -364.3720930232559)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (50.27906976744191, -350.88372093023264)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (-5.7209302325581195, -325.0232558139536)
+          |> addOutline (solid  10 ) black
+        ,
+        oval 100 60 
+          |> filled white
+          |> move (18.186046511627953, -246.04651162790705)
+          |> addOutline (solid  10 ) black
+      ]
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (-116.74418604651106, 587.9069767441855)
+      |> addOutline (solid  14 ) black
+    ,
+    oval 60 60 
+      |> filled white
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (-426.465116279069, -80.46511627906979)
+      |> addOutline (solid  7 ) black
+    ,
+    oval 80 80 
+      |> filled white
+      |> scaleX 1.5
+      |> scaleY 1.5
+      |> move (-290.37209302325556, 7.999999999999972)
+      |> addOutline (solid  7 ) black
+  ] 
+
+
+
 
 
 
