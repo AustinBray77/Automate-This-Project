@@ -335,6 +335,20 @@ showShape shapeColor input =
         input.shape
         |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
 
+-- makes the shape transparent over 1 second
+makeShapeTransparent: AnimateFuncInput -> Shape Msg
+makeShapeTransparent input = 
+    input.shape
+        |> makeTransparent (1-input.time) 
+
+-- makes the shape transparent when time > 0
+makeTransparentInstant: AnimateFuncInput -> Shape Msg
+makeTransparentInstant input =
+    if input.time > 0 then
+        input.shape |> makeTransparent 0
+    else 
+        input.shape |> makeTransparent 1
+
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
             -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape

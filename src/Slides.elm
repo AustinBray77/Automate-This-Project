@@ -16,7 +16,7 @@ slideFunctions = { get = (
   -- the slides are in order 
   --!! Put slides here !!
 --   [chessSlide, jeopardySlide, medicalSlide, financeIntro, entertainmentSlide2, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
-  [entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
+  [personalityBots, financeIntro, medicalSlide, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
   --!! --------------- !!
   )} 
 

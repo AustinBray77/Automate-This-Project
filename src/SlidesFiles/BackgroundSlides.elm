@@ -281,7 +281,7 @@ background6 time =
       |> clipToScreen
     ,
     oval 700 400 
-      |> filled (rgb 27 83 141)
+      |> filled (rgb 64 143 225)
       |> move (-1000, 600)
       |> addOutline (solid  0 ) black 
       |> clipToScreen 
