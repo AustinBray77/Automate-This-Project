@@ -200,10 +200,13 @@ explodeParticlizedShape speed currentTime shapes =
 
 particlizeAndExplodeShape: Float -> Float -> Int -> (Float, Float) -> AnimateFuncInput -> Shape Msg
 particlizeAndExplodeShape speed radius resolution position input= 
-    let
-        shapes = particlizeShape radius resolution position input.shape
-    in
-        group (explodeParticlizedShape speed input.time shapes)
+    if input.time == 0 then
+        input.shape
+    else
+        let
+            shapes = particlizeShape radius resolution position input.shape
+        in
+            group (explodeParticlizedShape speed input.time shapes)
 
 rotateBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
 rotateBasedOnIndex square speed currentTime shapeTuple =
@@ -335,6 +338,18 @@ showShape shapeColor input =
         input.shape
         |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
 
+animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> Pull
+animateLine (x1, y1) (x2, y2) ease timeData curTime =
+    let
+
+        time = 
+            case ease of 
+                Just e -> e (percentCompleted timeData curTime)
+                Nothing -> percentCompleted timeData curTime
+
+        point = (x1*(1-time) + x2*time, y1*(1-time) + y2*(time))
+    in
+        Pull point point
 -- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
             -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape
