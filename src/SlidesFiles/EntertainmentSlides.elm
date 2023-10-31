@@ -4,8 +4,6 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-import Html.Attributes exposing (align)
-import Html.Attributes exposing (value)
 
 entertainmentIntroSlide: SlideInput -> Shape Msg
 entertainmentIntroSlide input = 
@@ -177,21 +175,14 @@ entertainmentConclusion input = group
       |> move (-1500, 0)
       |> animate [(fromTill (TimeData 1 4 Once) (Just easeInAndOut) (moveAni 1200 0))] input.time,
       group [ 
-        group [ curve (400, -200) [
-          animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time
-          ]
+        group [   
+        line (400, -200) (animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time)
         |> outlined (solid 10) red,
-        curve (500, -100) [
-          animateLine (500, -100) (600, -150) Nothing (TimeData 13 14 Once) input.time
-          ]
+        line (500, -100) (animateLine (500, -100) (600, -150) Nothing (TimeData 13 14 Once) input.time)
         |> outlined (solid 10) red,
-        curve (600, -150) [
-          animateLine (600, -150) (700, -50) Nothing (TimeData 14 15 Once) input.time
-          ]
+        line (600, -150) (animateLine (600, -150) (700, -50) Nothing (TimeData 14 15 Once) input.time)
         |> outlined (solid 10) red,
-        curve (700, -50) [
-          animateLine (700, -50) (800, 150) Nothing (TimeData 15 16 Once) input.time
-          ]
+        line (700, -50) (animateLine (700, -50) (800, 150) Nothing (TimeData 15 16 Once) input.time)
         |> outlined (solid 10) red,
         ngon 3 35
         |> filled red
