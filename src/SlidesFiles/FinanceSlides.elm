@@ -212,6 +212,7 @@ dollarSign textSize color =
   text "$"
   |> size textSize
   |> centered
+  |> bold
   |> filled color
 
 -- only works when start time is 0
@@ -229,7 +230,7 @@ financeIntro input =
     background1 input.time
     ,
     dollarSignAnimation 650 100 (TimeData 0 5 RepeatLoop) input.time
-    |> move (-600, -100)
+    |> move (-600, -500)
     ,
     dollarSignAnimation 650 100 (TimeData 0 4 RepeatLoop) input.time
     |> move (-600, -150)
@@ -263,9 +264,9 @@ financeIntro input =
     text (typeWriter "Wall Street" 0.2 0.2 (TimeData 0 2 Once) input.time)
     |> size 144 
     |> underline
-    |> centered
+    |> alignLeft
     |> filled black
-    |> move (0, 250)
+    |> move (-300, 250)
     |> addOutline (solid  1 ) black
   ]
   |> transition [(bounceBack 2000 500)] input.transitionTime input.state
