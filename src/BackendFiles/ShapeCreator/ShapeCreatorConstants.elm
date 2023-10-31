@@ -11,6 +11,9 @@ height: Float
 height = 1080 
 -}
 
+defaultBuildInfo : BuildShapeInfo
+defaultBuildInfo = BuildShapeInfo False False False
+
 emptyShape: Shape T.Msg
 emptyShape = (rect 0 0 |> ghost)
 

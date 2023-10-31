@@ -5,6 +5,7 @@ import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
 import Html.Attributes exposing (align)
+import Html.Attributes exposing (value)
 
 entertainmentIntroSlide: SlideInput -> Shape Msg
 entertainmentIntroSlide input = 
@@ -146,14 +147,15 @@ entertainmentConclusion: SlideInput -> Shape Msg
 entertainmentConclusion input = group 
     [
       background4 input.time,
-      text (typeWriter "We aren't artists, why should we care?" 0.1 0.2 (TimeData 0 1000 Once) input.time)
+      text (typeWriter "We aren't artists, why should we care?" 0.05 0.2 (TimeData 0 1000 Once) input.time)
       |> alignLeft
       |> size 84
       |> filled black
       |> move (-650, 400),
       face
-      |> move (-750, 200)
-      |> animate [(fromTill (TimeData 3 7 Once) (Just tanScaled) (tornadoShape 5 3 350 16 (-400, -100)))] input.time,
+      |> move (-800, 200)
+      |> animate [(fromTill (TimeData 2.25 4 Once) (Just easeOut) (moveAni 800 0)),
+                  (fromTill (TimeData 4 7 Once) (Just tanScaled) (particlizeAndExplodeShape 5 350 16 (350, -150)))] input.time,
       group [ 
         computer
         |> scale 0.5,
@@ -166,13 +168,60 @@ entertainmentConclusion input = group
         |> move (1500, -1500)
         |> move (50, 25)
         |> animate [(fromTill (TimeData 8 8.5 Once) (Just easeIn) (moveAni -1500 1500))] input.time,
-        sticker "Better than you at elm" green
+        sticker "Better than you at elm" orange
         |> rotate (-pi/7)
         |> move (0, -1500)
+        |> move (50, -50)
         |> animate [(fromTill (TimeData 9 9.5 Once) (Just easeIn) (moveAni 0 1500))] input.time
       ]
       |> move (-1500, 0)
-      |> animate [(fromTill (TimeData 3 7 Once) (Just easeInAndOut) (moveAni 1250 0))] input.time
+      |> animate [(fromTill (TimeData 1 4 Once) (Just easeInAndOut) (moveAni 1200 0))] input.time,
+      group [ 
+        group [ curve (400, -200) [
+          animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time
+          ]
+        |> outlined (solid 10) red,
+        curve (500, -100) [
+          animateLine (500, -100) (600, -150) Nothing (TimeData 13 14 Once) input.time
+          ]
+        |> outlined (solid 10) red,
+        curve (600, -150) [
+          animateLine (600, -150) (700, -50) Nothing (TimeData 14 15 Once) input.time
+          ]
+        |> outlined (solid 10) red,
+        curve (700, -50) [
+          animateLine (700, -50) (800, 150) Nothing (TimeData 15 16 Once) input.time
+          ]
+        |> outlined (solid 10) red,
+        ngon 3 35
+        |> filled red
+        |> rotate (pi/4)
+        |> animate [
+                    (fromTill (TimeData 13 13 Once) Nothing (rotateAni -75)),
+                    (fromTill (TimeData 14 14 Once) Nothing (rotateAni 75)),
+                    (fromTill (TimeData 15 15 Once) Nothing (rotateAni 20)),
+                    (fromTill (TimeData 12 13 Once) Nothing (moveAni 100 100)),
+                    (fromTill (TimeData 13 14 Once) Nothing (moveAni 100 -50)),
+                    (fromTill (TimeData 14 15 Once) Nothing (moveAni 100 100)),
+                    (fromTill (TimeData 15 16 Once) Nothing (moveAni 100 200))] input.time
+        |> move (400, -200)
+        ]
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeInAndOut) (showShape (RGBA 255 0 0 1)))] input.time,
+        square 425
+        |> outlined (solid 5) (white)
+        |> move (612.5, 12.5)
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeInAndOut) (fadeOutlineToColor (RGBA 120 120 120 0) (RGBA 120 120 120 1) 5))] input.time,
+        text (typeWriter "Time" 0.1 0.2 (TimeData 10 1000 Once) input.time)
+        |> size 74
+        |> filled black
+        |> move (535, -265),
+        text (typeWriter "Algorithms" 0.1 0.2 (TimeData 10 1000 Once) input.time)
+        |> size 74
+        |> filled black
+        |> rotate (pi/2)
+        |> move (365, -150)
+      ]
+      |> move (-200, 0)
     ] 
 
 sticker: String -> Color -> Shape Msg
@@ -181,7 +230,7 @@ sticker string color =
     curve (-68.88,-44.72) [Pull (-67.88,-36.09) (-66.87,-27.46),Pull (-71.04,-29.33) (-75.21,-31.20),Pull (-73.20,-26.89) (-71.19,-22.57),Pull (-80.82,-24.16) (-90.46,-25.74),Pull (-83.41,-20.13) (-76.36,-14.52),Pull (-80.82,-12.51) (-85.28,-10.49),Pull (-81.25,-8.341) (-77.23,-6.184),Pull (-84.71,-2.157) (-92.18,1.8696),Pull (-82.69,3.5955) (-73.20,5.3213),Pull (-79.24,11.937) (-85.28,18.552),Pull (-76.36,18.408) (-67.45,18.265),Pull (-70.61,22.292) (-73.77,26.319),Pull (-68.74,25.887) (-63.71,25.456),Pull (-67.16,31.784) (-70.61,38.112),Pull (-63.71,35.092) (-56.80,32.071),Pull (-58.67,42.858) (-60.54,53.644),Pull (-53.64,44.728) (-46.74,35.811),Pull (-44.29,43.721) (-41.85,51.631),Pull (-39.40,45.015) (-36.96,38.4),Pull (-32.93,43.289) (-28.90,48.179),Pull (-27.46,43.146) (-26.03,38.112),Pull (-20.56,45.303) (-15.10,52.494),Pull (-13.66,43.289) (-12.22,34.085),Pull (-5.033,40.413) (2.1573,46.741),Pull (1.4382,37.680) (0.7191,28.620),Pull (5.0337,31.065) (9.3483,33.510),Pull (7.6224,28.907) (5.8966,24.305),Pull (14.525,26.319) (23.155,28.332),Pull (16.395,22.435) (9.6359,16.539),Pull (13.950,15.101) (18.265,13.662),Pull (14.525,11.217) (10.786,8.7730),Pull (17.689,4.8898) (24.593,1.0067),Pull (15.244,-0.862) (5.8966,-2.732),Pull (12.224,-9.348) (18.552,-15.96),Pull (9.3483,-15.67) (0.1438,-15.38),Pull (3.3078,-19.70) (6.4719,-24.01),Pull (0.1438,-24.30) (-6.184,-24.59),Pull (-2.444,-30.77) (1.2943,-36.96),Pull (-6.471,-33.51) (-14.23,-30.05),Pull (-11.93,-39.98) (-9.635,-49.90),Pull (-16.68,-42.57) (-23.73,-35.23),Pull (-25.74,-43.00) (-27.75,-50.76),Pull (-30.20,-43.86) (-32.64,-36.96),Pull (-35.66,-41.27) (-38.68,-45.59),Pull (-39.83,-40.84) (-40.98,-36.09),Pull (-46.16,-42.71) (-51.34,-49.33),Pull (-53.06,-40.70) (-54.79,-32.07),Pull (-61.69,-37.96) (-68.88,-44.72)]
     |> filled color
     |> rotate (-pi/6)
-    |> scaleX (1 + (0.1 * toFloat (String.length string)))
+    |> scaleX (1 + (0.12 * toFloat (String.length string)))
     |> scaleY (1 + (0.05 * toFloat (String.length string)))
     |> rotate (pi/6),
     text string
@@ -190,7 +239,7 @@ sticker string color =
     |> filled white
     |> rotate (pi/6)
     |> move (-30, -10)
-    |> move ((toFloat -(3 * String.length string)), (0.25 * toFloat (String.length string)))
+    |> move ( -(3.5 * toFloat (String.length string)), (-1 * toFloat (String.length string)))
   ]
 
 flyingTextAnimation: String -> Float -> Float -> Float -> Shape Msg
