@@ -13,7 +13,6 @@ getXDiff: (Float, Float) -> (Float, Float) -> Float
 getXDiff (a, b) (c, d) = 
   abs (c - a)
 
-
 buildLineOverTime: List (Float, Float) -> Float -> Float -> Float -> Maybe Ease -> LineType -> Color -> Shape Msg
 buildLineOverTime points startTime speed time ease lineType outlineCol =
   let 
@@ -694,7 +693,6 @@ financeSlideDhiren2 input =
     |> animate [(fromTill (TimeData 17 19 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
   ]
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
-
 
 financeSlideDhiren3 : SlideInput -> Shape Msg
 financeSlideDhiren3 input =
