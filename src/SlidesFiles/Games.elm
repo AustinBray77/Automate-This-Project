@@ -478,6 +478,7 @@ queen color outlineColor =
   ]
   |> scale 0.45
 
+-- made by yujiro
 chessSlide: SlideInput -> Shape Msg
 chessSlide input =
   group
@@ -665,6 +666,7 @@ chessSlide input =
   ]
   |> transition [(bounceBack 1000 0), (moveAni 0 500)] input.transitionTime input.state
 
+-- made by yujiro animated by Joshua
 jeopardySlide: SlideInput -> Shape Msg
 jeopardySlide input =
  group

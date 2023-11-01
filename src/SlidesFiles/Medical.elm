@@ -80,6 +80,7 @@ personalityBots input =
   ]
   |> transition [(moveAni 2000 -500)] input.transitionTime input.state
 
+-- made by yujiro animated by Joshua
 medicalSlide: SlideInput -> Shape Msg
 medicalSlide input = 
   group 

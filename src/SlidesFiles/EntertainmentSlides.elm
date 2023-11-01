@@ -4,8 +4,6 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-import Html.Attributes exposing (align)
-import Html.Attributes exposing (value)
 
 entertainmentIntroSlide: SlideInput -> Shape Msg
 entertainmentIntroSlide input = 
