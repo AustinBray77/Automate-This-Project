@@ -4,6 +4,13 @@ import GraphicSVG.EllieApp exposing (..)
 import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 
+loopTime: Float -> Float -> Float -> Float
+loopTime start duration current = 
+    if current < start then
+        0
+    else 
+        fmod duration (current - start)
+
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float
 percentCompleted time currentTime = 
