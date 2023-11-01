@@ -23,8 +23,8 @@ personalityBots input =
     spaceShip input.time 500 -250
     ,
     let
-        time = if input.time > 15 then (input.time - 7)*3 -- increaing time for one group of animations (makes sense when slide is playing)
-               else (input.time - 7)
+        time = if input.time > 25 then (input.time - 10)*3 -- increaing time for one group of animations (makes sense when slide is playing)
+               else (input.time - 10)
     in
       group 
       [
@@ -62,21 +62,21 @@ personalityBots input =
           |> move (-425, -25)
           |> animate [(fromTill (TimeData 4 5 RepeatFromStartWithPause) (Just easeInAndOut) (moveAni -225 -70))] time
       ]
-      |> animate [(fromTill (TimeData 9 7 Once) Nothing (makeShapeTransparent))] input.time
+      |> animate [(fromTill (TimeData 13 10 Once) Nothing (makeShapeTransparent))] input.time
     ,
     paper3Hour
       |> scale 0.95
       |> move (-1500, -125)
-      |> animate [(fromTill (TimeData 7 0 Once) Nothing makeTransparentInstant),
-                (fromTill (TimeData 7 8 Once) (Just easeInAndOut) (moveAni 1900 0)),
-                (fromTill (TimeData 17 100000 Once) Nothing makeTransparentInstant),
-                (fromTill (TimeData 15.5 16.5 Once) (Just easeOut) (moveAni -1900 -500))] input.time
+      |> animate [(fromTill (TimeData 10 0 Once) Nothing makeTransparentInstant),
+                (fromTill (TimeData 10 11 Once) (Just easeInAndOut) (moveAni 1900 0)),
+                (fromTill (TimeData 25 100000 Once) Nothing makeTransparentInstant),
+                (fromTill (TimeData 25.5 26.5 Once) (Just easeOut) (moveAni -1900 -500))] input.time
     ,
     paper5Min
       |> scale 0.95
       |> move (1500, 625)
-      |> animate [(fromTill (TimeData 15 0 Once) Nothing makeTransparentInstant),
-                (fromTill (TimeData 15 16 Once) (Just easeInAndOut) (moveAni -1100 -700))] input.time
+      |> animate [(fromTill (TimeData 25 0 Once) Nothing makeTransparentInstant),
+                (fromTill (TimeData 25 26 Once) (Just easeInAndOut) (moveAni -1100 -700))] input.time
   ]
   |> transition [(moveAni 2000 -500)] input.transitionTime input.state
 
@@ -247,7 +247,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-142.221041445271, -35.64293304994685)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0 0.1 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -256,7 +256,7 @@ spaceShip time x y =
         |> filled (rgb 255 69 0)
         |> move (-162.221041445271, -55.64293304994685)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.3 0.4 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 69 0 255)))] time
         |> clipToScreen
@@ -265,7 +265,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-182.221041445271, -75.64293304994685)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.2 0.3 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -274,7 +274,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-172.84803400637622, -32.986184909670555)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.1 0.2 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -283,7 +283,7 @@ spaceShip time x y =
         |> filled (rgb 255 69 0)
         |> move (-192.84803400637622, -52.986184909670555)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0 0.1 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 69 0 255)))] time
         |> clipToScreen
@@ -292,7 +292,7 @@ spaceShip time x y =
         |> filled (rgb 255 127 80)
         |> move (-203.34750265674816, -57.7470775770457)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.5 0.6 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 127 80 255)))] time
         |> clipToScreen
@@ -301,7 +301,7 @@ spaceShip time x y =
         |> filled (rgb 255 127 80)
         |> move (-220.07438894792773, -20.53134962805525)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.4 0.5 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 127 80 255)))] time
         |> clipToScreen
@@ -310,7 +310,7 @@ spaceShip time x y =
         |> filled (rgb 255 69 0)
         |> move (-184.0063761955367, -14.3039319872476)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0 0.1 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 69 0 255)))] time
         |> clipToScreen
@@ -319,7 +319,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-146.79064824654625, -49.39426142401699)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.1 0.2 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -328,7 +328,7 @@ spaceShip time x y =
         |> filled (rgb 255 140 0)
         |> move (-180.73326248671628, -94.81402763018065)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.15 0.25 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 140 0 255)))] time
         |> clipToScreen
@@ -337,7 +337,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-157.29011689691816, -103.50690754516471)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.05 0.15 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -346,7 +346,7 @@ spaceShip time x y =
         |> filled (rgb 255 140 0)
         |> move (-221.07332624867163, -119.08607863974493)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.25 0.35 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 140 0 255)))] time
         |> clipToScreen
@@ -355,7 +355,7 @@ spaceShip time x y =
         |> filled (rgb 255 140 0)
         |> move (-202.221041445271, -95.64293304994685)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.2 0.3 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 140 0 255)))] time
         |> clipToScreen
@@ -364,7 +364,7 @@ spaceShip time x y =
         |> filled (rgb 178 34 34)
         |> move (-247.3219978746015, -85.65356004250796)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.6 0.7 RepeatFromStartWithPause) Nothing (hideShape (RGBA 178 34 34 255)))] time
         |> clipToScreen
@@ -373,7 +373,7 @@ spaceShip time x y =
         |> filled (rgb 255 140 0)
         |> move (-216.99256110520724, -33.517534537725794)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.4 0.5 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 140 0 255)))] time
         |> clipToScreen
@@ -382,7 +382,7 @@ spaceShip time x y =
         |> filled (rgb 255 127 80)
         |> move (-182.0722635494155, -10.074388947927721)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0 0.1 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 127 80 255)))] time
         |> clipToScreen
@@ -391,7 +391,7 @@ spaceShip time x y =
         |> filled (rgb 255 127 80)
         |> move (-175.84484590860785, -133.538788522848)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.2 0.3 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 127 80 255)))] time
         |> clipToScreen
@@ -400,7 +400,7 @@ spaceShip time x y =
         |> filled (rgb 255 69 0)
         |> move (-130.5951115834219, -108.94792773645057)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.05 0.15 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 69 0 255)))] time
         |> clipToScreen
@@ -409,7 +409,7 @@ spaceShip time x y =
         |> filled (rgb 255 127 80)
         |> move (-150.76514346439959, -38.44845908607861)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0 0.1 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 127 80 255)))] time
         |> clipToScreen
@@ -418,7 +418,7 @@ spaceShip time x y =
         |> filled (rgb 255 69 0)
         |> move (-242.0935175345377, -23.03931987247606)
         |> move (x+190, y-290)
-        |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+        |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25)),
                   (fromTill (TimeData 0.15 0.25 RepeatFromStartWithPause) Nothing (hideShape (RGBA 255 69 0 255)))] time
         |> clipToScreen
@@ -430,7 +430,7 @@ spaceShip time x y =
       |> move (0, 220)
       |> move (x, y)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -439,7 +439,7 @@ spaceShip time x y =
       |> move (0, -222.21041445270987)
       |> move (x, y)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -448,7 +448,7 @@ spaceShip time x y =
       |> move (0, -256.1317747077576)
       |> move (x, y)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -457,7 +457,7 @@ spaceShip time x y =
       |> move (-19.681190223166844, 92.79489904357068)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -466,7 +466,7 @@ spaceShip time x y =
       |> move (0, 1.1477151965993642)
       |> move (x, y)
       |> addOutline (solid  0 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -475,7 +475,7 @@ spaceShip time x y =
       |> move (80, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -484,7 +484,7 @@ spaceShip time x y =
       |> move (60, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -493,7 +493,7 @@ spaceShip time x y =
       |> move (40, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -502,7 +502,7 @@ spaceShip time x y =
       |> move (20, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -511,7 +511,7 @@ spaceShip time x y =
       |> move (0, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -520,7 +520,7 @@ spaceShip time x y =
       |> move (-20, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -529,7 +529,7 @@ spaceShip time x y =
       |> move (-40, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -538,7 +538,7 @@ spaceShip time x y =
       |> move (-60, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -547,7 +547,7 @@ spaceShip time x y =
       |> move (-80, -160)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -556,7 +556,7 @@ spaceShip time x y =
       |> move (-40, 60)
       |> move (x, y)
       |> addOutline (solid  2 ) black
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
     ,
@@ -566,7 +566,7 @@ spaceShip time x y =
       |> move (x, y)
       |> move (-20, 241.14771519659934)
       |> addOutline (solid  2 ) white
-      |> animate [(fromTill (TimeData 0 7.5 Once) (Just easeIn) (moveAni 150 1500)),
+      |> animate [(fromTill (TimeData 0 10 Once) (Just easeIn) (moveAni 150 1500)),
                   (fromTill (TimeData 0 0.05 RepeatLoop) (Just easeInAndOut) (rotateAni -0.25))] time
       |> clipToScreen
   ]

@@ -53,7 +53,7 @@ historyOfAlgorithms input =
     |> animate [(fromTill (TimeData 5 0 Once) (Just easeIn) makeShapeTransparent)] input.time
     ,
     poll
-      |> move (0, 50)
+      |> move (-25, 50)
     ,
     poll
       |> move (1615, 50)
