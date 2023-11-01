@@ -5,11 +5,8 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-<<<<<<< Updated upstream
 import SlidesFiles.EntertainmentSlides exposing (computer)
-=======
 import BackendFiles.HelperFunctions exposing (addTuple)
->>>>>>> Stashed changes
 
 
 getXDiff: (Float, Float) -> (Float, Float) -> Float
@@ -21,7 +18,7 @@ buildLineOverTime: List (Float, Float) -> Float -> Float -> Float -> Maybe Ease 
 buildLineOverTime points startTime speed time ease lineType outlineCol =
   let 
     getAnimation point1 point2 (startT, endT) =
-      curve point1 [animateLine point1 point2 ease (TimeData startT endT Once) time]
+      line point1 (animateLine point1 point2 ease (TimeData startT endT Once) time)
     
     convertToSumList curSum list =
       case list of
@@ -316,6 +313,8 @@ financeSlideDhiren1 : SlideInput -> Shape Msg
 financeSlideDhiren1 input =
   group 
   [
+    background4 input.time
+    ,
     skyScraper
     |> move(800, 300)
     |> scale 1  
@@ -361,6 +360,8 @@ financeSlideDhiren2 : SlideInput -> Shape Msg
 financeSlideDhiren2 input = 
   group
   [
+    background4 input.time
+    ,
     stockBackground
     ,
     (buildLineOverTime stockLine 0 10 input.time Nothing (solid 2.5) red)
@@ -395,7 +396,26 @@ financeSlideDhiren2 input =
     |> filled black 
     |> move (50, -240)
     |> animate [(fromTill (TimeData 17 19 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
-    
+  ]
+  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+
+
+financeSlideDhiren3 : SlideInput -> Shape Msg
+financeSlideDhiren3 input =
+  group
+  [
+    person
+    |> move (-400, -350)
+    ,
+    person
+    |> move (-600, -350)
+    ,
+    person
+    |> move (-500, -400)
+    ,
+    person
+    ,
+    groupThoughts
   ]
 
 peopleAnimation : Float -> Shape Msg
@@ -439,8 +459,8 @@ peopleAnimation time =
     |> animate [(fromTill (TimeData 0 2.6 Once) (Just easeInAndOut) (scaleAni (1.5,1.5)))] p2Time
     |> animate [(fromTill (TimeData 2.6 3 Once) (Just easeInAndOut) (scaleAni (0, 0)))] p2Time
     |> move startOffset
-    |> animate [(fromTill (TimeData 0 1 Once) (Nothing) (moveAni 200 0))] p2Time
-    |> animate [(fromTill (TimeData 1 3 Once) (Just easeOut) (moveAni 480 0))] p2Time
+    |> animate [(fromTill (TimeData 0 1 Once) (Nothing) (moveAni 240 0))] p2Time
+    |> animate [(fromTill (TimeData 1 3 Once) (Just easeOut) (moveAni 440 0))] p2Time
     |> animate [(fromTill (TimeData 1 3 Once) (Just easeIn) (moveAni 0 500))] p2Time
     ,
     graduate 
@@ -11074,7 +11094,6 @@ financeSlideAustin input =
     |> move (-585, 400),
     newYorkStockExchange
     |> scale 0.75
-<<<<<<< Updated upstream
     |> move (400, -150),
     smallServer input.time
     |> move (300, 300),
@@ -11183,122 +11202,119 @@ smallServer time =
     intTime = round time
   in
   group
-  [  
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, 180)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, 140)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, 100)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, 60)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, 20)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, -20)
-      |> addOutline (solid  5 ) black
-    ,
-    roundedRect 200 50 0 
-      |> filled (rgba 60 60 60 1)
-      |> move (-120, -60)
-      |> addOutline (solid  5 ) black
-    ,
-    group [ oval 20 20 
-      |> filled red
-      |> move (-100, -20)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 2 intTime == 0 then green else red)
-      |> move (-60, 180)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled green
-      |> move (-100, 100)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 2 intTime == 0 then red else green)
-      |> move (-60, 140)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled red
-      |> move (-100, 180)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled red
-      |> move (-100, 140)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 3 intTime == 0 then green else red)
-      |> move (-60, 100)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled green
-      |> move (-100, 60)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 3 intTime == 0 then red else green)
-      |> move (-60, 60)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled green
-      |> move (-60, 20)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 2 intTime == 0 then green else blue)
-      |> move (-100, 20)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled red
-      |> move (-60, 20)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 4 intTime == 0 then red else grey)
-      |> move (-60, -20)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 3 intTime == 0 then red else grey)
-      |> move (-60, -60)
-      |> addOutline (solid  5 ) black
-    ,
-    oval 20 20 
-      |> filled (if modBy 2 intTime == 0 then green else red)
-      |> move (-100, -60)
-      |> addOutline (solid  5 ) black
+    [  
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, 180)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, 140)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, 100)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, 60)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, 20)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, -20)
+        |> addOutline (solid  5 ) black
+      ,
+      roundedRect 200 50 0 
+        |> filled (rgba 60 60 60 1)
+        |> move (-120, -60)
+        |> addOutline (solid  5 ) black
+      ,
+      group [ oval 20 20 
+        |> filled red
+        |> move (-100, -20)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 2 intTime == 0 then green else red)
+        |> move (-60, 180)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled green
+        |> move (-100, 100)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 2 intTime == 0 then red else green)
+        |> move (-60, 140)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled red
+        |> move (-100, 180)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled red
+        |> move (-100, 140)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 3 intTime == 0 then green else red)
+        |> move (-60, 100)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled green
+        |> move (-100, 60)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 3 intTime == 0 then red else green)
+        |> move (-60, 60)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled green
+        |> move (-60, 20)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 2 intTime == 0 then green else blue)
+        |> move (-100, 20)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled red
+        |> move (-60, 20)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 4 intTime == 0 then red else grey)
+        |> move (-60, -20)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 3 intTime == 0 then red else grey)
+        |> move (-60, -60)
+        |> addOutline (solid  5 ) black
+      ,
+      oval 20 20 
+        |> filled (if modBy 2 intTime == 0 then green else red)
+        |> move (-100, -60)
+        |> addOutline (solid  5 ) black
+      ]
+      |> (\x -> (if intTime >= 5 then x |> repaint red else x))
     ]
-    |> (\x -> (if intTime >= 5 then x |> repaint red else x))
-  ]
-=======
     |> move (400, -150)
-  ]
 
 
->>>>>>> Stashed changes

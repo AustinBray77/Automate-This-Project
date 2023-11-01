@@ -348,7 +348,6 @@ showShape shapeColor input =
 animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> (Float, Float)
 animateLine (x1, y1) (x2, y2) ease timeData curTime =
     let
-
         time = 
             case ease of 
                 Just e -> e (percentCompleted timeData curTime)
