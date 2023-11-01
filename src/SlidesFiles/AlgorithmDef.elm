@@ -256,13 +256,13 @@ algorithmText time =
         |> filled black
         |> move (100,160)
         ,
-        text ("to a particular answer or output based on ")
+        text ("leads its user to a particular answer or ")
       |>size 60
         |>centered
         |> filled black
         |> move (100,100)
         ,
-        text ("the information at hand\"")
+        text ("output based on the information at hand\"")
       |>size 60
         |>centered
         |> filled black
