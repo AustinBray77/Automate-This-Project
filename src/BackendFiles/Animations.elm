@@ -338,7 +338,7 @@ showShape shapeColor input =
         input.shape
         |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
 
-animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> Pull
+animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> (Float, Float)
 animateLine (x1, y1) (x2, y2) ease timeData curTime =
     let
 
@@ -349,7 +349,12 @@ animateLine (x1, y1) (x2, y2) ease timeData curTime =
 
         point = (x1*(1-time) + x2*time, y1*(1-time) + y2*(time))
     in
-        Pull point point
+        point
+
+animateCurve: (Float, Float) -> (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> Pull
+animateCurve (x1, y1) (x2, y2) pullPoint ease timeData curTime =
+    Pull (animateLine (x1, y1) pullPoint ease timeData curTime) (animateLine (x1, y1) (x2, y2) ease timeData curTime)
+
 -- makes the shape transparent over 1 second
 makeShapeTransparent: AnimateFuncInput -> Shape Msg
 makeShapeTransparent input = 

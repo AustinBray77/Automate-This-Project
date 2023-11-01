@@ -5,6 +5,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
+import SlidesFiles.EntertainmentSlides exposing (computer)
 
 -- by default faces to the left
 server: Float -> Shape Msg
@@ -10895,6 +10896,7 @@ financeSlideAustin: SlideInput -> Shape Msg
 financeSlideAustin input = 
   group [
     background2 input.time,
+    group [ 
     chicagoSkyline
     |> move(-400, 200),
     wedge 100 0.5
@@ -10909,5 +10911,224 @@ financeSlideAustin input =
     |> move (-585, 400),
     newYorkStockExchange
     |> scale 0.75
-    |> move (400, -150)
+    |> move (400, -150),
+    smallServer input.time
+    |> move (300, 300),
+    curve (-400, 300) [Pull (-250, 350) (75, 350)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 5 5 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    curve (285, 350) [Pull (450, 350) (500, 125)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 5 5 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    line (-450, 125) (animateLine (-450, 125) (25, -150) (Just easeInAndOut) (TimeData 0 4 Once) input.time)  
+    |> outlined (solid 15) blue,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 4 12 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 4.5 12.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 5 13 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 5.5 13.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 6 14 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 6.5 14.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time
+    ]
+    |> animate [(fromTill (TimeData 19.3 20.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
+    moneyWash (TimeData 18 20 Once) input.time,
+    text (typeWriter "Upshot?" 0.2 0.1 (TimeData 22 1000 Once) input.time)
+    |> size 74
+    |> alignLeft
+    |> filled black
+    |> move (-125, 350),
+    smallServer (input.time - 100)
+    |> move (-300, -50),
+    plus
+
+  ]
+
+plus: Shape Msg
+plus = 
+  group [
+    rect 20 100 
+    |> filled (rgba 60 60 60 1)
+    |> addOutline (solid 5) black,
+    rect 100 20 
+    |> filled (rgba 60 60 60 1)
+    |> addOutline (solid 5) black
+  ]
+
+placeMoney: Int -> Int -> Shape Msg -> Shape Msg
+placeMoney square index shape =
+  let
+    yFunc: Int -> Float
+    yFunc x =
+      10 * sin(1/4 * toFloat x)
+  in
+  shape
+  |> move ((toFloat (modBy square index)) * 100, (yFunc index) - 10 * toFloat (index//square))
+
+animateMoney: TimeData -> Float -> Int -> Int -> Shape Msg -> Shape Msg
+animateMoney timeData time square index shape = 
+  let
+    floatIndex = toFloat index
+    start = (toFloat (index//square)/10 + 0.5) + timeData.start
+    end = start+(timeData.end-timeData.start)
+  in
+  shape
+  |> animate [(fromTill (TimeData start end Once) (Just easeInAndOut) (moveAni 0 2000))] time
+
+moneyWash: TimeData -> Float -> Shape Msg
+moneyWash timeData time =
+  let
+    total = 24
+    baseText = 
+      text "$"
+      |> size 200
+      |> filled green
+      |> addOutline (solid 2) black
+  in
+    group ( List.repeat (total^2) baseText
+    |> List.map (\x -> x |> move (-1200, -800))
+    |> List.indexedMap (placeMoney total)
+    |> List.indexedMap (animateMoney timeData time total)
+    )
+
+smallServer: Float -> Shape Msg
+smallServer time = 
+  let
+    intTime = round time
+  in
+  group
+  [  
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, 180)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, 140)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, 100)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, 60)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, 20)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, -20)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 200 50 0 
+      |> filled (rgba 60 60 60 1)
+      |> move (-120, -60)
+      |> addOutline (solid  5 ) black
+    ,
+    group [ oval 20 20 
+      |> filled red
+      |> move (-100, -20)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 2 intTime == 0 then green else red)
+      |> move (-60, 180)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled green
+      |> move (-100, 100)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 2 intTime == 0 then red else green)
+      |> move (-60, 140)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled red
+      |> move (-100, 180)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled red
+      |> move (-100, 140)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 3 intTime == 0 then green else red)
+      |> move (-60, 100)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled green
+      |> move (-100, 60)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 3 intTime == 0 then red else green)
+      |> move (-60, 60)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled green
+      |> move (-60, 20)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 2 intTime == 0 then green else blue)
+      |> move (-100, 20)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled red
+      |> move (-60, 20)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 4 intTime == 0 then red else grey)
+      |> move (-60, -20)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 3 intTime == 0 then red else grey)
+      |> move (-60, -60)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 20 20 
+      |> filled (if modBy 2 intTime == 0 then green else red)
+      |> move (-100, -60)
+      |> addOutline (solid  5 ) black
+    ]
+    |> (\x -> (if intTime >= 5 then x |> repaint red else x))
   ]
