@@ -4,6 +4,13 @@ import GraphicSVG.EllieApp exposing (..)
 import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 
+loopTime: Float -> Float -> Float -> Float
+loopTime start duration current = 
+    if current < start then
+        0
+    else 
+        fmod duration (current - start)
+
 --Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
 percentCompleted: TimeData -> Float -> Float
 percentCompleted time currentTime = 
@@ -255,6 +262,18 @@ scaleAni xy input =
         |> scaleX (1 + ((Tuple.first xy - 1) * input.time))
         |> scaleY (1 + ((Tuple.second xy - 1) * input.time))
 
+scaleFromAni : (Float, Float) -> (Float, Float) -> AnimateFuncInput -> Shape Msg
+scaleFromAni (startx, starty) (x, y) input = 
+    if input.time > 0 then
+      input.shape
+          |> scaleX (startx + ((x - startx) * input.time))
+          |> scaleY (starty + ((y - starty) * input.time))
+    else
+      input.shape
+        |> scaleX startx
+        |> scaleY starty
+
+
 -- scales the shape by the given x, y factor once time is greator than 0
 scaleInstant : (Float, Float)-> AnimateFuncInput -> Shape Msg
 scaleInstant xy input = 
@@ -341,7 +360,6 @@ showShape shapeColor input =
 animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> (Float, Float)
 animateLine (x1, y1) (x2, y2) ease timeData curTime =
     let
-
         time = 
             case ease of 
                 Just e -> e (percentCompleted timeData curTime)

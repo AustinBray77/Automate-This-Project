@@ -128,7 +128,7 @@ entertainmentSlide2 input =
         |> filled black
         |> move(-550, 300)
         |> animate [(fromTill (TimeData 19 20 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
-        text "This is incredible a computer could never do this!"
+        text "This is incredible! A computer could never do this!"
         |> size 52
         |> filled black
         |> move(-900, 400)
