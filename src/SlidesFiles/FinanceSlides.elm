@@ -11445,8 +11445,10 @@ financeSlideAustin input =
     |> alignLeft
     |> filled black
     |> move (-125, 350),
-    smallServer (input.time - 100)
-    |> move (-300, -50)
+    server input.time
+    |> scale 0.75
+    |> scaleX -1
+    |> move (-500, -50)
     |> move (0, -1000)
     |> animate [(fromTill (TimeData 20 21.5 Once) (Just easeOut) (moveAni 0 1000)),
                 (fromTill (TimeData 30 32 Once) (Just easeInAndOut) (moveAni -1000 1000))] input.time,

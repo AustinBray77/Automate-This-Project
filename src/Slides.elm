@@ -20,7 +20,7 @@ slideFunctions = { get = (
   -- [historyOfAlgorithms, personalityBots, financeIntro, medicalSlide, financeSlideDhiren1, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
 --   [chessSlide, jeopardySlide, medicalSlide, financeIntro, entertainmentSlide2, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
   
-  [algorithmImaginerSlide, financeSlideAustin, financeSlideDhiren3, financeSlideDhiren2, financeSlideDhiren1, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
+  [entertainmentIntroSlide, entertainmentSlide1, entertainmentSlide2, entertainmentConclusion, algorithmImaginerSlide, financeSlideAustin, financeSlideDhiren3, financeSlideDhiren2, financeSlideDhiren1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
   --!! --------------- !!
   --[testingSlide, testingSlide2,testingSlide3, testingSlide4, testingSlide5,testingSlide6,testingSlide7]
   )} 

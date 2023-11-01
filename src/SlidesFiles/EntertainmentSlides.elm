@@ -19,6 +19,7 @@ entertainmentIntroSlide input =
         |> addOutline (solid  1 ) black
       ]
     ]
+    |> transition [(fromTill (TimeData 0 2 Once) (Just tanScaled) (particlizeAndExplodeShape 100 1000 4 (0, 0)))] input.transitionTime input.state
 
 entertainmentSlide1: SlideInput -> Shape Msg
 entertainmentSlide1 input =
@@ -29,34 +30,37 @@ entertainmentSlide1 input =
         |> alignLeft 
         |> filled black
         |> move (-500, 400)
-        |> animate [(fromTill (TimeData 3 5 Once) (Just easeInAndOut) (hideShape (RGBA 0 0 0 1)))] input.time,
+        |> animate [(fromTill (TimeData 10 12 Once) (Just easeInAndOut) (hideShape (RGBA 0 0 0 1)))] input.time,
         group [
           face
           |> scale 0.4
-          |> move(-250, 150),
+          |> move(-250, 150)
+          |> animate [(fromTill (TimeData 12 15 Once) (Just tanScaled) (bounceBack 1000 -1000))] input.time,
           face
           |> scaleX -1
           |> scale 0.5
-          |> move(350, -150),
+          |> move(350, -150)
+          |> animate [(fromTill (TimeData 12 15  Once) (Just tanScaled) (bounceBack -1000 1000))] input.time,
           face
           |> scale 0.45
-          |> move(-400, -100),
+          |> move(-400, -100)
+          |> animate [(fromTill (TimeData 12 15 Once) (Just tanScaled) (bounceBack 1000 1000))] input.time,
           face
           |> scaleX -1
           |> scale 0.3
           |> move(250, 200)
+          |> animate [(fromTill (TimeData 12 15 Once) (Just tanScaled) (bounceBack -1000 -1000))] input.time
         ]
-        |> animate [(fromTill (TimeData 4.5 4.5 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time
-        |> animate [(fromTill (TimeData 3 5 Once) (Just tanScaled) (bounceBack 1000 1000))] input.time,
+        |> animate [(fromTill (TimeData 14.5 14.5 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time,
         computer
         |> move (0, -1000)
-        |> animate [(fromTill (TimeData 5 7 Once) (Just easeOut) (moveAni 0 1100))] input.time,
+        |> animate [(fromTill (TimeData 18 21 Once) (Just easeOut) (moveAni 0 1100))] input.time,
         drawInCircle 125 "Polyphonic 🎵  HMI 🎵 "
-        |> animate [(fromTill (TimeData 7 9 Once) (Just easeInAndOut) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1))),
-                    (fromTill (TimeData 7 21 RepeatFromStart) Nothing (rotateAni -360))] input.time
+        |> animate [(fromTill (TimeData 23 25 Once) (Just easeInAndOut) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1))),
+                    (fromTill (TimeData 23 37 RepeatFromStart) Nothing (rotateAni -360))] input.time
         |> move (0, 100)
     ]
-    |> transition [(moveAni 1000 2000)] input.transitionTime input.state
+    |> transition [(bounceBack -1000 1000)] input.transitionTime input.state
 
 entertainmentSlide2: SlideInput -> Shape Msg
 entertainmentSlide2 input =
@@ -150,30 +154,36 @@ entertainmentConclusion input = group
       |> size 84
       |> filled black
       |> move (-650, 400),
-      face
-      |> move (-800, 200)
-      |> animate [(fromTill (TimeData 2.25 4 Once) (Just easeOut) (moveAni 800 0)),
-                  (fromTill (TimeData 4 7 Once) (Just tanScaled) (particlizeAndExplodeShape 5 350 16 (350, -150)))] input.time,
+      group [ 
+        face
+        |> move (-800, 200),
+        text "You"
+        |> size 156
+        |> filled white
+        |> move (-600, -200)
+      ]
+      |> animate [(fromTill (TimeData 5.35 7 Once) (Just easeOut) (moveAni 800 0)),
+                  (fromTill (TimeData 7 10 Once) (Just tanScaled) (particlizeAndExplodeShape 5 360 16 (350, -165)))] input.time,
       group [ 
         computer
         |> scale 0.5,
         sticker "New" red
         |> move (-1500, 1500)
         |> move (-50, 50)
-        |> animate [(fromTill (TimeData 7 7.5 Once) (Just easeIn) (moveAni 1500 -1500))] input.time,
+        |> animate [(fromTill (TimeData 12 12.5 Once) (Just easeIn) (moveAni 1500 -1500))] input.time,
         sticker "Improved" green
         |> rotate (-pi/5)
         |> move (1500, -1500)
         |> move (50, 25)
-        |> animate [(fromTill (TimeData 8 8.5 Once) (Just easeIn) (moveAni -1500 1500))] input.time,
+        |> animate [(fromTill (TimeData 14 14.5 Once) (Just easeIn) (moveAni -1500 1500))] input.time,
         sticker "Better than you at elm" orange
         |> rotate (-pi/7)
         |> move (0, -1500)
-        |> move (50, -50)
-        |> animate [(fromTill (TimeData 9 9.5 Once) (Just easeIn) (moveAni 0 1500))] input.time
+        |> move (100, -50)
+        |> animate [(fromTill (TimeData 16 16.5 Once) (Just easeIn) (moveAni 0 1500))] input.time
       ]
       |> move (-1500, 0)
-      |> animate [(fromTill (TimeData 1 4 Once) (Just easeInAndOut) (moveAni 1200 0))] input.time,
+      |> animate [(fromTill (TimeData 4 7 Once) (Just easeInAndOut) (moveAni 1200 0))] input.time,
       group [ 
         group [   
         line (400, -200) (animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time)
@@ -214,6 +224,7 @@ entertainmentConclusion input = group
       ]
       |> move (-200, 0)
     ] 
+    |> transition [(fromTill (TimeData 0 2 Once) (Just easeInAndOut) (scaleFromAni (1, 1) (0, 0)))] input.transitionTime input.state
 
 sticker: String -> Color -> Shape Msg
 sticker string color =
