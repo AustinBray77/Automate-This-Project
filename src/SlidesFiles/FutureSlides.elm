@@ -70,22 +70,32 @@ studentsSlide input =
 algorithmImaginerSlide: SlideInput -> Shape Msg
 algorithmImaginerSlide input = 
   group
-  [ 
+  [
     background6 input.time
     ,
-    radiantAura
-    |> move (0, -300)
-    ,
-    person
-    |> scale 0.7
-    |> move (40, -400)
-    ,
-    emptyThought
-    |> move (100, -300)
-    ,
-    algorithmImage
-    |> scale 0.45
-    |> move (425, -70)
+    group -- make everything rise up
+    [ 
+      radiantAura -- animate aura to grow in scale (or animate gradient !)
+      |> move (-10, -400)
+      ,
+      pedestal
+      |> move (50, -529)
+      ,
+      person
+      |> scale 0.8
+      |> move (35, -400)
+      ,
+      group --fade in thought bubbles
+      [
+        emptyThought 
+        |> move (100, -300)
+        ,
+        algorithmImage
+        |> scale 0.45
+        |> move (425, -70)
+      ]
+    ]
+
   ]
 
 radiantAura : Shape Msg
@@ -93,3 +103,93 @@ radiantAura =
   circle 300
   |> filled (radialGradient [transparentStop lightYellow 0 1, transparentStop lightYellow 300 0])
  
+pedestal : Shape Msg
+pedestal = 
+  group
+  [  
+      group
+      [      
+        roundedRect 70 200 0 
+          |> filled (rgb 240 240 240)
+          |> move (-100, -140)
+          |> addOutline (solid  5 ) (rgb 220 220 180)
+        ,
+        roundedRect 85 30 5 
+          |> filled (rgb 240 240 240)
+          |> move (-100, -220)
+          |> addOutline (solid  5 ) (rgb 220 220 180)
+        ,
+        roundedRect 85 30 5 
+          |> filled (rgb 240 240 240)
+          |> move (-100, -40)
+          |> addOutline (solid  5 ) (rgb 220 220 180)
+        ,
+          List.foldr union (rect 0 0 |> ghost)
+          [          
+            roundedRect 80 65 0 
+              |> filled (rgb 240 240 240)
+              |> move (120, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            ngon 3 20 
+              |> filled (rgb 240 240 240)
+              |> rotate (degrees -30 )
+              |> move (80, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            ngon 3 20 
+              |> filled (rgb 240 240 240)
+              |> rotate (degrees -30 )
+              |> move (160, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            roundedRect 135 30 0 
+              |> filled (rgb 240 240 240)
+              |> move (120, -55)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            roundedRect 135 40 20 
+              |> filled (rgb 240 240 240)
+              |> move (120, -39.07136715391229)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+          ]
+          |> move (-220, -240)
+          |> addOutline (solid  10 ) (rgb 220 220 180)
+        ,
+          List.foldr union (rect 0 0 |> ghost)
+          [          
+            roundedRect 80 65 0 
+              |> filled (rgb 240 240 240)
+              |> move (120, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            ngon 3 20 
+              |> filled (rgb 240 240 240)
+              |> rotate (degrees -30 )
+              |> move (80, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            ngon 3 20 
+              |> filled (rgb 240 240 240)
+              |> rotate (degrees -30 )
+              |> move (160, -20)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            roundedRect 135 30 0 
+              |> filled (rgb 240 240 240)
+              |> move (120, -55)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+            ,
+            roundedRect 135 40 20 
+              |> filled (rgb 240 240 240)
+              |> move (120, -39.07136715391229)
+              |> addOutline (solid  0 ) (rgb 220 220 180)
+          ]
+          |> rotate (degrees -180 )
+          |> move (20, -20)
+          |> addOutline (solid  10 ) (rgb 220 220 180)
+      ]
+      |> scaleX 3
+      |> scaleY 3
+      |> move (240, -140)
+  ]
