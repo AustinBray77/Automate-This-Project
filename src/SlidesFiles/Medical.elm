@@ -139,6 +139,8 @@ medicalSlide input =
 
 -- have to call animate on ever shape so that clip will be more efficent (if animate where called on the group then clip would also have to be called on the group)
 -- clip is way more efficent when calling on each shape in group instead of entire group
+-- have to call animate on ever shape so that clip will be more efficent (if animate where called on the group then clip would also have to be called on the group)
+-- clip is way more efficent when calling on each shape in group instead of entire group
 ambulence: Float -> Shape Msg
 ambulence time =
   --ambulence--
@@ -1028,4 +1030,11 @@ personalityTypes =
       |> filled black
       |> move (-160.82890541976622, -236.38682252922428)
       |> addOutline (solid  0 ) blue
+    text "Harmoniser" 
+      |> size 70 
+      |> alignLeft 
+      |> filled black
+      |> move (-160.82890541976622, -236.38682252922428)
+      |> addOutline (solid  0 ) blue
   ]
+

@@ -712,7 +712,7 @@ financeSlideDhiren3 input =
     person
     |> move (-500, -400)
     ,
-    groupThoughtsAnimation input.time
+    groupThoughtsAnimation (input.time + 0)
   ]
 
 peopleAnimation : Float -> Shape Msg
@@ -11062,6 +11062,8 @@ groupThoughtsAnimation : Float -> Shape Msg
 groupThoughtsAnimation time =
   group
   [  
+    group
+    [
       List.foldr union (rect 0 0 |> ghost)
       [      
         oval 300 150 
@@ -11129,85 +11131,21 @@ groupThoughtsAnimation time =
           |> move (18.186046511627953, -246.04651162790705)
           |> addOutline (solid  10 ) black
       ]
-      |> scaleX 1.5
-      |> scaleY 1.5
-      |> animate [(fromTill (TimeData 6.5 7.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
-      |> move (303.6279069767445, 338.5116279069766)
       |> addOutline (solid  14 ) black
-    ,
-      List.foldr union (rect 0 0 |> ghost)
-      [      
-        oval 300 150 
-          |> filled white
-          |> move (107.86046511627914, -293.3023255813955)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (-14.372093023255772, -283.06976744186056)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (62.00000000000004, -226.04651162790708)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (110.27906976744188, -216.46511627906986)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (160.04651162790702, -233.67441860465127)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (211.30232558139537, -255.34883720930242)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (252.13953488372096, -291.9069767441862)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (237.90697674418612, -324.0000000000001)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (183.4883720930233, -345.67441860465124)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (114.18604651162795, -364.3720930232559)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (50.27906976744191, -350.88372093023264)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (-5.7209302325581195, -325.0232558139536)
-          |> addOutline (solid  10 ) black
-        ,
-        oval 100 60 
-          |> filled white
-          |> move (18.186046511627953, -246.04651162790705)
-          |> addOutline (solid  10 ) black
-      ]
+      ,
+      algorithmImage
+      |> scale 0.45
+      |> move (135, -300)
+      
+      ] 
       |> scaleX 1.5
       |> scaleY 1.5
       |> animate [(fromTill (TimeData 5.5 6.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (347.4418604651166, 776.744186046511)
-      |> addOutline (solid  14 ) black
+
     ,
+      group
+      [
       List.foldr union (rect 0 0 |> ghost)
       [      
         oval 300 150 
@@ -11274,13 +11212,21 @@ groupThoughtsAnimation time =
           |> filled white
           |> move (18.186046511627953, -246.04651162790705)
           |> addOutline (solid  10 ) black
+      ]
+      |> addOutline (solid  14 ) black
+      ,
+      neuralNetwork
+      |> scale 0.2
+      |> move (100, -290)
       ]
       |> scaleX 1.5
       |> scaleY 1.5
       |> animate [(fromTill (TimeData 4.5 5.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (-610.4186046511624, 786.3255813953488)
-      |> addOutline (solid  14 ) black
+      
     ,
+      group
+      [
       List.foldr union (rect 0 0 |> ghost)
       [      
         oval 300 150 
@@ -11348,11 +11294,17 @@ groupThoughtsAnimation time =
           |> move (18.186046511627953, -246.04651162790705)
           |> addOutline (solid  10 ) black
       ]
+      |> addOutline (solid  14 ) black
+      ,
+      robot
+      |> scale 0.5
+      |> move (110, -275)
+      ]
       |> scaleX 1.5
       |> scaleY 1.5
       |> animate [(fromTill (TimeData 3.5 4.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (-116.74418604651106, 587.9069767441855)
-      |> addOutline (solid  14 ) black
+      
     ,
     oval 60 60 
       |> filled white
@@ -11441,10 +11393,6 @@ financeSlideAustin input =
     ]
     |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
     text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
-    |> size 74
-    |> alignLeft
-    |> filled black
-    |> move (-125, 350),
     server input.time
     |> scale 0.75
     |> scaleX -1
@@ -11797,3 +11745,557 @@ algorithmImage =
       |> addOutline (solid  0 ) black
   ]
   |> scale 0.5
+neuralNetwork: Shape Msg 
+neuralNetwork = 
+  group
+  [  
+    roundedRect 350 10 0 
+      |> filled black
+      |> rotate (degrees -55 )
+      |> move (440, 120)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 350 10 0 
+      |> filled black
+      |> rotate (degrees 55 )
+      |> move (440, -160)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 10 0 
+      |> filled black
+      |> rotate (degrees 30 )
+      |> move (460, -60)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 10 0 
+      |> filled black
+      |> rotate (degrees -30 )
+      |> move (440, 40)
+      |> addOutline (solid  0 ) black
+    ,
+      group
+      [      
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees 75 )
+          |> move (160, 0)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, 160)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (140, 100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees -75 )
+          |> move (160, -40)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (160, -80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (160, -120)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -200)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (140, -180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -280)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 260)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (160, 180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (140, 40)
+          |> addOutline (solid  0 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -280)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -100)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 80)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 260)
+          |> addOutline (solid  5 ) black
+      ]
+      |> move (100, 0)
+    ,
+      group
+      [      
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees 55 )
+          |> move (-280, -40)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 500 10 0 
+          |> filled black
+          |> rotate (degrees 70 )
+          |> move (-300, 40)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 30 )
+          |> move (-300, -140)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees -30 )
+          |> move (-280, -240)
+          |> addOutline (solid  0 ) black
+        ,
+        oval 100 100 
+          |> filled blue
+          |> move (-400, -170)
+          |> addOutline (solid  5 ) black
+      ]
+    ,
+      group
+      [      
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -55 )
+          |> move (-280, 20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 500 10 0 
+          |> filled black
+          |> rotate (degrees -70 )
+          |> move (-300, -60)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 30 )
+          |> move (-280, 220)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees -30 )
+          |> move (-280, 100)
+          |> addOutline (solid  0 ) black
+        ,
+        oval 100 100 
+          |> filled blue
+          |> move (-400, 170)
+          |> addOutline (solid  5 ) black
+      ]
+    ,
+      group
+      [      
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees 75 )
+          |> move (160, 0)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, 160)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (140, 100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees -75 )
+          |> move (160, -40)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (160, -80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (160, -120)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -200)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (140, -180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -280)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 260)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (160, 180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (140, 40)
+          |> addOutline (solid  0 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -280)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -100)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 80)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 260)
+          |> addOutline (solid  5 ) black
+      ]
+      |> move (-80, 0)
+    ,
+    oval 100 100 
+      |> filled green
+      |> move (540, -20)
+      |> addOutline (solid  5 ) black
+    ,
+      group
+      [      
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees 75 )
+          |> move (160, 0)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, 160)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (140, 100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 600 10 0 
+          |> filled black
+          |> rotate (degrees -75 )
+          |> move (160, -40)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (160, -80)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 300 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (160, -20)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees -67.5 )
+          |> move (160, -120)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -100)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (140, -200)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees -45 )
+          |> move (140, -180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (140, -280)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> move (120, 260)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 200 10 0 
+          |> filled black
+          |> rotate (degrees 45 )
+          |> move (160, 180)
+          |> addOutline (solid  0 ) black
+        ,
+        roundedRect 400 10 0 
+          |> filled black
+          |> rotate (degrees 67.6 )
+          |> move (140, 40)
+          |> addOutline (solid  0 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -280)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, -100)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 80)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (240, 260)
+          |> addOutline (solid  5 ) black
+      ]
+      |> move (-260, 1.4883720930232585)
+    ,
+      group
+      [      
+        oval 100 100 
+          |> filled red
+          |> move (60, -280)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (60, -100)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (60, 80)
+          |> addOutline (solid  5 ) black
+        ,
+        oval 100 100 
+          |> filled red
+          |> move (60, 260)
+          |> addOutline (solid  5 ) black
+      ]
+      |> move (-260, 0)
+  ]
+
+robot: Shape Msg
+robot = 
+  group
+  [  
+    oval 40 60 
+      |> filled white
+      |> move (-80, -120)
+      |> addOutline (solid  8 ) black
+    ,
+    oval 40 60 
+      |> filled white
+      |> move (80, -120)
+      |> addOutline (solid  8 ) black
+    ,
+    roundedRect 95 65 10 
+      |> filled black
+      |> move (0, -150)
+      |> addOutline (solid  8 ) black
+    ,
+    oval 60 60 
+      |> filled black
+      |> move (-140, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 155 95 20 
+      |> filled white
+      |> move (0, -120)
+      |> addOutline (solid  8 ) black
+    ,
+    oval 60 60 
+      |> filled black
+      |> move (140, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 20 20 
+      |> filled black
+      |> move (145, 72)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 20 20 
+      |> filled black
+      |> move (-145, 72)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 270 220 110 
+      |> filled white
+      |> move (0, 1.4883720930232585)
+      |> addOutline (solid  8 ) black
+    ,
+    oval 65 65 
+      |> filled black
+      |> move (0, -60)
+      |> addOutline (solid  5 ) black
+    ,
+    roundedRect 135 65 0 
+      |> filled white
+      |> move (0, -40)
+      |> addOutline (solid  0 ) red
+    ,
+    roundedRect 200 100 60 
+      |> filled (rgb 180 180 240)
+      |> move (-1.4883720930232585, 1.4883720930232558)
+      |> addOutline (solid  8 ) black
+    ,
+    oval 35 35 
+      |> filled black
+      |> move (-45, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 35 35 
+      |> filled black
+      |> move (45, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 80 0 
+      |> filled black
+      |> move (-145, 35.53488372093023)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 80 0 
+      |> filled black
+      |> move (145, 30)
+      |> addOutline (solid  0 ) black
+  ]

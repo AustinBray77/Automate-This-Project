@@ -55,8 +55,6 @@ blackboard time =
         |> addOutline (solid  5 ) black
     ]
     |>move(-500, 100)
-
-
 studentsSlide: SlideInput -> Shape Msg
 studentsSlide input =
   group[
@@ -66,7 +64,6 @@ studentsSlide input =
   
   ]
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
-
 algorithmImaginerSlide: SlideInput -> Shape Msg
 algorithmImaginerSlide input = 
   group
@@ -75,7 +72,7 @@ algorithmImaginerSlide input =
     ,
     group -- make everything rise up
     [ 
-      radiantAura -- animate aura to grow in scale (or animate gradient !)
+      radiantAura input.time -- animate aura to grow in scale (or animate gradient !)
       |> move (-10, -400)
       ,
       pedestal
@@ -94,14 +91,16 @@ algorithmImaginerSlide input =
         |> scale 0.45
         |> move (425, -70)
       ]
+      |> animate [(fromTill (TimeData 2 4 Once) (Just easeOut) (scaleFromAni (0,0) (1,1)))] input.time
     ]
+    |> animate [(fromTill (TimeData 5 8 Once) (Just easeInAndOut) (moveAni 0 400))] input.time
 
   ]
 
-radiantAura : Shape Msg
-radiantAura = 
-  circle 300
-  |> filled (radialGradient [transparentStop lightYellow 0 1, transparentStop lightYellow 300 0])
+radiantAura : Float -> Shape Msg
+radiantAura time = 
+  circle 800
+  |> filled (radialGradient [transparentStop lightYellow 0 (percentCompleted (TimeData 7 8 Once) time), transparentStop lightYellow ((percentCompleted (TimeData 7 9 Once) time) * 800) 0])
  
 pedestal : Shape Msg
 pedestal = 
@@ -193,3 +192,5 @@ pedestal =
       |> scaleY 3
       |> move (240, -140)
   ]
+
+
