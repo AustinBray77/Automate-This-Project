@@ -74,7 +74,7 @@ entertainmentSlide2 input =
           |> move (-850, 100)
           |> animate [(fromTill (TimeData 4 6 Once) Nothing (hideShape (RGBA 0 0 0 1)))] input.time
         ]
-        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni -1000 -1000))] input.time
+        |> animate [(fromTill (TimeData 25 27 Once) (Just easeIn) (moveAni -1000 -1000))] input.time
         |> transition [(fromTill (TimeData 0 0.01 Once) Nothing (hideShape (RGBA 255 255 255 255)))] input.transitionTime input.state
         ,
         group [ 
@@ -82,34 +82,34 @@ entertainmentSlide2 input =
           |> filled white
           |> addOutline (solid 5) black
           |> move (-175, 0)
-          |> animate [(fromTill (TimeData 4 5 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          |> animate [(fromTill (TimeData 8 10 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
           circle 40
           |> filled white
           |> addOutline (solid 5) black
           |> move (-100, 50)
-          |> animate [(fromTill (TimeData 5 6 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          |> animate [(fromTill (TimeData 10 12 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
           circle 50
           |> filled white
           |> addOutline (solid 5) black
           |> move (0, 125)
-          |> animate [(fromTill (TimeData 6 7 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+          |> animate [(fromTill (TimeData 12 14 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
           speechBubble
           |> scale 2
           |> move (550, -75)
-          |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 255 255 255 1))),
-                      (fromTill (TimeData 7 8 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 20))] input.time,
+          |> animate [(fromTill (TimeData 14 16 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 255 255 255 1))),
+                      (fromTill (TimeData 14 16 Once) (Nothing) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 20))] input.time,
           text "Algorithms vs Bach???"
           |> size 74
           |> filled black
           |> move (-200, 260)
-          |> animate [(fromTill (TimeData 7 8 Once) (Nothing) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1)))] input.time
+          |> animate [(fromTill (TimeData 14 16 Once) (Nothing) (fadeShapeToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1)))] input.time
         ]
-        |> animate [(fromTill (TimeData 10 12 Once) (Just easeIn) (moveAni 1000 1000))] input.time,
+        |> animate [(fromTill (TimeData 25 27 Once) (Just easeIn) (moveAni 1000 1000))] input.time,
         fullCrowd input.time
         |> scale 3
         |> move (-1000, 1000)
         |> move (-550, 0)
-        |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni 1000 -1000))] input.time,
+        |> animate [(fromTill (TimeData 27 29 Once) (Just easeOut) (moveAni 1000 -1000))] input.time,
         flyingTextAnimation "🎶" -700 200 input.time
         |> move (input.time * sin(input.time), -15 * input.time * cos(input.time)),
         flyingTextAnimation "🎵" -700 0 input.time
@@ -126,22 +126,22 @@ entertainmentSlide2 input =
         |> size 52
         |> filled black
         |> move(-700, 200)
-        |> animate [(fromTill (TimeData 18 19 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
+        |> animate [(fromTill (TimeData 32 33 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
         text "Bach!! Sounds so good"
         |> size 52
         |> filled black
         |> move(-550, 300)
-        |> animate [(fromTill (TimeData 19 20 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
+        |> animate [(fromTill (TimeData 33 34 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
         text "This is incredible! A computer could never do this!"
         |> size 52
         |> filled black
         |> move(-900, 400)
-        |> animate [(fromTill (TimeData 20 21 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
+        |> animate [(fromTill (TimeData 34 35 Once) (Just easeInAndOut) (showShape (RGBA 0 0 0 1)))] input.time,
         computer
         |> scale 0.5
         |> move (1000, -1000)
         |> move (550, 0)
-        |> animate [(fromTill (TimeData 13 15 Once) (Just easeOut) (moveAni -1000 1000))] input.time
+        |> animate [(fromTill (TimeData 27 29 Once) (Just easeOut) (moveAni -1000 1000))] input.time
     ]
     |> transition [(bounceBack 1000 1000)] input.transitionTime input.state
 
@@ -249,8 +249,8 @@ flyingTextAnimation string x y time =
     text string
     |> size 74
     |> filled black
-    |> animate [(fromTill (TimeData 15 15 Once) Nothing (showShape (RGBA 0 0 0 1))), 
-                (fromTill (TimeData 15 18 RepeatLoop) (Just easeIn) (moveAni x y))] time
+    |> animate [(fromTill (TimeData 30 30 Once) Nothing (showShape (RGBA 0 0 0 1))), 
+                (fromTill (TimeData 30 33 RepeatLoop) (Just easeIn) (moveAni x y))] time
 
 face: Shape Msg
 face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455,36),
@@ -411,39 +411,39 @@ fullCrowd time =
       crowd
       |> scale 0.4
       |> move (0, 30)
-      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
+      |> animate [(fromTill (TimeData 31 34 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.4
       |> move (-30, 30)
-      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 5))] time,
+      |> animate [(fromTill (TimeData 31 34 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 5))] time,
       crowd
       |> scale 0.4
       |> move (30, 30)
-      |> animate [(fromTill (TimeData 18.5 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 20))] time,
+      |> animate [(fromTill (TimeData 31.5 34 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 20))] time,
       crowd
       |> scale 0.5
       |> move (50, 25)
-      |> animate [(fromTill (TimeData 17.5 20 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 10))] time,
+      |> animate [(fromTill (TimeData 30.5 33 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 10))] time,
       crowd
       |> scale 0.6
       |> move (-15, 10)
-      |> animate [(fromTill (TimeData 18.25 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 17.5))] time,
+      |> animate [(fromTill (TimeData 31.25 34 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 17.5))] time,
       crowd
       |> scale 0.7
       |> move (75, 0)
-      |> animate [(fromTill (TimeData 18 22 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
+      |> animate [(fromTill (TimeData 31 35 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.7
       |> move (15, 0)
-      |> animate [(fromTill (TimeData 18.75 21.25 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 12.5))] time,
+      |> animate [(fromTill (TimeData 31.75 34.25 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 12.5))] time,
       crowd
       |> scale 0.8
       |> move (45, -10)
-      |> animate [(fromTill (TimeData 18 21 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
+      |> animate [(fromTill (TimeData 31 34 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 15))] time,
       crowd
       |> scale 0.9
       |> move (-10, -10)
-      |> animate [(fromTill (TimeData 18.3 21.6 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 16))] time
+      |> animate [(fromTill (TimeData 31.3 34.6 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 16))] time
   ]
 
 crowd: Shape Msg
