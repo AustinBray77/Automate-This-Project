@@ -16,7 +16,7 @@ slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = (
   -- the slides are in order 
   --!! Put slides here !!
-  [historyOfAlgorithms, personalityBots, financeIntro, medicalSlide, financeSlideDhiren1, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
+  [financeSlideJoshua, financeSlideDhiren1, historyOfAlgorithms, personalityBots, financeIntro, medicalSlide, financeSlideDhiren1, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
   --!! --------------- !!
   )} 
 

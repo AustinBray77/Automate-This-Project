@@ -5,7 +5,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-import SlidesFiles.EntertainmentSlides exposing (computer)
+import SlidesFiles.EntertainmentSlides exposing (..)
 
 -- by default faces to the left
 server: Float -> Shape Msg
@@ -223,6 +223,242 @@ dollarSignAnimation x y timeData time =
                 (fromTill timeData (Just easeIn) (moveAni x 0)),
                 (fromTill timeData (Just easeInAndOut) (moveAni 0 y))] time
 
+graphOutline: Float -> Float -> Shape Msg
+graphOutline xIncrease yIncrease = 
+  group
+  [  
+    roundedRect 400 10 0 
+      |> filled black
+      |> move (200, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 400 0 
+      |> filled black
+      |> move (0, 200)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (40, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat xIncrease) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (35, -5)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (80, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*2)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (75, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (120, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*3)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (115, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (160, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*4)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (155, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (200, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*5)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (195, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (240, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*6)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (235, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (280, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*7)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (275, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (320, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*8)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (315, -10)
+    ,
+    roundedRect 10 20 0 
+      |> filled black
+      |> move (360, 5)
+      |> addOutline (solid  0 ) black
+    ,
+    text (String.fromFloat (xIncrease*9)) 
+    |> alignLeft
+    |> size 20
+    |> filled black
+    |> rotate (degrees -90)
+    |> move (355, -10)
+    ,
+      group
+      [      
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (60, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat yIncrease) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (55, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (100, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*2)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (95, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (140, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*3)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (135, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (180, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*4)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (175, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (220, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*5)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (215, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (260, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*6)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (255, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (300, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*7)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (295, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (340, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*8)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (335, 40)
+        ,
+        roundedRect 10 20 0 
+          |> filled black
+          |> move (380, 25)
+          |> addOutline (solid  0 ) black
+        ,
+        text (String.fromFloat (yIncrease*9)) 
+          |> alignRight
+          |> size 20
+          |> filled black
+          |> rotate (degrees -90)
+          |> move (375, 40)
+      ]
+      |> rotate (degrees 90 )
+      |> move (25, -20)
+  ]
+
 financeIntro: SlideInput -> Shape Msg
 financeIntro input =
   group
@@ -270,6 +506,66 @@ financeIntro input =
     |> addOutline (solid  1 ) black
   ]
   |> transition [(bounceBack 2000 500)] input.transitionTime input.state
+
+financeSlideJoshua: SlideInput -> Shape Msg
+financeSlideJoshua input = 
+  group
+  [
+    background7 input.time
+    ,
+    let 
+      time = if input.time > 4 then (input.time - 4) else 0
+    in
+    group
+    [
+      graphOutline 1 10
+      ,
+      text "Automated Bots in US Stock Market"
+      |> size 35
+      |> centered
+      |> underline
+      |> filled black
+      |> move (200, 450)
+      ,
+      text "Date (in 2000's)"
+      |> size 30
+      |> centered
+      |> filled black
+      |> move (200, -50)
+      ,
+      text "Bots in market (%)"
+      |> size 30
+      |> centered
+      |> filled black
+      |> rotate (degrees 90)
+      |> move (-50, 200)
+      ,
+      line (0,40) (animateLine (0,40) (50,50) Nothing (TimeData 0 1 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (50,50) (animateLine (50,50) (100,75) Nothing (TimeData 1 2 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (100,75) (animateLine (100,75) (150,175) Nothing (TimeData 2 3 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (150,175) (animateLine (150,175) (225,200) Nothing (TimeData 3 4 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (225,200) (animateLine (225,200) (300,240) Nothing (TimeData 4 5 Once) time)
+      |> outlined (solid 5) black
+    ]
+    |> move (-650, -450)
+    |> animate [(fromTill (TimeData 4 0 Once) Nothing makeShapeTransparent)] input.time -- making a shape transparent but backwords (TimeData 4 0) does the given animation backwords from 0 to 4
+    ,
+    text (typeWriter "Wall Street Take Over" 0.1 0.2 (TimeData 0 1 Once) input.time)
+    |> size 75
+    |> alignLeft
+    |> bold
+    |> filled black
+    |> move (-375, 400)
+  ]
+  |> transition [(bounceBack 1000 500)] input.transitionTime input.state
 
 -- Dhiren's Slides & Shapes
 financeSlideDhiren1 : SlideInput -> Shape Msg
