@@ -4,6 +4,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
+import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought)
 
 blackboard: Float -> Shape Msg
 blackboard time =
@@ -66,4 +67,29 @@ studentsSlide input =
   ]
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
 
-    
+algorithmImaginerSlide: SlideInput -> Shape Msg
+algorithmImaginerSlide input = 
+  group
+  [ 
+    background6 input.time
+    ,
+    radiantAura
+    |> move (0, -300)
+    ,
+    person
+    |> scale 0.7
+    |> move (40, -400)
+    ,
+    emptyThought
+    |> move (100, -300)
+    ,
+    algorithmImage
+    |> scale 0.45
+    |> move (425, -70)
+  ]
+
+radiantAura : Shape Msg
+radiantAura = 
+  circle 300
+  |> filled (radialGradient [transparentStop lightYellow 0 1, transparentStop lightYellow 300 0])
+ 

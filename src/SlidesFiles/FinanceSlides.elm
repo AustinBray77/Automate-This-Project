@@ -404,6 +404,11 @@ financeSlideDhiren3 : SlideInput -> Shape Msg
 financeSlideDhiren3 input =
   group
   [
+    background4 input.time
+    ,
+    person
+    |> move (-500, -300)
+    ,
     person
     |> move (-400, -350)
     ,
@@ -413,9 +418,7 @@ financeSlideDhiren3 input =
     person
     |> move (-500, -400)
     ,
-    person
-    ,
-    groupThoughts
+    groupThoughtsAnimation input.time
   ]
 
 peopleAnimation : Float -> Shape Msg
@@ -10761,8 +10764,8 @@ emptyThought =
       ]
   ]
 
-groupThoughts : Shape Msg
-groupThoughts =
+groupThoughtsAnimation : Float -> Shape Msg
+groupThoughtsAnimation time =
   group
   [  
       List.foldr union (rect 0 0 |> ghost)
@@ -10834,6 +10837,7 @@ groupThoughts =
       ]
       |> scaleX 1.5
       |> scaleY 1.5
+      |> animate [(fromTill (TimeData 6.5 7.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (303.6279069767445, 338.5116279069766)
       |> addOutline (solid  14 ) black
     ,
@@ -10906,6 +10910,7 @@ groupThoughts =
       ]
       |> scaleX 1.5
       |> scaleY 1.5
+      |> animate [(fromTill (TimeData 5.5 6.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (347.4418604651166, 776.744186046511)
       |> addOutline (solid  14 ) black
     ,
@@ -10978,6 +10983,7 @@ groupThoughts =
       ]
       |> scaleX 1.5
       |> scaleY 1.5
+      |> animate [(fromTill (TimeData 4.5 5.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (-610.4186046511624, 786.3255813953488)
       |> addOutline (solid  14 ) black
     ,
@@ -11050,6 +11056,7 @@ groupThoughts =
       ]
       |> scaleX 1.5
       |> scaleY 1.5
+      |> animate [(fromTill (TimeData 3.5 4.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
       |> move (-116.74418604651106, 587.9069767441855)
       |> addOutline (solid  14 ) black
     ,
@@ -11057,14 +11064,16 @@ groupThoughts =
       |> filled white
       |> scaleX 1.5
       |> scaleY 1.5
-      |> move (-426.465116279069, -80.46511627906979)
       |> addOutline (solid  7 ) black
+      |> animate [(fromTill (TimeData 2 2.75 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
+      |> move (-350.465116279069, -80.46511627906979)   
     ,
     oval 80 80 
       |> filled white
       |> scaleX 1.5
       |> scaleY 1.5
-      |> move (-290.37209302325556, 7.999999999999972)
+      |> animate [(fromTill (TimeData 2.75 3.5 Once) (Just easeIn) (scaleFromAni (0, 0) (1, 1)))] time
+      |> move (-250.37209302325556, 0)
       |> addOutline (solid  7 ) black
   ] 
 
@@ -11390,7 +11399,7 @@ algorithmImage =
     ,
     roundedRect 10 135 0 
       |> filled (rgba 100 100 100 1)
-      |> move (-202.0041753653445, -120)
+      |> move (-202.0041753653445, -117)
       |> addOutline (solid  0 ) black
     ,
     roundedRect 200 100 0 

@@ -262,6 +262,18 @@ scaleAni xy input =
         |> scaleX (1 + ((Tuple.first xy - 1) * input.time))
         |> scaleY (1 + ((Tuple.second xy - 1) * input.time))
 
+scaleFromAni : (Float, Float) -> (Float, Float) -> AnimateFuncInput -> Shape Msg
+scaleFromAni (startx, starty) (x, y) input = 
+    if input.time > 0 then
+      input.shape
+          |> scaleX (startx + ((x - startx) * input.time))
+          |> scaleY (starty + ((y - starty) * input.time))
+    else
+      input.shape
+        |> scaleX startx
+        |> scaleY starty
+
+
 -- scales the shape by the given x, y factor once time is greator than 0
 scaleInstant : (Float, Float)-> AnimateFuncInput -> Shape Msg
 scaleInstant xy input = 
