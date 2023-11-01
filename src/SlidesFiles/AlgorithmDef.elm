@@ -250,7 +250,7 @@ examples time =
 algorithmText: Float -> Shape Msg
 algorithmText time =
   group[
-        text ("\"(An Algorithm) is a list of instructions that leads its user")
+        text ("\"(An Algorithm) is a list of instructions that")
       |>size 60
         |>centered
         |> filled black
