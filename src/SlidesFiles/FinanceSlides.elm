@@ -11145,20 +11145,20 @@ financeSlideAustin input =
     |> move (-125, 350),
     smallServer (input.time - 100)
     |> move (-300, -50),
-    plus
-
+    plus,
+    algorithmImage
+    |> move (500, -50)
   ]
 
 plus: Shape Msg
 plus = 
   group [
     rect 20 100 
-    |> filled (rgba 60 60 60 1)
-    |> addOutline (solid 5) black,
+    |> filled (rgba 60 60 60 1),
     rect 100 20 
     |> filled (rgba 60 60 60 1)
-    |> addOutline (solid 5) black
   ]
+  |> addOutline (solid 10) black
 
 placeMoney: Int -> Int -> Shape Msg -> Shape Msg
 placeMoney square index shape =
@@ -11315,6 +11315,164 @@ smallServer time =
       ]
       |> (\x -> (if intTime >= 5 then x |> repaint red else x))
     ]
-    |> move (400, -150)
 
-
+algorithmImage: Shape Msg
+algorithmImage = 
+    group
+  [  
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 45 )
+      |> move (-280, 200)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees -45 )
+      |> move (-160, 200)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 60 )
+      |> move (-60, 220)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (160, 320)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 165 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (260, 240)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees -15 )
+      |> move (100, 160)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 45 )
+      |> move (337.9958246346555, -100)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 100 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (257.9958246346555, 120)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 15 )
+      |> move (97.99582463465549, 80)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 15 )
+      |> move (-42.00417536534451, 40)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees -15 )
+      |> move (-42.00417536534451, -40)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (-102.00417536534451, -180)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 10 135 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (-202.0041753653445, -120)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 200 100 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (-202.0041753653445, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 300 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (-482.0041753653445, -80)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> move (-362.0041753653445, 0)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees 60 )
+      |> move (126.01252609603335, -95.94989561586638)
+      |> addOutline (solid  0 ) black
+    ,
+    roundedRect 135 10 0 
+      |> filled (rgba 100 100 100 1)
+      |> rotate (degrees -45 )
+      |> move (215.99164926931104, -100)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled red
+      |> move (-340, 140)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 150 150 
+      |> filled red
+      |> move (20, 320)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled red
+      |> move (40, 180)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled red
+      |> move (400, -40)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled red
+      |> move (40, -60)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled red
+      |> move (40, 60)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 125 125 
+      |> filled red
+      |> move (40, -180)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled (rgba 100 100 100 1)
+      |> move (-220, 260)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled (rgba 100 100 100 1)
+      |> move (-100, 140)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled (rgba 100 100 100 1)
+      |> move (277.9958246346555, -160)
+      |> addOutline (solid  0 ) black
+    ,
+    oval 75 75 
+      |> filled (rgba 100 100 100 1)
+      |> move (157.9958246346555, -40)
+      |> addOutline (solid  0 ) black
+  ]
+  |> scale 0.5
