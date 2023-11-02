@@ -6,7 +6,6 @@ import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
 import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought)
 
-blackboard:Float->Shape Msg
 blackboard time=  group
   [  
     roundedRect 640 450 30 
@@ -69,7 +68,7 @@ blackboard time=  group
       |> filled white
       |> move (-300, -40)
       ,
-      text "\"electronic ether\"" 
+      text "\"electronic ether\" in 300s" 
       |> size 20
       |> alignLeft 
       |>fixedwidth
@@ -193,8 +192,7 @@ logos time =  group
       |> move (100, 100)
       |>animate[(fromTill (TimeData 0 3 RepeatLoop) (Just easeInAndOut) (moveAni -100 75))] time
   ]
-  |>scaleX 1.5
-  |> scaleY 1.5
+  |>scale 1.5
   |> move(2000,2000)
   |>animate [(fromTill (TimeData 0 3 Once) (Just easeIn) (moveAni -1800 -2600))] time
   --|> animate [(fromTill (TimeData 3 6 RepeatLoop) (Just easeInAndOut) (moveAni 300 0))] time
@@ -208,17 +206,79 @@ futureSlideAyush input =
     background2 input.time
     ,
     blackboard input.time
-    |>scaleX 1.2
-    |>scaleY 1.2
-
-    ,
-    (buildLineOverTime flashCrash 0 10 input.time Nothing (solid 2) white)
+    |>scale 1.2,
+    (buildLineOverTime flashCrash 3 10 input.time Nothing (solid 2) white)
     |> scale 4
     |> move (-560, 175)
     ,
     logos input.time
+    ,
+    algorithmText input.time
+      |>scale 1.7
+    ,
+    text (typeWriter "Algorithms in the Future" 0.2 0.2 (TimeData 0 2 Once) input.time)
+    |> size 80
+    |> alignLeft 
+    |> filled black
+    |> move (-100, 350)
   
   ]
+  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+algorithmText:Float->Shape Msg
+algorithmText time= group
+  [  
+    text "Algorithms are EVERYWHERE around us" 
+      |> size 30 
+      |> alignLeft 
+      |> filled black
+      |> move (-15, 266.6370546595937)
+      |> addOutline (solid  1 ) blue
+    ,
+    oval 5 5 
+      |> filled black
+      |> move (-26.91676436107855, 235.75615474794836)
+      |> addOutline (solid  5 ) black
+    ,
+    oval 5 5 
+      |> filled black
+      |> move (-26.91676436107855, 201.3833528722157)
+      |> addOutline (solid  5 ) black
+    ,
+    text "Algorithms are EVERYWHERE around us" 
+      |> size 30 
+      |> alignLeft 
+      |> filled black
+      |> move (-15, 266.6370546595937)
+      |> addOutline (solid  1 ) blue
+    ,
+    oval 5 5 
+      |> filled black
+      |> move (-26.91676436107855, 274.63071512309494)
+      |> addOutline (solid  5 ) black
+    ,
+    text "They also have a scary number of applications" 
+      |> size 30 
+      |> alignLeft 
+      |> filled black
+      |> move (-15, 228.11419416721378)
+      |> addOutline (solid  1 ) blue
+    ,
+    text "We need to be careful while making algorithms as" 
+      |> size 30 
+      |> alignLeft 
+      |> filled black
+      |> move (-15, 192.96765254939433)
+      |> addOutline (solid  1 ) blue
+    ,
+    text "when written poorly, they can malfunction." 
+      |> size 30 
+      |> alignLeft 
+      |> filled black
+      |> move (-15, 162.3228694309887)
+      |> addOutline (solid  1 ) blue
+  ]
+  |>move(-70,-120)
+  |> animate [(fromTill (TimeData 3 5 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 0 0 0 255)))] time
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
 algorithmImaginerSlide: SlideInput -> Shape Msg
 algorithmImaginerSlide input = 
