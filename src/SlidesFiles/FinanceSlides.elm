@@ -7,13 +7,328 @@ import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
 import SlidesFiles.EntertainmentSlides exposing (..)
 
-getXDiff: (Float, Float) -> (Float, Float) -> Float
-getXDiff (a, b) (c, d) = 
-  abs (c - a)
+
+financeIntro: SlideInput -> Shape Msg
+financeIntro input =
+  group
+  [  
+    background1 input.time
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 5 RepeatLoop) input.time
+    |> move (-600, -500)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 4 RepeatLoop) input.time
+    |> move (-600, -150)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
+    |> move (-600, -200)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 2.5 RepeatLoop) input.time
+    |> move (-600, -250)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
+    |> move (-600, -300)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
+    |> move (-600, -350)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 4.5 RepeatLoop) input.time
+    |> move (-600, -400)
+    ,
+    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
+    |> move (-600, -450)
+    ,
+    server input.time
+    |> mirrorX
+    |> move (-750, -250)
+    ,
+    server input.time
+    |> scale 0.75
+    |> move (150, -300)
+    ,
+    text (typeWriter "Wall Street" 0.2 0.2 (TimeData 0 2 Once) input.time)
+    |> size 144 
+    |> underline
+    |> alignLeft
+    |> filled black
+    |> move (-300, 250)
+    |> addOutline (solid  1 ) black
+  ]
+  |> transition [(bounceBack 2000 500)] input.transitionTime input.state
+
+{-
+financeSlideJoshua: SlideInput -> Shape Msg
+financeSlideJoshua input = 
+  group
+  [
+    background7 input.time
+    ,
+    let 
+      time = if input.time > 4 then (input.time - 4) else 0
+    in
+    group
+    [
+      graphOutline 1 10
+      ,
+      text "Automated Bots in US Stock Market"
+      |> size 35
+      |> centered
+      |> underline
+      |> filled black
+      |> move (200, 450)
+      ,
+      text "Date (in 2000's)"
+      |> size 30
+      |> centered
+      |> filled black
+      |> move (200, -50)
+      ,
+      text "Bots in market (%)"
+      |> size 30
+      |> centered
+      |> filled black
+      |> rotate (degrees 90)
+      |> move (-50, 200)
+      ,
+      line (0,40) (animateLine (0,40) (50,50) Nothing (TimeData 0 1 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (50,50) (animateLine (50,50) (100,75) Nothing (TimeData 1 2 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (100,75) (animateLine (100,75) (150,175) Nothing (TimeData 2 3 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (150,175) (animateLine (150,175) (225,200) Nothing (TimeData 3 4 Once) time)
+      |> outlined (solid 5) black
+      ,
+      line (225,200) (animateLine (225,200) (300,240) Nothing (TimeData 4 5 Once) time)
+      |> outlined (solid 5) black
+    ]
+    |> move (-650, -450)
+    |> animate [(fromTill (TimeData 4 0 Once) Nothing makeShapeTransparent)] input.time -- making a shape transparent but backwords (TimeData 4 0) does the given animation backwords from 0 to 4
+    ,
+    text (typeWriter "Wall Street Take Over" 0.1 0.2 (TimeData 0 1 Once) input.time)
+    |> size 75
+    |> alignLeft
+    |> bold
+    |> filled black
+    |> move (-375, 400)
+  ]
+  |> transition [(bounceBack 1000 500)] input.transitionTime input.state
+-}
+
+financeSlideDhiren1 : SlideInput -> Shape Msg
+financeSlideDhiren1 input =
+  group 
+  [
+    background4 input.time
+    ,
+    skyScraper
+    |> move(800, 300)
+    |> scale 1  
+    ,
+    newYorkStockExchange
+    |> move (580,50)
+    |> scale 0.5
+    ,
+    rect 900 25
+    |> filled grey
+    |> move (445, -130)
+    ,
+    wallStreetBanner
+    |> move (750, 200)
+    |> scale 0.6
+    ,
+    startingSalary
+    |> move (-300, -670)
+    |> animate [(fromTill (TimeData 2 8 Once) (Just easeInAndOut) (moveAni 0 800))] input.time
+    ,
+    signOnBonus
+    |> move (-360, -670)
+    |> animate [(fromTill (TimeData 6 10 Once) (Just easeInAndOut) (moveAni 0 650))] input.time
+    ,
+    rect 300 800
+    |> filled (gradient [transparentStop white 180 1, transparentStop white 300 0])
+    |> rotate (degrees 90)
+    |> move (-600, -470)
+    ,
+    mcMasterShape
+    |> move (100, -900)
+    |> scale 0.4
+    ,
+    peopleAnimation input.time
+    ,
+    mcMasterDoorGradient
+    |> move (100, -900)
+    |> scale 0.4
+  ]
+  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+
+financeSlideDhiren2 : SlideInput -> Shape Msg
+financeSlideDhiren2 input = 
+  group
+  [
+    background4 input.time
+    ,
+    stockBackground
+    ,
+    (buildLineOverTime stockLine 0 10 input.time Nothing (solid 2.5) red)
+    |> scale 4
+    |> move (-535, 150)
+    ,
+    group
+    [
+      facebookBackground
+      ,
+      facebookLogo
+      |> move (34, 0)
+    ]
+    |> animate [(fromTill (TimeData 8 12 Once) (Just easeInAndOut) (scaleAni (6, 6)))] input.time
+    |> animate [(fromTill (TimeData 8 11 Once) (Just easeOut) (moveAni 0 900))] input.time
+    |> animate [(fromTill (TimeData 11 12 Once) (Just easeIn) (moveAni 0 -100))] input.time
+    |> move (450.3720930232558, -610.13953488372084)
+    ,
+    person
+    |> scale 0.7
+    |> move (-400, -440)
+    ,
+    sadThoughtAnimation 15 input.time
+    |> move (-50, 50)
+    ,
+    rect 250 400 
+    |> filled white
+    |> move (-440, -350)
+    |> animate [(fromTill (TimeData 13 15 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
+    ,
+    rect 400 250 
+    |> filled black 
+    |> move (50, -240)
+    |> animate [(fromTill (TimeData 17 19 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
+  ]
+  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+
+financeSlideDhiren3 : SlideInput -> Shape Msg
+financeSlideDhiren3 input =
+  group
+  [
+    background4 input.time
+    ,
+    person
+    |> move (-500, -300)
+    ,
+    person
+    |> move (-400, -350)
+    ,
+    person
+    |> move (-600, -350)
+    ,
+    person
+    |> move (-500, -400)
+    ,
+    groupThoughtsAnimation (input.time + 0)
+  ]
+
+financeSlideAustin: SlideInput -> Shape Msg
+financeSlideAustin input = 
+  group [
+    background2 input.time,
+    group [ 
+    smallServer input.time
+    |> move (300, 300),
+    curve (-400, 300) [Pull (-250, 350) (75, 350)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    curve (285, 350) [Pull (450, 350) (500, 125)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    line (-450, 125) (animateLine (-450, 125) (25, -150) (Just easeInAndOut) (TimeData 18 22 Once) input.time)  
+    |> outlined (solid 15) blue,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 22 30 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 22.5 30.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 23 31 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 23.5 31.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 24 32 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 24.5 32.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    chicagoSkyline
+    |> move(-400, 200),
+    wedge 100 0.5
+    |> filled green
+    |> rotate (pi/2)
+    |> scaleX 3
+    |> scaleY 0.5
+    |> move(-450, 125),
+    text (typeWriter "Chicago" 0.1 0.2 (TimeData 0 1000 Once) input.time)
+    |> size 74
+    |> filled black
+    |> move (-585, 400),
+    newYorkStockExchange
+    |> scale 0.75
+    |> move (400, -150)
+    ]
+    |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
+    text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
+    |> size 74
+    |> alignLeft
+    |> filled black
+    |> move (-125, 350),
+    server input.time
+    |> scale 0.75
+    |> scaleX -1
+    |> move (-500, -50)
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni -1000 1000))] input.time,
+    plus
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
+    algorithmImage
+    |> move (500, -50)
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 1000 1000))] input.time,
+    text "$$$$$"
+    |> size 356
+    |> filled (rgbaToColor (RGBA 38 127 0 1))
+    |> move (-450, -100)
+    |> animate [(fromTill (TimeData 50 52 Once) (Just easeInAndOut) (showShape (RGBA 38 127 0 1))),
+                (fromTill (TimeData 50 52 Once) (Just easeInAndOut) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+    moneyWash (TimeData 36 38 Once) input.time
+  ]
+  |> transition [(moveAni 1000 1000)]  input.transitionTime input.state
 
 buildLineOverTime: List (Float, Float) -> Float -> Float -> Float -> Maybe Ease -> LineType -> Color -> Shape Msg
 buildLineOverTime points startTime speed time ease lineType outlineCol =
   let 
+    getXDiff: (Float, Float) -> (Float, Float) -> Float
+    getXDiff (a, b) (c, d) = 
+      abs (c - a)
+
     getAnimation point1 point2 (startT, endT) =
       line point1 (animateLine point1 point2 ease (TimeData startT endT Once) time)
     
@@ -22,7 +337,6 @@ buildLineOverTime points startTime speed time ease lineType outlineCol =
         (x::xs) ->
           (curSum + x) :: convertToSumList (curSum + x) xs
         [] -> []
-
 
     times = 
       case points of 
@@ -495,230 +809,6 @@ graphOutline xIncrease yIncrease =
       |> rotate (degrees 90 )
       |> move (25, -20)
   ]
-
-financeIntro: SlideInput -> Shape Msg
-financeIntro input =
-  group
-  [  
-    background1 input.time
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 5 RepeatLoop) input.time
-    |> move (-600, -500)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 4 RepeatLoop) input.time
-    |> move (-600, -150)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
-    |> move (-600, -200)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 2.5 RepeatLoop) input.time
-    |> move (-600, -250)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 3 RepeatLoop) input.time
-    |> move (-600, -300)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
-    |> move (-600, -350)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 4.5 RepeatLoop) input.time
-    |> move (-600, -400)
-    ,
-    dollarSignAnimation 650 100 (TimeData 0 3.5 RepeatLoop) input.time
-    |> move (-600, -450)
-    ,
-    server input.time
-    |> mirrorX
-    |> move (-750, -250)
-    ,
-    server input.time
-    |> scale 0.75
-    |> move (150, -300)
-    ,
-    text (typeWriter "Wall Street" 0.2 0.2 (TimeData 0 2 Once) input.time)
-    |> size 144 
-    |> underline
-    |> alignLeft
-    |> filled black
-    |> move (-300, 250)
-    |> addOutline (solid  1 ) black
-  ]
-  |> transition [(bounceBack 2000 500)] input.transitionTime input.state
-
-financeSlideJoshua: SlideInput -> Shape Msg
-financeSlideJoshua input = 
-  group
-  [
-    background7 input.time
-    ,
-    let 
-      time = if input.time > 4 then (input.time - 4) else 0
-    in
-    group
-    [
-      graphOutline 1 10
-      ,
-      text "Automated Bots in US Stock Market"
-      |> size 35
-      |> centered
-      |> underline
-      |> filled black
-      |> move (200, 450)
-      ,
-      text "Date (in 2000's)"
-      |> size 30
-      |> centered
-      |> filled black
-      |> move (200, -50)
-      ,
-      text "Bots in market (%)"
-      |> size 30
-      |> centered
-      |> filled black
-      |> rotate (degrees 90)
-      |> move (-50, 200)
-      ,
-      line (0,40) (animateLine (0,40) (50,50) Nothing (TimeData 0 1 Once) time)
-      |> outlined (solid 5) black
-      ,
-      line (50,50) (animateLine (50,50) (100,75) Nothing (TimeData 1 2 Once) time)
-      |> outlined (solid 5) black
-      ,
-      line (100,75) (animateLine (100,75) (150,175) Nothing (TimeData 2 3 Once) time)
-      |> outlined (solid 5) black
-      ,
-      line (150,175) (animateLine (150,175) (225,200) Nothing (TimeData 3 4 Once) time)
-      |> outlined (solid 5) black
-      ,
-      line (225,200) (animateLine (225,200) (300,240) Nothing (TimeData 4 5 Once) time)
-      |> outlined (solid 5) black
-    ]
-    |> move (-650, -450)
-    |> animate [(fromTill (TimeData 4 0 Once) Nothing makeShapeTransparent)] input.time -- making a shape transparent but backwords (TimeData 4 0) does the given animation backwords from 0 to 4
-    ,
-    text (typeWriter "Wall Street Take Over" 0.1 0.2 (TimeData 0 1 Once) input.time)
-    |> size 75
-    |> alignLeft
-    |> bold
-    |> filled black
-    |> move (-375, 400)
-  ]
-  |> transition [(bounceBack 1000 500)] input.transitionTime input.state
-
--- Dhiren's Slides & Shapes
-financeSlideDhiren1 : SlideInput -> Shape Msg
-financeSlideDhiren1 input =
-  group 
-  [
-    background4 input.time
-    ,
-    skyScraper
-    |> move(800, 300)
-    |> scale 1  
-    ,
-    newYorkStockExchange
-    |> move (580,50)
-    |> scale 0.5
-    ,
-    rect 900 25
-    |> filled grey
-    |> move (445, -130)
-    ,
-    wallStreetBanner
-    |> move (750, 200)
-    |> scale 0.6
-    ,
-    startingSalary
-    |> move (-300, -670)
-    |> animate [(fromTill (TimeData 2 8 Once) (Just easeInAndOut) (moveAni 0 800))] input.time
-    ,
-    signOnBonus
-    |> move (-360, -670)
-    |> animate [(fromTill (TimeData 6 10 Once) (Just easeInAndOut) (moveAni 0 650))] input.time
-    ,
-    rect 300 800
-    |> filled (gradient [transparentStop white 180 1, transparentStop white 300 0])
-    |> rotate (degrees 90)
-    |> move (-600, -470)
-    ,
-    mcMasterShape
-    |> move (100, -900)
-    |> scale 0.4
-    ,
-    peopleAnimation input.time
-    ,
-    mcMasterDoorGradient
-    |> move (100, -900)
-    |> scale 0.4
-  ]
-  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (moveAni 0 -1500))] input.transitionTime input.state
-
-financeSlideDhiren2 : SlideInput -> Shape Msg
-financeSlideDhiren2 input2 = 
-  let
-    input = {input2 | time = input2.time - 5}
-  in
-  group
-  [
-    background4 input.time
-    ,
-    stockBackground
-    ,
-    (buildLineOverTime stockLine 0 10 input.time Nothing (solid 2.5) red)
-    |> scale 4
-    |> move (-535, 150)
-    ,
-    group
-    [
-      facebookBackground
-      ,
-      facebookLogo
-      |> move (34, 0)
-    ]
-    |> animate [(fromTill (TimeData 8 12 Once) (Just easeInAndOut) (scaleAni (6, 6)))] input.time
-    |> animate [(fromTill (TimeData 8 11 Once) (Just easeOut) (moveAni 0 900))] input.time
-    |> animate [(fromTill (TimeData 11 12 Once) (Just easeIn) (moveAni 0 -100))] input.time
-    |> move (450.3720930232558, -610.13953488372084)
-    ,
-    person
-    |> scale 0.7
-    |> move (-400, -440)
-    ,
-    sadThoughtAnimation 15 input.time
-    |> move (-50, 50)
-    ,
-    rect 250 400 
-    |> filled white
-    |> move (-440, -350)
-    |> animate [(fromTill (TimeData 13 15 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
-    ,
-    rect 400 250 
-    |> filled black 
-    |> move (50, -240)
-    |> animate [(fromTill (TimeData 17 19 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
-  ]
-  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (moveAni 0 -1500))] input.transitionTime input.state
-
-financeSlideDhiren3 : SlideInput -> Shape Msg
-financeSlideDhiren3 input =
-  group
-  [
-    background4 input.time
-    ,
-    person
-    |> move (-500, -300)
-    ,
-    person
-    |> move (-400, -350)
-    ,
-    person
-    |> move (-600, -350)
-    ,
-    person
-    |> move (-500, -400)
-    ,
-    groupThoughtsAnimation (input.time + 0)
-  ]
-  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (scaleAni (0, 0)))] input.transitionTime input.state
 
 peopleAnimation : Float -> Shape Msg
 peopleAnimation time = 
@@ -11335,98 +11425,6 @@ chicagoSkyline =
   |> filled black
   |> scale 3
 
-financeSlideAustin: SlideInput -> Shape Msg
-financeSlideAustin input = 
-  group [
-    background2 input.time,
-    group [ 
-    smallServer input.time
-    |> move (300, 300),
-    curve (-400, 300) [Pull (-250, 350) (75, 350)]  
-    |> outlined (solid 5) blue
-    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
-    curve (285, 350) [Pull (450, 350) (500, 125)]  
-    |> outlined (solid 5) blue
-    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
-    line (-450, 125) (animateLine (-450, 125) (25, -150) (Just easeInAndOut) (TimeData 18 22 Once) input.time)  
-    |> outlined (solid 15) blue,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 22 30 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 22.5 30.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 23 31 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 23.5 31.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 24 32 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 24.5 32.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    chicagoSkyline
-    |> move(-400, 200),
-    wedge 100 0.5
-    |> filled green
-    |> rotate (pi/2)
-    |> scaleX 3
-    |> scaleY 0.5
-    |> move(-450, 125),
-    text (typeWriter "Chicago" 0.1 0.2 (TimeData 0 1000 Once) input.time)
-    |> size 74
-    |> filled black
-    |> move (-585, 400),
-    newYorkStockExchange
-    |> scale 0.75
-    |> move (400, -150)
-    ]
-    |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
-    text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
-    |> size 74
-    |> alignLeft
-    |> filled black
-    |> move (-125, 350),
-    server input.time
-    |> scale 0.75
-    |> scaleX -1
-    |> move (-500, -50)
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni -1000 1000))] input.time,
-    plus
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
-    algorithmImage
-    |> move (500, -50)
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 1000 1000))] input.time,
-    text "$$$$$"
-    |> size 356
-    |> filled (rgbaToColor (RGBA 38 127 0 1))
-    |> move (-450, -100)
-    |> animate [(fromTill (TimeData 50 52 Once) (Just easeInAndOut) (showShape (RGBA 38 127 0 1))),
-                (fromTill (TimeData 50 52 Once) (Just easeInAndOut) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
-    moneyWash (TimeData 36 38 Once) input.time
-  ]
-  |> transition [(moveAni 1000 1000)]  input.transitionTime input.state
 
 plus: Shape Msg
 plus = 
@@ -11753,6 +11751,7 @@ algorithmImage =
       |> addOutline (solid  0 ) black
   ]
   |> scale 0.5
+
 neuralNetwork: Shape Msg 
 neuralNetwork = 
   group
@@ -12307,3 +12306,4 @@ robot =
       |> move (145, 30)
       |> addOutline (solid  0 ) black
   ]
+

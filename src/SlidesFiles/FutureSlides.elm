@@ -79,6 +79,7 @@ blackboard time=  group
   ]
   |>move(-2475,200)
   |>animate[(fromTill (TimeData 0 3 Once) (Just easeIn) (moveAni 2000 0))] time
+
 logos: Float -> Shape Msg
 logos time =  group
   [  
@@ -197,9 +198,11 @@ logos time =  group
   |>animate [(fromTill (TimeData 0 3 Once) (Just easeIn) (moveAni -1800 -2600))] time
   --|> animate [(fromTill (TimeData 3 6 RepeatLoop) (Just easeInAndOut) (moveAni 300 0))] time
   |>animate[(fromTill (TimeData 0 3 RepeatLoop) (Nothing) (moveAni 175 200))] time
+
 flashCrash: List (Float, Float)
 flashCrash=[(-92.56,51.604),(-90.00,52.951), (-86.90,52.277),(-83.80,51.604),(-78.41,51.2) ,(-73.02,50.795), (-68.31,49.044),(-63.59,47.292), (-59.28,46.753), (-54.97,46.214), (-53.35,44.463) ,(-51.73,42.711), (-47.83,44.193), (-43.92,45.675), (-41.49,44.463), (-39.07,43.250), (-35.03,45.271), (-30.98,47.292), (-26.00,47.427), (-21.01,47.562), (-17.11,46.349), (-13.20,45.136), (-8.623,45.002), (-4.042,44.867), (-1.212,42.981), (1.6168,41.094), (6.4673,41.094), (11.317,41.094), (14.416,40.016), (17.515,38.938), (19.132,36.917) ,(20.749,34.896), (21.153,33.818), (21.557,32.741), (22.096,34.088), (22.635,35.435), (24.117,31.258), (25.6,27.082), (26.543,29.642) ,(27.486,32.202), (29.911,27.082), (32.336,21.962), (34.088,-4.311), (35.84,-30.58), (37.995,-6.197), (40.151,18.189), (40.96,12.8), (41.768,7.4105), (43.250,16.976), (44.732,26.543), (45.810,22.366), (46.888,18.189), (48.774,15.629), (50.661,13.069), (51.604,11.587), (52.547,10.105), (54.703,15.629), (56.858,21.153), (59.553,25.330), (62.248,29.507)]
   |> List.map (\(a, b) -> (a, b * 1.3))
+
 futureSlideAyush: SlideInput -> Shape Msg
 futureSlideAyush input =
   group[
@@ -208,7 +211,6 @@ futureSlideAyush input =
     blackboard input.time
     |>scaleX 1.2
     |>scaleY 1.2
-
     ,
     let 
       time = if input.time >= 3 then (input.time - 3) else 0
@@ -230,6 +232,7 @@ futureSlideAyush input =
   
   ]
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
+
 algorithmText:Float->Shape Msg
 algorithmText time= group
   [  
@@ -285,8 +288,9 @@ algorithmText time= group
   ]
   |>move(-70,-120)
   |> animate [(fromTill (TimeData 3 5 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 0 0 0 255)))] time
-algorithmImaginerSlide: SlideInput -> Shape Msg
-algorithmImaginerSlide input = 
+
+futureSlideDhiren: SlideInput -> Shape Msg
+futureSlideDhiren input = 
   group
   [
     background6 input.time
@@ -315,7 +319,6 @@ algorithmImaginerSlide input =
       |> animate [(fromTill (TimeData 2 4 Once) (Just easeOut) (scaleFromAni (0,0) (1,1)))] (input.time - 15)
     ]
     |> animate [(fromTill (TimeData 5 8 Once) (Just easeInAndOut) (moveAni 0 400))] (input.time - 15)
-
   ]
   |> transition [(moveAni 1000 200), (rotateAni 750)] input.transitionTime input.state
 
@@ -323,7 +326,7 @@ radiantAura : Float -> Shape Msg
 radiantAura time = 
   circle 800
   |> filled (radialGradient [transparentStop lightYellow 0 (percentCompleted (TimeData 7 8 Once) time), transparentStop lightYellow ((percentCompleted (TimeData 7 9 Once) time) * 800) 0])
- 
+
 pedestal : Shape Msg
 pedestal = 
   group
@@ -414,3 +417,4 @@ pedestal =
       |> scaleY 3
       |> move (240, -140)
   ]
+

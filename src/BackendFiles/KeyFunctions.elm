@@ -23,6 +23,7 @@ checkKey keyInfo states key =
   |> List.length
   |> (/=) 0
 
+
 applyShift: String -> String
 applyShift char = 
   let 

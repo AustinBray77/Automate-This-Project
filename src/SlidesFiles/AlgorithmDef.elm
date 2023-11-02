@@ -242,6 +242,8 @@ examples time =
       |> animate [(fromTill (TimeData 12 12.5 Once) Nothing (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 0 0 0 250)))] time
   ]
   |>move(0,-100)
+
+  
 algorithmText: Float -> Shape Msg
 algorithmText time =
   group[
