@@ -118,6 +118,99 @@ financeSlideJoshua input =
   |> transition [(bounceBack 1000 500)] input.transitionTime input.state
 -}
 
+financeSlideAustin: SlideInput -> Shape Msg
+financeSlideAustin input = 
+  group [
+    background2 input.time,
+    group [ 
+    smallServer input.time
+    |> move (300, 300),
+    curve (-400, 300) [Pull (-250, 350) (75, 350)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    curve (285, 350) [Pull (450, 350) (500, 125)]  
+    |> outlined (solid 5) blue
+    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
+    line (-450, 125) (animateLine (-450, 125) (25, -150) (Just easeInAndOut) (TimeData 18 22 Once) input.time)  
+    |> outlined (solid 15) blue,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 22 30 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 22.5 30.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 23 31 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 23.5 31.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 24 32 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    text "$"
+    |> size 74
+    |> filled green
+    |> move (-450, 90)
+    |> animate [(fromTill (TimeData 24.5 32.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
+    chicagoSkyline
+    |> move(-400, 200),
+    wedge 100 0.5
+    |> filled green
+    |> rotate (pi/2)
+    |> scaleX 3
+    |> scaleY 0.5
+    |> move(-450, 125),
+    text (typeWriter "Chicago" 0.1 0.2 (TimeData 0 1000 Once) input.time)
+    |> size 74
+    |> filled black
+    |> move (-585, 400),
+    newYorkStockExchange
+    |> scale 0.75
+    |> move (400, -150)
+    ]
+    |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
+    text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
+    |> size 74
+    |> alignLeft
+    |> filled black
+    |> move (-125, 350),
+    server input.time
+    |> scale 0.75
+    |> scaleX -1
+    |> move (-500, -50)
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni -1000 1000))] input.time,
+    plus
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
+    algorithmImage
+    |> move (500, -50)
+    |> move (0, -1000)
+    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
+                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 1000 1000))] input.time,
+    text "$$$$$"
+    |> size 356
+    |> filled (rgbaToColor (RGBA 38 127 0 1))
+    |> move (-450, -100)
+    |> animate [(fromTill (TimeData 50 52 Once) (Just easeInAndOut) (showShape (RGBA 38 127 0 1))),
+                (fromTill (TimeData 50 52 Once) (Just easeInAndOut) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
+    moneyWash (TimeData 36 38 Once) input.time
+  ]
+  |> transition [(moveAni 1000 1000)]  input.transitionTime input.state
+
 financeSlideDhiren1 : SlideInput -> Shape Msg
 financeSlideDhiren1 input =
   group 
@@ -229,98 +322,6 @@ financeSlideDhiren3 input =
     groupThoughtsAnimation (input.time + 0)
   ]
 
-financeSlideAustin: SlideInput -> Shape Msg
-financeSlideAustin input = 
-  group [
-    background2 input.time,
-    group [ 
-    smallServer input.time
-    |> move (300, 300),
-    curve (-400, 300) [Pull (-250, 350) (75, 350)]  
-    |> outlined (solid 5) blue
-    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
-    curve (285, 350) [Pull (450, 350) (500, 125)]  
-    |> outlined (solid 5) blue
-    |> animate [(fromTill (TimeData 15 15 Once) Nothing (fadeOutlineToColor (RGBA 60 60 60 1) (RGBA 255 0 0 1) 5))] input.time,
-    line (-450, 125) (animateLine (-450, 125) (25, -150) (Just easeInAndOut) (TimeData 18 22 Once) input.time)  
-    |> outlined (solid 15) blue,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 22 30 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 22.5 30.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 23 31 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 23.5 31.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 24 32 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    text "$"
-    |> size 74
-    |> filled green
-    |> move (-450, 90)
-    |> animate [(fromTill (TimeData 24.5 32.5 Once) (Just (\x ->  easeInAndOut (5*x))) (moveAni 475 -275))] input.time,
-    chicagoSkyline
-    |> move(-400, 200),
-    wedge 100 0.5
-    |> filled green
-    |> rotate (pi/2)
-    |> scaleX 3
-    |> scaleY 0.5
-    |> move(-450, 125),
-    text (typeWriter "Chicago" 0.1 0.2 (TimeData 0 1000 Once) input.time)
-    |> size 74
-    |> filled black
-    |> move (-585, 400),
-    newYorkStockExchange
-    |> scale 0.75
-    |> move (400, -150)
-    ]
-    |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
-    text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
-    |> size 74
-    |> alignLeft
-    |> filled black
-    |> move (-125, 350),
-    server input.time
-    |> scale 0.75
-    |> scaleX -1
-    |> move (-500, -50)
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni -1000 1000))] input.time,
-    plus
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
-    algorithmImage
-    |> move (500, -50)
-    |> move (0, -1000)
-    |> animate [(fromTill (TimeData 38 39.5 Once) (Just easeOut) (moveAni 0 1000)),
-                (fromTill (TimeData 48 50 Once) (Just easeInAndOut) (moveAni 1000 1000))] input.time,
-    text "$$$$$"
-    |> size 356
-    |> filled (rgbaToColor (RGBA 38 127 0 1))
-    |> move (-450, -100)
-    |> animate [(fromTill (TimeData 50 52 Once) (Just easeInAndOut) (showShape (RGBA 38 127 0 1))),
-                (fromTill (TimeData 50 52 Once) (Just easeInAndOut) (fadeOutlineToColor (RGBA 0 0 0 0) (RGBA 0 0 0 1) 5))] input.time,
-    moneyWash (TimeData 36 38 Once) input.time
-  ]
-  |> transition [(moveAni 1000 1000)]  input.transitionTime input.state
 
 buildLineOverTime: List (Float, Float) -> Float -> Float -> Float -> Maybe Ease -> LineType -> Color -> Shape Msg
 buildLineOverTime points startTime speed time ease lineType outlineCol =

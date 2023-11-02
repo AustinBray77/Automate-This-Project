@@ -11,18 +11,26 @@ import SlidesFiles.Medical exposing (..)
 import SlidesFiles.Games exposing (..)
 import SlidesFiles.HistoryOfAlgorithms exposing (..)
 import SlidesFiles.FutureSlides exposing (..)
-import SlidesFiles.AlgorithmDef exposing (algorithmDefSlide)
+import SlidesFiles.AlgorithmDef exposing (..)
 import SlidesFiles.Intro exposing (..)
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = (
   -- the slides are in order 
   --!! Put slides here !!
-  [introSlide, algorithmDefSlide, historyOfAlgorithms, historyOfAlgorithms2, financeIntro, financeSlideAustin, financeSlideDhiren1, financeSlideDhiren2, financeSlideDhiren3, entertainmentIntroSlide,
-    entertainmentSlide1, entertainmentSlide2, entertainmentConclusion, chessSlide, jeopardySlide, medicalSlide, personalityBots, futureSlideAyush, algorithmImaginerSlide, introSlide] 
-  --!! --------------- !!
+  [
+    introSlide, 
+    algorithmDefSlide, 
+    historyOfAlgorithms, historyOfAlgorithms2, 
+    financeIntro, financeSlideAustin, financeSlideDhiren1, financeSlideDhiren2, financeSlideDhiren3, 
+    entertainmentIntroSlide, entertainmentSlide1, entertainmentSlide2, entertainmentConclusion, 
+    chessSlide, jeopardySlide, medicalSlide, 
+    personalityBots, 
+    futureSlideAyush, futureSlideDhiren, 
+    introSlide] 
   )} 
 
+{-
 testingSlide: SlideInput -> Shape Msg
 testingSlide input =
     background1 input.time
@@ -60,3 +68,5 @@ testingSlide7: SlideInput -> Shape Msg
 testingSlide7 input = 
     background7 input.time
         |> transition [(moveAni 2000 0)] input.transitionTime input.state
+
+-}
