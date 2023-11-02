@@ -137,6 +137,7 @@ medicalSlide input =
   ]
   |> transition [(moveAni 1000 0)] input.transitionTime input.state
 
+-- made by Yujiro used for medicalSlide
 -- have to call animate on ever shape so that clip will be more efficent (if animate where called on the group then clip would also have to be called on the group)
 -- clip is way more efficent when calling on each shape in group instead of entire group
 -- have to call animate on ever shape so that clip will be more efficent (if animate where called on the group then clip would also have to be called on the group)
@@ -238,6 +239,7 @@ ambulence time =
   ]
   |> move (0, -575)
 
+-- made by Joshua used for personality Bots
 -- calling clip and animate on every shape to improve performance
 spaceShip: Float -> Float -> Float -> Shape Msg
 spaceShip time x y = 
@@ -573,6 +575,7 @@ spaceShip time x y =
       |> clipToScreen
   ]
 
+-- made by Joshua used for personalityBots
 paper3Hour: Shape Msg
 paper3Hour = 
   group
@@ -847,6 +850,7 @@ paper3Hour =
       |> move (240, 310)
   ]
 
+-- Made by Joshua used for personalityBots
 paper5Min: Shape Msg
 paper5Min = 
     group
@@ -951,6 +955,7 @@ paper5Min =
       |> move (240, 310)
   ]
 
+-- Made by Joshua used for personalityBots
 personalityTypes: Shape Msg
 personalityTypes = 
   group
@@ -959,82 +964,46 @@ personalityTypes =
       |> filled white
       |> addOutline (solid  2 ) black
     ,
-    roundedRect 235 65 0 
-      |> filled white
-      |> move (-295.2391073326247, 76.89691817215727)
-      |> addOutline (solid  2 ) black
-    ,
-    roundedRect 175 65 0 
-      |> filled white
-      |> move (5.526036131774603, 185.92986184909674)
-      |> addOutline (solid  2 ) black
-    ,
-    roundedRect 275 65 0 
-      |> filled white
-      |> move (295.2603613177471, 93.92136025504782)
-      |> addOutline (solid  2 ) black
-    ,
-    roundedRect 275 65 0 
-      |> filled white
-      |> move (303.93198724760913, -91.79596174282682)
-      |> addOutline (solid  2 ) black
-    ,
-    roundedRect 250 65 0 
-      |> filled white
-      |> move (-296.0680127523914, -104.42082890541977)
-      |> addOutline (solid  2 ) black
-    ,
-    roundedRect 335 65 0 
-      |> filled white
-      |> move (7.20510095642932, -216.38682252922428)
-      |> addOutline (solid  2 ) black
-    ,
-    text "Thinker" 
+    text "Emotions" 
       |> size 70 
       |> alignLeft 
       |> filled black
       |> move (-408.35281615302847, 56.89691817215728)
       |> addOutline (solid  0 ) blue
     ,
-    text "Rebel" 
+    text "Thoughts" 
       |> size 70 
       |> alignLeft 
       |> filled black
-      |> move (-74.47396386822547, 165.92986184909668)
+      |> move (-94.47396386822547, 165.92986184909668)
       |> addOutline (solid  0 ) blue
     ,
-    text "Promoter" 
+    text "Actions" 
       |> size 70 
       |> alignLeft 
       |> filled black
       |> move (162.14665249734327, 75.06907545164718)
       |> addOutline (solid  0 ) blue
     ,
-    text "Imaginer" 
+    text "Reflections" 
       |> size 70 
       |> alignLeft 
       |> filled black
       |> move (174.750265674814, -110.64824654622743)
       |> addOutline (solid  0 ) blue
     ,
-    text "Persister" 
+    text "Opinions" 
       |> size 70 
       |> alignLeft 
       |> filled black
       |> move (-416.0680127523914, -124.42082890541977)
       |> addOutline (solid  0 ) blue
     ,
-    text "Harmoniser" 
+    text "Reactions" 
       |> size 70 
       |> alignLeft 
       |> filled black
-      |> move (-160.82890541976622, -236.38682252922428)
-      |> addOutline (solid  0 ) blue,
-    text "Harmoniser" 
-      |> size 70 
-      |> alignLeft 
-      |> filled black
-      |> move (-160.82890541976622, -236.38682252922428)
+      |> move (-140.82890541976622, -236.38682252922428)
       |> addOutline (solid  0 ) blue
   ]
 

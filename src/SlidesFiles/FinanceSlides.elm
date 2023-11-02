@@ -41,6 +41,7 @@ buildLineOverTime points startTime speed time ease lineType outlineCol =
       |> List.map (outlined lineType outlineCol) 
       |> group
   
+-- Made by Joshua used in inclding but not limited to financeIntro
 -- by default faces to the left
 server: Float -> Shape Msg
 server time = 
@@ -241,6 +242,7 @@ server time =
       |> animate [(fromTill (TimeData 1.4 1.5 RepeatFromStartWithPause) Nothing (fadeShapeToColor (RGBA 0 255 0 255) (RGBA 100 100 100 100)))] time
   ]
 
+-- Made by Joshua used in financeIntro
 dollarSign: Float -> Color -> Shape Msg
 dollarSign textSize color = 
   text "$"
@@ -249,6 +251,7 @@ dollarSign textSize color =
   |> bold
   |> filled color
 
+-- Made by Joshua
 -- only works when start time is 0
 dollarSignAnimation: Float -> Float -> TimeData -> Float -> Shape Msg
 dollarSignAnimation x y timeData time =
@@ -647,10 +650,13 @@ financeSlideDhiren1 input =
     |> move (100, -900)
     |> scale 0.4
   ]
-  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (moveAni 0 -1500))] input.transitionTime input.state
 
 financeSlideDhiren2 : SlideInput -> Shape Msg
-financeSlideDhiren2 input = 
+financeSlideDhiren2 input2 = 
+  let
+    input = {input2 | time = input2.time - 5}
+  in
   group
   [
     background4 input.time
@@ -690,7 +696,7 @@ financeSlideDhiren2 input =
     |> move (50, -240)
     |> animate [(fromTill (TimeData 17 19 Once) (Just easeIn) (fadeShapeToColor (RGBA 255 255 255 1) (RGBA 255 255 255 0)))] input.time
   ]
-  |> transition [(moveAni 1000 0)] input.transitionTime input.state
+  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (moveAni 0 -1500))] input.transitionTime input.state
 
 financeSlideDhiren3 : SlideInput -> Shape Msg
 financeSlideDhiren3 input =
@@ -712,6 +718,7 @@ financeSlideDhiren3 input =
     ,
     groupThoughtsAnimation (input.time + 0)
   ]
+  |> transition [(fromTill (TimeData 0 1 Once) (Just easeIn) (scaleAni (0, 0)))] input.transitionTime input.state
 
 peopleAnimation : Float -> Shape Msg
 peopleAnimation time = 

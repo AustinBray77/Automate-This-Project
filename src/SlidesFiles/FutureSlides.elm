@@ -206,7 +206,6 @@ futureSlideAyush input =
     background2 input.time
     ,
     blackboard input.time
-<<<<<<< HEAD
     |>scaleX 1.2
     |>scaleY 1.2
 
@@ -215,10 +214,6 @@ futureSlideAyush input =
       time = if input.time >= 3 then (input.time - 3) else 0
     in
     (buildLineOverTime flashCrash 0 10 time Nothing (solid 2) white)
-=======
-    |>scale 1.2,
-    (buildLineOverTime flashCrash 3 10 input.time Nothing (solid 2) white)
->>>>>>> 7d62958bd332ac60b54a6e47f7b56d09420f6d85
     |> scale 4
     |> move (-560, 175)
     ,
@@ -298,7 +293,7 @@ algorithmImaginerSlide input =
     ,
     group -- make everything rise up
     [ 
-      radiantAura input.time -- animate aura to grow in scale (or animate gradient !)
+      radiantAura (input.time - 15) -- animate aura to grow in scale (or animate gradient !)
       |> move (-10, -400)
       ,
       pedestal
@@ -317,11 +312,12 @@ algorithmImaginerSlide input =
         |> scale 0.45
         |> move (425, -70)
       ]
-      |> animate [(fromTill (TimeData 2 4 Once) (Just easeOut) (scaleFromAni (0,0) (1,1)))] input.time
+      |> animate [(fromTill (TimeData 2 4 Once) (Just easeOut) (scaleFromAni (0,0) (1,1)))] (input.time - 15)
     ]
-    |> animate [(fromTill (TimeData 5 8 Once) (Just easeInAndOut) (moveAni 0 400))] input.time
+    |> animate [(fromTill (TimeData 5 8 Once) (Just easeInAndOut) (moveAni 0 400))] (input.time - 15)
 
   ]
+  |> transition [(moveAni 1000 200), (rotateAni 750)] input.transitionTime input.state
 
 radiantAura : Float -> Shape Msg
 radiantAura time = 
