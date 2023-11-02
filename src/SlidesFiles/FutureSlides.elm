@@ -4,7 +4,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought)
+import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought,buildLineOverTime)
 
 blackboard time=  group
   [  
