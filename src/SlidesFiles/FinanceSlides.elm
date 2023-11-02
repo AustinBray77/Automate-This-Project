@@ -6,8 +6,6 @@ import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
 import SlidesFiles.EntertainmentSlides exposing (..)
-import BackendFiles.HelperFunctions exposing (addTuple)
-
 
 getXDiff: (Float, Float) -> (Float, Float) -> Float
 getXDiff (a, b) (c, d) = 
@@ -11393,6 +11391,10 @@ financeSlideAustin input =
     ]
     |> animate [(fromTill (TimeData 37.3 38.3 Once) (Just easeInAndOut) (moveAni 0 1000))] input.time,
     text (typeWriter "Upshot?" 0.2 0.1 (TimeData 38 1000 Once) input.time)
+    |> size 74
+    |> alignLeft
+    |> filled black
+    |> move (-125, 350),
     server input.time
     |> scale 0.75
     |> scaleX -1
@@ -11442,9 +11444,8 @@ placeMoney square index shape =
 animateMoney: TimeData -> Float -> Int -> Int -> Shape Msg -> Shape Msg
 animateMoney timeData time square index shape = 
   let
-    floatIndex = toFloat index
     start = (toFloat (index//square)/10 + 0.5) + timeData.start
-    end = start+(timeData.end-timeData.start)
+    end = start+(timeData.end - timeData.start)
   in
   shape
   |> animate [(fromTill (TimeData start end Once) (Just easeInAndOut) (moveAni 0 2000))] time

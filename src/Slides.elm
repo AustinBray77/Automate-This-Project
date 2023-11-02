@@ -12,17 +12,15 @@ import SlidesFiles.Medical exposing (..)
 import SlidesFiles.Games exposing (..)
 import SlidesFiles.HistoryOfAlgorithms exposing (..)
 import SlidesFiles.FutureSlides exposing (..)
+import SlidesFiles.AlgorithmDef exposing (algorithmDefSlide)
 
 slideFunctions : { get : List (SlideInput -> Shape Msg) }
 slideFunctions = { get = (
   -- the slides are in order 
   --!! Put slides here !!
-  -- [historyOfAlgorithms, personalityBots, financeIntro, medicalSlide, financeSlideDhiren1, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
---   [chessSlide, jeopardySlide, medicalSlide, financeIntro, entertainmentSlide2, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
-  
-  [financeSlideDhiren3, algorithmImaginerSlide, financeIntro, financeSlideDhiren1, financeSlideDhiren2, financeSlideDhiren3, financeSlideAustin, entertainmentSlide2, entertainmentSlide1, testingSlide2, testingSlide3, testingSlide, testingSlide4, testingSlide5, testingSlide6, testingSlide7] 
+  [algorithmDefSlide, historyOfAlgorithms, historyOfAlgorithms2, financeIntro, financeSlideAustin, financeSlideDhiren1, financeSlideDhiren2, financeSlideDhiren3, entertainmentIntroSlide,
+    entertainmentSlide1, entertainmentSlide2, entertainmentConclusion, chessSlide, jeopardySlide, medicalSlide, personalityBots, futureSlideAyush, algorithmImaginerSlide] 
   --!! --------------- !!
-  --[testingSlide, testingSlide2,testingSlide3, testingSlide4, testingSlide5,testingSlide6,testingSlide7]
   )} 
 
 

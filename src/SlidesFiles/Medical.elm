@@ -13,7 +13,7 @@ personalityBots input =
   [
     background3 input.time
     ,
-    text (typeWriter "Categorizing Humankind" 0.2 0.2 (TimeData 0 1 Once) input.time)
+    text (typeWriter "Categorizing Humankind" 0.1 0.2 (TimeData 0 1 Once) input.time)
       |> size 120 
       |> alignLeft
       |> filled black
@@ -150,7 +150,7 @@ ambulence time =
       |> move (-84.83290488431884, 160.29562982005143)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     oval 135 55 
@@ -159,7 +159,7 @@ ambulence time =
       |> move (-70.41131105398452, 225.80976863753213)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 90 155 0 
@@ -167,7 +167,7 @@ ambulence time =
       |> move (-0.7197943444730339, 183.3290488431877)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 400 300 2 
@@ -175,7 +175,7 @@ ambulence time =
       |> move (317.99485861182484, 252)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     oval 65 70 
@@ -183,7 +183,7 @@ ambulence time =
       |> move (74, 340)
       |> move (1150,0)
       |> addOutline (solid  1 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0)),
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0)),
                   (fromTill (TimeData 0 0.25 RepeatFromStart) Nothing (fadeShapeToColor (RGBA 255 0 0 255) (RGBA 100 100 100 255)))] time
       |> clipToScreen
     ,
@@ -192,7 +192,7 @@ ambulence time =
       |> move (440, 100)
       |> move (1150,0)
       |> addOutline (solid  15 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 50 150 0 
@@ -200,7 +200,7 @@ ambulence time =
       |> move (310, 250)
       |> move (1150,0)
       |> addOutline (solid  5 ) red
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 150 50 0 
@@ -208,7 +208,7 @@ ambulence time =
       |> move (310, 250)
       |> move (1150,0)
       |> addOutline (solid  5 ) red
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 80 170 1 
@@ -217,7 +217,7 @@ ambulence time =
       |> move (1.2339331619536758, 251.9151670951157)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     roundedRect 90 240 1 
@@ -225,7 +225,7 @@ ambulence time =
       |> move (70, 222.77634961439588)
       |> move (1150,0)
       |> addOutline (solid  5 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
     ,
     oval 100 100 
@@ -233,7 +233,7 @@ ambulence time =
       |> move (-8, 100)
       |> move (1150,0)
       |> addOutline (solid  15 ) black
-      |> animate [(fromTill (TimeData 0 30 RepeatFromStart) Nothing (moveAni -2750 0))] time
+      |> animate [(fromTill (TimeData 0 10 RepeatFromStart) Nothing (moveAni -2750 0))] time
       |> clipToScreen
   ]
   |> move (0, -575)
@@ -1029,7 +1029,7 @@ personalityTypes =
       |> alignLeft 
       |> filled black
       |> move (-160.82890541976622, -236.38682252922428)
-      |> addOutline (solid  0 ) blue
+      |> addOutline (solid  0 ) blue,
     text "Harmoniser" 
       |> size 70 
       |> alignLeft 

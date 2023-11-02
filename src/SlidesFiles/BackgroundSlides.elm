@@ -301,6 +301,7 @@ background7 time =
       |> scaleY 5
       |> move (980, 60)
       |> addOutline (solid  0 ) black
+      |> clipToScreen
     ,
     ngon 6 50 
       |> filled (rgb 209 80 67)
@@ -308,6 +309,7 @@ background7 time =
       |> rotate (degrees -30 )
       |> move (-740, 160)
       |> addOutline (solid  0 ) black
+      |> clipToScreen
     ,
     ngon 6 100 
       |> filled (rgb 64 143 225)
@@ -315,6 +317,7 @@ background7 time =
       |> rotate (degrees -30 )
       |> move (-860, -20)
       |> addOutline (solid  0 ) black
+      |> clipToScreen
     ,
     ngon 6 200 
       |> filled (rgb 221 213 32)

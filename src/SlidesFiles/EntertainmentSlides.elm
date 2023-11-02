@@ -187,16 +187,11 @@ entertainmentConclusion input = group
       group [ 
         group [   
         line (400, -200) (animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time)
-        group [   
-        line (400, -200) (animateLine (400, -200) (500, -100) Nothing (TimeData 12 13 Once) input.time)
         |> outlined (solid 10) red,
-        line (500, -100) (animateLine (500, -100) (600, -150) Nothing (TimeData 13 14 Once) input.time)
         line (500, -100) (animateLine (500, -100) (600, -150) Nothing (TimeData 13 14 Once) input.time)
         |> outlined (solid 10) red,
         line (600, -150) (animateLine (600, -150) (700, -50) Nothing (TimeData 14 15 Once) input.time)
-        line (600, -150) (animateLine (600, -150) (700, -50) Nothing (TimeData 14 15 Once) input.time)
         |> outlined (solid 10) red,
-        line (700, -50) (animateLine (700, -50) (800, 150) Nothing (TimeData 15 16 Once) input.time)
         line (700, -50) (animateLine (700, -50) (800, 150) Nothing (TimeData 15 16 Once) input.time)
         |> outlined (solid 10) red,
         ngon 3 35

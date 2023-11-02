@@ -4,7 +4,7 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought)
+import SlidesFiles.FinanceSlides exposing (algorithmImage, person, emptyThought, buildLineOverTime)
 
 blackboard:Float->Shape Msg
 blackboard time=  group
@@ -212,7 +212,10 @@ futureSlideAyush input =
     |>scaleY 1.2
 
     ,
-    (buildLineOverTime flashCrash 0 10 input.time Nothing (solid 2) white)
+    let 
+      time = if input.time >= 3 then (input.time - 3) else 0
+    in
+    (buildLineOverTime flashCrash 0 10 time Nothing (solid 2) white)
     |> scale 4
     |> move (-560, 175)
     ,

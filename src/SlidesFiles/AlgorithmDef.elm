@@ -9,11 +9,6 @@ flowchart: Float -> Shape Msg
 flowchart time =
   group
   [  
-    roundedRect 200 100 50 
-      |> filled (rgb 255 80 80)
-      |> move (-3811, -394)
-      |> addOutline (solid  5 ) black
-    ,
       List.foldr union (rect 0 0 |> ghost) --row 3 first
       [      
         roundedRect 8 40 0 
