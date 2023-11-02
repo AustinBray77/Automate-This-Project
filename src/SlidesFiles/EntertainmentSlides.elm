@@ -4,7 +4,10 @@ import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 import BackendFiles.Animations exposing (..)
 import SlidesFiles.BackgroundSlides exposing (..)
-
+{-|
+Intro slide for the entertainment section
+Made by: Austin
+-}
 entertainmentIntroSlide: SlideInput -> Shape Msg
 entertainmentIntroSlide input = 
     group [
@@ -21,6 +24,11 @@ entertainmentIntroSlide input =
     ]
     |> transition [(fromTill (TimeData 0 2 Once) (Just tanScaled) (particlizeAndExplodeShape 100 1000 4 (0, 0)))] input.transitionTime input.state
 
+{-|
+First Content Slide for the entertainment section,
+Polyphonic HMI and A&Rs
+Made by: Austin
+-}
 entertainmentSlide1: SlideInput -> Shape Msg
 entertainmentSlide1 input =
     group [
@@ -62,6 +70,11 @@ entertainmentSlide1 input =
     ]
     |> transition [(bounceBack -1000 1000)] input.transitionTime input.state
 
+{-|
+Second Content Slide for the entertainment section,
+About David Cope and the Bach Bot
+Made by: Austin
+-}
 entertainmentSlide2: SlideInput -> Shape Msg
 entertainmentSlide2 input =
     group [
@@ -145,6 +158,10 @@ entertainmentSlide2 input =
     ]
     |> transition [(bounceBack 1000 1000)] input.transitionTime input.state
 
+{-|
+Conclusion slide for the entertainment section
+Made by: Austin
+-}
 entertainmentConclusion: SlideInput -> Shape Msg
 entertainmentConclusion input = group 
     [
@@ -226,6 +243,10 @@ entertainmentConclusion input = group
     ] 
     |> transition [(fromTill (TimeData 0 2 Once) (Just easeInAndOut) (scaleFromAni (1, 1) (0, 0)))] input.transitionTime input.state
 
+{-|
+Sticker object used on the conclusion slide
+Made by: Austin
+-}
 sticker: String -> Color -> Shape Msg
 sticker string color =
   group [
@@ -244,6 +265,11 @@ sticker string color =
     |> move ( -(3.5 * toFloat (String.length string)), (-1 * toFloat (String.length string)))
   ]
 
+{-|
+Animation to make text fly between two points
+Used to make the emojis fly around in entertainmentSlide2
+Made By: Austin
+-}
 flyingTextAnimation: String -> Float -> Float -> Float -> Shape Msg
 flyingTextAnimation string x y time =
     text string
@@ -252,6 +278,13 @@ flyingTextAnimation string x y time =
     |> animate [(fromTill (TimeData 30 30 Once) Nothing (showShape (RGBA 0 0 0 1))), 
                 (fromTill (TimeData 30 33 RepeatLoop) (Just easeIn) (moveAni x y))] time
 
+{-|
+Blank face shape
+Used in many slides, including but not limited to;
+  - entertainmentSlide1
+  - entertainmentSlideConclusion
+Made By: Austin
+-}
 face: Shape Msg
 face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455,36),
              (503, 71), (541,173), (580, 208), (581, 307), (649, 427), (637, 445),
@@ -262,6 +295,11 @@ face = polygon [(0, 252), (28, 137), (119,43), (216, 8), (310,0), (385, 9), (455
     |> filled black
     |> scaleY -1
 
+{-|
+Grey and blue computer shape
+Used in many slides
+Made By: Austin
+-}
 computer: Shape Msg
 computer =   group
   [  
@@ -296,6 +334,11 @@ computer =   group
   |> addOutline (solid 2) black
   |> scale 12
 
+{-|
+Drawing of Dr. David Cope
+Used in the entertainmentSlide2 function
+Made By: Austin
+-}
 copeDrawing: Shape Msg
 copeDrawing =
   group [ 
@@ -316,6 +359,11 @@ copeDrawing =
   ]
   |> scale 5
 
+{-|
+Speech bubble shape
+Used in the entertainmentSlide2 function
+Made By: Austin
+-}
 speechBubble: Shape Msg
 speechBubble = 
   group
@@ -405,6 +453,11 @@ speechBubble =
       |> addOutline (solid  20 ) black
   ]
 
+{-|
+Full crown shape to represent a crowd of people
+Used in the entertainmentSlide2 function
+Made By: Austin
+-}
 fullCrowd: Float -> Shape Msg
 fullCrowd time = 
   group [
@@ -446,6 +499,11 @@ fullCrowd time =
       |> animate [(fromTill (TimeData 31.3 34.6 Once) (Just (\x -> (sin (6*pi*(x+0.25)) )/2 + 0.5)) (moveAni 0 16))] time
   ]
 
+{-|
+Part of a crowd, used to form a full crowd
+Used in the entertainmentSlide2 function
+Made By: Austin
+-}
 crowd: Shape Msg
 crowd = group (
   [
@@ -457,6 +515,11 @@ crowd = group (
   |> List.map (\x -> x |> filled (rgba 50 50 50 1) |> addOutline (solid 2) black)
   )
 
+{-|
+Draws a string in a circle of a given radius
+Used in the entertainmentSlide1 function
+Made By: Austin
+-}
 drawInCircle: Float -> String -> Shape Msg
 drawInCircle radius message =
   String.toList message
@@ -464,7 +527,11 @@ drawInCircle radius message =
   |> List.map (drawChar radius (String.length message))
   |> group
   
-  
+{-|
+Draws each character to draw a string in a circle
+Used by the drawInCircle function
+Made By: Austin
+-}
 drawChar: Float -> Int -> (Int, Char) -> Shape Msg
 drawChar radius count (index, character) =
   text (String.fromChar character)
