@@ -279,7 +279,6 @@ algorithmText time= group
   ]
   |>move(-70,-120)
   |> animate [(fromTill (TimeData 3 5 Once) (Nothing) (fadeShapeToColor (RGBA 255 255 255 0) (RGBA 0 0 0 255)))] time
-  |> transition [(moveAni 1000 0)] input.transitionTime input.state
 algorithmImaginerSlide: SlideInput -> Shape Msg
 algorithmImaginerSlide input = 
   group
