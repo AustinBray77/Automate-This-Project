@@ -4,6 +4,8 @@ import GraphicSVG.EllieApp exposing (..)
 import BackendFiles.SlideUtilTypes exposing (..)
 import BackendFiles.SlideUtilTypes exposing (Msg)
 
+-- Converts a current time to be looped within a range
+-- Created By: Dhiren
 loopTime: Float -> Float -> Float -> Float
 loopTime start duration current = 
     if current < start then
@@ -11,7 +13,8 @@ loopTime start duration current =
     else 
         fmod duration (current - start)
 
---Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
+-- Takes in a time data and returns the percentage through that the animation has been completed, between 0 and 1
+-- Created By: Austin
 percentCompleted: TimeData -> Float -> Float
 percentCompleted time currentTime = 
     let
@@ -26,6 +29,8 @@ percentCompleted time currentTime =
     in 
         percent
 
+-- Float based modulous
+-- Created By: Dhirn
 fmod: Float -> Float -> Float
 fmod divisor dividend = 
   if divisor > dividend then
@@ -33,7 +38,9 @@ fmod divisor dividend =
   else
     fmod divisor (dividend - divisor)
 
---RepeatFromStart
+-- REPEATING FUNCTIONS
+-- Takes a given time and repeats it within the range of time data
+-- Created By: Josh
 repeatLoop: TimeData -> Float -> Float
 repeatLoop timeData curTime = 
     let 
@@ -47,6 +54,8 @@ repeatLoop timeData curTime =
     else 
         2 - percentTime
 
+-- Takes a given time and repeats it within the range of time data with a pause at the end of each loop
+-- Created By: Josh
 repeatFromStartWithPause: TimeData -> Float -> Float
 repeatFromStartWithPause timeData curTime = 
     let 
@@ -57,6 +66,9 @@ repeatFromStartWithPause timeData curTime =
     else    
         (modTime - timeData.start) / (timeData.end - timeData.start)
 
+-- Takes a given time and repeats it within the range of time data with a pause at the end of each loop
+-- Repeats from the end instead of the start
+-- Created By: Josh
 repeatFromEndWithPause: TimeData -> Float -> Float
 repeatFromEndWithPause timeData curTime = 
     let 
@@ -67,6 +79,8 @@ repeatFromEndWithPause timeData curTime =
     else    
         1 - (modTime - timeData.start) / (timeData.end - timeData.start)
 
+-- Takes a given time and repeats it within the range of time data
+-- Created By: Josh
 repeatFromStart: TimeData -> Float -> Float
 repeatFromStart timeData curTime = 
     let 
@@ -80,28 +94,33 @@ repeatFromStart timeData curTime =
 
 -- EASING FUNCTIONS
 --Tan function scaled down to have it's period between 0 and 1
+-- Created By: Austin
 tanScaled: Float -> Float 
 tanScaled x =
     tan (pi/2 * x)
 
 -- Sin function scaled to have it's period between 0 and 1
--- ease in and out
+-- Ease in and out
+-- Created By: Dhiren, Austin, and Josh
 easeInAndOut: Float -> Float
 easeInAndOut x =
     clamp 0 1 (sin (pi * (x - 0.5)) / 2 + 0.5)
 
 --Sin function scaled to have only the top left quarter of the period between 0 and 1
+-- Created By: Dhiren, Austin, and Josh
 easeOut: Float -> Float
 easeOut x =
     clamp 0 1 (sin (pi * x / 2))
 
 --Sin function scaled to have only the bottom left quarter of the period between 0 and 1
+-- Created By: Dhiren, Austin, and Josh
 easeIn: Float -> Float
 easeIn x =
     sin(pi / 2 * (x - 1)) + 1
 
--- makes the animation run in the given TimeData interval
--- this function assumes that the given animation is originally done in 1 second
+-- Makes the animation run in the given TimeData interval
+-- This function assumes that the given animation is originally done in 1 second
+-- Created By: Austin
 fromTill: TimeData -> Maybe Ease -> (AnimateFuncInput -> Shape Msg) -> AnimateFuncInput -> Shape Msg
 fromTill timeData easeFunc animation input =
     let
@@ -113,11 +132,13 @@ fromTill timeData easeFunc animation input =
         animation (AnimateFuncInput (ease ((percentCompleted timeData) input.time)) input.shape)
 
 -- Converts type alias RGBA to Color type 
+-- Created By: Austin
 rgbaToColor: RGBA -> Color 
 rgbaToColor color =
     (rgba color.r color.g color.b color.a)
 
 --Takes in a animation func input, start, and end color, and calculates what color the shape should currently be based on the input
+-- Created By: Austin
 calculateColor: AnimateFuncInput -> RGBA -> RGBA -> RGBA
 calculateColor input startColor targetColor = 
         { r = (startColor.r * (1 - input.time) + targetColor.r * input.time),  
@@ -128,6 +149,7 @@ calculateColor input startColor targetColor =
 
 -- Takes in a start and end color, as well as an animate func input and returns an animation of the shapes color between the two given colors
 -- takes 1 second to turn from start to end color (use fromTill function to make this duration longer or shorter)
+-- Created By: Austin
 fadeShapeToColor: RGBA -> RGBA -> AnimateFuncInput -> Shape Msg
 fadeShapeToColor startColor targetColor input = 
     if input.time > 1 then
@@ -140,6 +162,7 @@ fadeShapeToColor startColor targetColor input =
 
 --Takes in a start and end color as well as an animate func input and resturns an animation of the shapes outline between the two given colors
 -- takes 1 second to turn from start to end color (use fromTill function to make this duration longer or shorter)
+-- Created By: Austin
 fadeOutlineToColor: RGBA -> RGBA -> Float -> AnimateFuncInput -> Shape Msg
 fadeOutlineToColor startColor targetColor outlineThickness input = 
     if input.time > 1 then
@@ -150,10 +173,14 @@ fadeOutlineToColor startColor targetColor outlineThickness input =
         in
             addOutline (solid outlineThickness) (rgbaToColor newColor) input.shape
 
+-- Takes an indexed shape and clips it with a background shape
+-- Created By: Austin
 clipShapes: Shape Msg -> (Int, Shape Msg) -> Shape Msg
 clipShapes shape shapeTuple = 
     clip (Tuple.second shapeTuple) shape
 
+-- Takes in a list of shapes and places them in a square based on the index
+-- Created By: Austin
 placeShapesBasedOnIndex: Float -> Int -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
 placeShapesBasedOnIndex radius resolution squareSize shapeTuple =
     let
@@ -231,6 +258,9 @@ rotateBasedOnIndex square speed currentTime shapeTuple =
             (shape)
         )
 
+-- Takes a list of shapes then rotates and moves them apart based on the index
+-- Moves out by the speed, and rotates by the rotateSpeed
+-- Created By: Austin
 explodeRotateShape: Float -> Float -> Float -> List (Shape Msg) -> List (Shape Msg)
 explodeRotateShape speed rotateSpeed currentTime shapes =
     let
@@ -242,6 +272,10 @@ explodeRotateShape speed rotateSpeed currentTime shapes =
         |> List.unzip
         |> Tuple.second
 
+-- Takes in a shape, splits it into a number of smaller parts based on the reslution
+-- Then explodes and rotates the shape by the given speed and rotateSpeed
+-- Position and radius are the position and radius of the shape being exploded
+-- Created By: Austin
 tornadoShape: Float -> Float -> Float -> Int -> (Float, Float) -> AnimateFuncInput -> Shape Msg
 tornadoShape speed rotateSpeed radius resolution position input = 
     let
@@ -249,19 +283,23 @@ tornadoShape speed rotateSpeed radius resolution position input =
     in
         group (explodeRotateShape speed rotateSpeed input.time shapes)
 
--- moves the shape x, y amount of pixels after the start time over the duration
+-- Moves the shape x, y amount of pixels after the start time over the duration
+-- Created By: Josh
 moveAni : Float -> Float -> AnimateFuncInput -> Shape Msg
 moveAni x y input = 
         input.shape
             |> move ((x * input.time), (y * input.time))
 
--- scales the shape by the given x, y factor after the start time over the duration
+-- Scales the shape by the given x, y factor after the start time over the duration
+-- Created By: Josh 
 scaleAni : (Float, Float)-> AnimateFuncInput -> Shape Msg
-scaleAni xy input = 
+scaleAni (x, y) input = 
     input.shape
-        |> scaleX (1 + ((Tuple.first xy - 1) * input.time))
-        |> scaleY (1 + ((Tuple.second xy - 1) * input.time))
+        |> scaleX (1 + ((x - 1) * input.time))
+        |> scaleY (1 + ((y - 1) * input.time))
 
+-- Scales the shape from a given x y to another x y
+-- Created By: Dhiren
 scaleFromAni : (Float, Float) -> (Float, Float) -> AnimateFuncInput -> Shape Msg
 scaleFromAni (startx, starty) (x, y) input = 
     if input.time > 0 then
@@ -274,7 +312,8 @@ scaleFromAni (startx, starty) (x, y) input =
         |> scaleY starty
 
 
--- scales the shape by the given x, y factor once time is greator than 0
+-- Scales the shape by the given x, y factor once time is greator than 0
+-- Created: Josh
 scaleInstant : (Float, Float)-> AnimateFuncInput -> Shape Msg
 scaleInstant xy input = 
     if input.time > 0 then
@@ -283,11 +322,14 @@ scaleInstant xy input =
             |> scaleY (Tuple.second xy)
     else input.shape
 
+-- Slides the shape off screen overtime
+-- Created By: Josh
 slideOut : Float -> Float -> AnimateFuncInput -> Shape Msg
 slideOut x y input = 
         move ((x * input.time), (y * input.time)) input.shape
 
--- moves the shape backword before moving speeding up in the other direction
+-- Moves the shape backword before moving speeding up in the other direction
+-- Created By: Josh
 bounceBack : Float -> Float -> AnimateFuncInput -> Shape Msg
 bounceBack x y input =
     let
@@ -295,17 +337,20 @@ bounceBack x y input =
     in
         move ((x * (time^time - 1)), (y * (time^time - 1))) input.shape
 
--- rotates the shape
+-- Rotates the shape over time
+-- Created By: Josh
 rotateAni : Float -> AnimateFuncInput -> Shape Msg
 rotateAni rotation input = 
         rotate (degrees (rotation * input.time)) input.shape
 
--- multiplies a tuple of floats by a given float k
+-- Multiplies a tuple of floats by a given float k
+-- Created By: Austin
 multTuple: Float -> (Float, Float) -> (Float, Float)
 multTuple k (x, y) =
   (k*x, k*y)
 
--- rotates around a shape 
+-- Rotates around a shape around a position
+-- Created By: Austin
 rotateAround : Float -> (Float, Float) -> AnimateFuncInput -> Shape Msg
 rotateAround speed position input =
     input.shape
@@ -314,6 +359,7 @@ rotateAround speed position input =
     |> move position
 
 -- Animates a string being typed out at a given speed
+-- Created By: Austin
 typeWriter: String -> Float -> Float -> TimeData -> Float -> String
 typeWriter string speed blinkSpeed time givenTime = 
     let
@@ -331,13 +377,15 @@ typeWriter string speed blinkSpeed time givenTime =
                 " "
         )
 
---Blank shape used for hide animation optimization
+-- Blank shape used for hide animation optimization
+-- Created By: Austin
 blankShape: Shape Msg
 blankShape = 
     rect 0 0 
     |> filled blank
 
 -- Hides shape after 1 second
+-- Created By: Austin
 hideShape: RGBA -> AnimateFuncInput -> Shape Msg
 hideShape shapeColor input =
     if input.time < 1 then
@@ -347,6 +395,7 @@ hideShape shapeColor input =
         blankShape
 
 -- Shows shape after 1 second
+-- Created By: Austin
 showShape: RGBA -> AnimateFuncInput -> Shape Msg
 showShape shapeColor input = 
     if input.time == 0 then
@@ -357,6 +406,9 @@ showShape shapeColor input =
         input.shape
         |> repaint (rgbaToColor (calculateColor input (RGBA 0 0 0 0) shapeColor))
 
+-- Takes in the start and end position of a line and animates it over time
+-- Returns just the end point
+-- Created By: Austin
 animateLine: (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> (Float, Float)
 animateLine (x1, y1) (x2, y2) ease timeData curTime =
     let
@@ -369,17 +421,21 @@ animateLine (x1, y1) (x2, y2) ease timeData curTime =
     in
         point
 
+-- Animates a curve, similar to animate line except it animates both the pullPoint and endPoint
+-- Created By: Austin
 animateCurve: (Float, Float) -> (Float, Float) -> (Float, Float) -> Maybe Ease -> TimeData -> Float -> Pull
 animateCurve (x1, y1) (x2, y2) pullPoint ease timeData curTime =
     Pull (animateLine (x1, y1) pullPoint ease timeData curTime) (animateLine (x1, y1) (x2, y2) ease timeData curTime)
 
--- makes the shape transparent over 1 second
+-- Makes the shape transparent over 1 second
+-- Created By: Josh
 makeShapeTransparent: AnimateFuncInput -> Shape Msg
 makeShapeTransparent input = 
     input.shape
         |> makeTransparent (1-input.time) 
 
--- makes the shape transparent when time > 0
+-- Makes the shape transparent when time > 0
+-- Created By: Josh
 makeTransparentInstant: AnimateFuncInput -> Shape Msg
 makeTransparentInstant input =
     if input.time > 0 then
@@ -387,21 +443,24 @@ makeTransparentInstant input =
     else 
         input.shape |> makeTransparent 1
 
--- makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
+-- Makes the syntax better when using with shapes (allows you to use it with "|>" like the "move" and "rotate" functions)
+-- Created By: Josh
 animate : List (AnimateFuncInput -> Shape Msg) -- take in a list of functions that animate the shape given if we are at the right slide
             -> Float -> Shape Msg -> Shape Msg -- takes in the current time and shape
 animate animations time shape =
     subAnimate (AnimateFuncInput time shape) animations -- calling all the animations
 
--- backend function
--- used to loop thorugh each animation for the given shape
+-- Backend function for animate
+-- Used to loop thorugh each animation for the given shape
+-- Created By: Josh
 subAnimate : AnimateFuncInput -> List (AnimateFuncInput -> Shape Msg) -> Shape Msg
 subAnimate input animationFuncs =
     case animationFuncs of
         x :: xs -> subAnimate (AnimateFuncInput input.time (x input)) xs -- calling the animation on the shape until list is empty
         _ -> input.shape -- returning shape with animations applied once list is empty
 
--- the same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
+-- The same as animate but only gets called when the slide is tranitioning (takes in extra param to check if the animation should play)
+-- Created By: Josh
 transition : List (AnimateFuncInput -> Shape Msg) -> Float -> SlideState -> Shape Msg -> Shape Msg
 transition animations time state shape =
     case state of 
