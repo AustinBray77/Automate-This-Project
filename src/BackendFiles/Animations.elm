@@ -196,6 +196,9 @@ placeShapesBasedOnIndex radius resolution squareSize shapeTuple =
             (shape)
         )
 
+-- Takes in a shape and turns it into a list of squares which represent the same area
+-- Takes in the radius and position of the shape, and also the resolution for how many squares there should be
+-- Created By: Austin
 particlizeShape: Float -> Int -> (Float, Float) -> Shape Msg -> List (Shape Msg)
 particlizeShape radius resolution position shape = 
     let
@@ -210,18 +213,19 @@ particlizeShape radius resolution position shape =
             |> List.map (placeShapesBasedOnIndex radius resolution squareSize)
             |> List.map (clipShapes shape)
 
-
+-- Moves a list of shapes based on their index
+-- The further away they are from the center they are, the faster they move
+-- Created By: Austin
 moveBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-moveBasedOnIndex square speed currentTime shapeTuple =
+moveBasedOnIndex square speed currentTime (index, shape) =
     let
-        index = Tuple.first shapeTuple
-        shape = Tuple.second shapeTuple
-
         xPos = ((toFloat (modBy square index - square // 2)) + 0.5) * speed * currentTime
         yPos = (toFloat (index//square - square//2) + 0.5) * -speed * currentTime
     in
         (index, move (xPos, yPos) shape)
 
+-- Takes a list of shapes and explods them apart
+-- Created By: Austin
 explodeParticlizedShape: Float -> Float -> List (Shape Msg) -> List (Shape Msg)
 explodeParticlizedShape speed currentTime shapes =
     let
@@ -232,6 +236,8 @@ explodeParticlizedShape speed currentTime shapes =
         |> List.unzip
         |> Tuple.second
 
+-- Takes a shape, divides into a certain amount of equally sized squares, then explodes them apart
+-- Created By: Austin
 particlizeAndExplodeShape: Float -> Float -> Int -> (Float, Float) -> AnimateFuncInput -> Shape Msg
 particlizeAndExplodeShape speed radius resolution position input= 
     if input.time == 0 then
@@ -242,12 +248,12 @@ particlizeAndExplodeShape speed radius resolution position input=
         in
             group (explodeParticlizedShape speed input.time shapes)
 
+-- Takes a list of shape and rotates them based on their index and the given rotation speed
+-- The further from the center of the list the item is, the faster it rotates
+-- Created By: Austin
 rotateBasedOnIndex: Int -> Float -> Float -> (Int, Shape Msg) -> (Int, Shape Msg)
-rotateBasedOnIndex square speed currentTime shapeTuple =
+rotateBasedOnIndex square speed currentTime (index, shape) =
     let
-        index = Tuple.first shapeTuple
-        shape = Tuple.second shapeTuple
-
         xPos = ((toFloat (modBy square index - square // 2)) + 0.5)
         yPos = (toFloat (index//square - square//2) + 0.5)
 
